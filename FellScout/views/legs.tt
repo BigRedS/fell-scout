@@ -1,0 +1,11 @@
+<script src='javascripts/legs.js'></script>
+<h1>Checkpoint Legs</h1>
+<div id='div_legs'>
+  <table id="tbl_legs" class='table'>
+    <thead>
+      <tr><th class="felltrack">Leg</th><th>Expected Time Taken (minutes)</th><th>Teams on leg</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>

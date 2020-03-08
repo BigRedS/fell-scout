@@ -1,0 +1,44 @@
+# This is the main configuration file of your Dancer2 app
+# env-related settings should go to environments/$env.yml
+# all the settings in this file will be loaded at Dancer's startup.
+
+# Your application's name
+appname: "FellScout"
+
+# The default layout to use for your application (located in
+# views/layouts/main.tt)
+layout: "main"
+
+# when the charset is set to UTF-8 Dancer2 will handle for you
+# all the magic of encoding and decoding. You should not care
+# about unicode within your app when this setting is set (recommended).
+charset: "UTF-8"
+
+# template engine
+# simple: default and very basic template engine
+# template_toolkit: TT
+
+template: "simple"
+
+logger: "File"
+engines:
+  session:
+    Simple:
+      cookie_name: FellScout
+  logger:
+    File:
+      log_dir: "/home/avi/logs/"
+      file_name: "fellscout.log"
+
+commands:
+  get_data: /home/avi/apps/fell-scout/FellScout/bin/progress-to-json --teams --entrants -f /home/avi/apps/fell-scout/FellScout/progress.csv
+routes:
+  50mile: 
+    checkpoints: 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17
+  50km:
+    checkpoints: 1 2 3 4 5 6 8 9 14 15 16 17
+  30km:
+    checkpoints: 1 2 3 4 5 6 7 17
+
+ignore_teams:
+  122: On bus but not retired / withdrawn

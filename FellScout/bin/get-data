@@ -1,0 +1,42 @@
+#! /bin/bash
+if [ -z "$FELLTRACK_PASS" ] || [ -z "$FELLTRACK_USER" ] || [ -z "$FELLTRACK_OWNER" ]; then
+	echo "ERROR: You must pass a Felltrack username, password and owner to this script, as"
+	echo "ERROR: the environment vars FELLTRACK_OWNER,  FELLTRACK_PASS and FELLTTRACK_USER"
+	echo "If need be, log in with a browser and check the cookie contents"
+	exit 2;
+fi
+
+if [ -z "$1" ]; then
+  sleep=30
+else
+  sleep=$1
+fi
+
+while [ /bin/true ]; do
+	csv=$(curl -X POST  -k https://felltrack.com/cgi-bin/felltrack.cgi \
+	-H "Host: felltrack.com" \
+	-H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0" \
+	-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
+	-H "Accept-Language: en-US,en;q=0.5" \
+	-H "Accept-Encoding: gzip, deflate, br" \
+	-H "Content-Type: application/x-www-form-urlencoded" \
+	-H "Content-Length: 56" \
+	-H "Origin: https://felltrack.com" \
+	-H "Connection: keep-alive" \
+	-H "Referer: https://felltrack.com/cgi-bin/felltrack.cgi" \
+	-H "Cookie: FellTrackOWNER=${FELLTRACK_OWNER}; FellTrackUID=${FELLTRACK_USER}; FellTrackPWORD${FELLTRACK_USER}=$FELLTRACK_PASS; FellTrackLASTREADRW${FELLTRACK_USER}=0; FellTrackLASTREADCORR${FELLTRACK_USER}=0; FellTrackLOC${FELLTRACK_USER}=none; FellTrackNUMBLANKS=20; FellTrackSCW=2400; FellTrackROLLING=%2C%2C0; FellTrackCOL=0; FellTrackLASTNAV=Entrant%20progress" \
+	-H "Upgrade-Insecure-Requests: 1" \
+	-d 'SCW=2400&HIDDENNAV=correcthiker&NAV=Entrant+progress+CSV' \
+	2>/dev/null);
+
+	if [ -z "$csv" ]; then
+		echo "$(date) fail"
+	else
+		echo "$(date) success"
+		echo "$csv" > ./progress.csv
+		if [ -d ./progresses ]; then
+		  cp ./progress.csv ./progresses/progress.csv-$(date +%F-%T)
+		fi
+	fi
+	sleep $sleep;
+done

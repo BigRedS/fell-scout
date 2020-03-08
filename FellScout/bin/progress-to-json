@@ -1,0 +1,227 @@
+#! /usr/bin/perl
+use strict;
+use warnings;
+use Data::Dumper;
+use Text::CSV;
+use Getopt::Long;
+use Time::Local;
+use JSON;
+use utf8;
+
+use lib '../local/lib/perl5';
+
+binmode STDOUT, ":utf8";
+
+my $in_file = './progress.csv';
+my $return_teams = undef;
+my $return_entrants = undef;
+my $team = undef;
+my $help = undef;
+my $now = time();
+
+GetOptions (
+  "file|f=s" => \$in_file,
+  "teams"  => \$return_teams,
+  "entrants" => \$return_entrants,
+  "help" => \$help,
+  "now" => \$now,
+  "debug" => \$ENV{DEBUG},
+) or abort("Failed to parse command-line options. Try with --help?");
+
+sub usage{
+print <<EOF;
+
+$0 ; tool for parsing Felltrack CSV output into JSON
+
+Options:
+
+  --file [file]  Path to the CSV file. Defaults to ./progress.csv
+  -f [file]
+
+  --debug        Print debug messages to STDOUT
+
+  --entrants     Return a hash of _all_ entrants; default is just a
+                 hash of currently-competing teams
+
+  --help         Show this help 
+
+  --now [string] Set 'now' to the given epoch time
+
+EOF
+
+}
+
+my $fh;
+my $file_mtime = undef;
+$file_mtime = (stat($in_file))[9];
+open($fh, '<encoding(utf8)', $in_file) or abort("Error opening '$in_file': $!");
+my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
+                or abort("Cannot use CSV: ".Text::CSV->error_diag ());
+
+# All the times in the CSV file are simply HH:MM; we'll create a data structure that contains epoch
+# timestamps and for those we need to know the rest of the time. The event starts at 6am, so we
+# need to have some time at which we switch over to assuming small-hours are from after-midnight
+# during the event rather than during the morning; that's what we'll use $how_hour for.
+
+my @timebits = (localtime($now))[3,4,5];
+my $now_hour = (localtime($now))[2];
+
+my $entrants = {};
+my $teams = {};
+
+while (my $line = readline($fh)){
+	chomp($line);
+	$line =~ s/",(\d)/","$1/;
+	$csv->parse($line);
+	my @row = $csv->fields();
+
+	#$line=~s/^"//;
+	#$line=~s/"$//;
+	#my @row = split(m/"?,"?/, $line);
+
+	my $entrant;
+
+  # TODO: See if this logic still holds
+	# The CSV is broken (quote marks in fields are not escaped) but this only 
+	# affects two teams, who we'll ignore for now. 
+	# This manifests in Text::CSV returning a load of empty fields, so skip
+	# lines with an empty first field, and the header.
+	next unless my $number = shift(@row);
+	next if $number eq '';
+	next if $number eq 'Number';
+
+	$entrant->{code}      = $number;
+	$entrant->{name}      = shift(@row);
+	$entrant->{team_name} = shift(@row);
+	$entrant->{route}     = shift(@row);
+
+	debug("[Line $.] Entrant $entrant->{code}; name: $entrant->{name}");
+
+	# I'm not sure what the last three fields are so lets strip them
+	pop(@row);
+	$entrant->{district} = pop(@row);
+	$entrant->{unit} = pop(@row);
+
+	$entrant->{total_time} = pop(@row);
+	$entrant->{completed_hhmm} = pop(@row);
+	$entrant->{waiting_time} = pop(@row);
+
+  my $last_cp_hhmm_numeric = 0;
+	my @checkpoints = @row;
+	for (my $i = 1; $i<=@checkpoints; $i++){
+    my $hhmm = $checkpoints[$i];
+    next if !$hhmm or $hhmm eq '';
+    if($hhmm =~ m/R$/){
+      debug("[Line $.] $entrant->{code} retired at CP $i ($hhmm)");
+      $entrant->{retired} = $i;
+      $hhmm =~ s/R$//;
+    }
+    if($hhmm =~ m/^M/){
+      $entrant->{checkpoints}->{$i}->{manual} = 'true';
+      $hhmm =~ s/^M//;
+    }
+    if($hhmm eq 'missed'){
+      $entrant->{checkpoints}->{$i}->{missed} = 'true';
+      next;
+    }
+
+    my $hhmm_numeric = $hhmm;
+    $hhmm_numeric =~ s/://;
+    unless( !$hhmm_numeric or $hhmm_numeric == 0){
+      my $added_days = $entrant->{checkpoints}->{$i -1 }->{_added_days} || 0;
+      if($hhmm_numeric < $last_cp_hhmm_numeric){ 
+        debug("Went from $last_cp_hhmm_numeric to $hhmm_numeric; assuming midnight happened");
+        $added_days += 1;
+      } 
+      $last_cp_hhmm_numeric = $hhmm_numeric;
+    	my $time = mmhh_to_epoch( $hhmm, $added_days );
+      debug("[Line $.] Entrant $entrant->{code} CP $i: $time ( $hhmm ) ".localtime($time));
+      $entrant->{checkpoints}->{$i}->{arrived_time} = $time;
+      $entrant->{checkpoints}->{$i}->{arrived_localtime} = localtime($time);
+      $entrant->{checkpoints}->{$i}->{arrived_hhmm} = $hhmm;
+      $entrant->{checkpoints}->{$i}->{arrived_hhmm_numeric} = $hhmm_numeric;
+      $entrant->{checkpoints}->{$i}->{_added_days} = $added_days;
+    }
+	}
+  # The entrants hash contains every person who entered, so _everyone_ gets added to this hash...
+  $entrants->{ $entrant->{code} } = $entrant;
+
+  # But the Teams one is only those teams still in on it, so we don't bother with entrants who have
+  # retired or finished
+  if( $entrant->{retired} or $entrant->{completed_hhmm}){
+    debug("Entrant $entrant->{code} has either retired or finished");
+  }else{
+    unless( $entrant->{code} =~ m/^(\d+)([A-Z]+)$/ ){
+      error("Invalid entrant code '$entrant->{code}'");
+      next;
+    }
+    my $team_number = $1;
+    $entrant->{team_number} = $team_number;
+    $entrant->{letter} = $2;
+
+    # Pick an entrant and use them to represent the team
+    unless($teams->{ $entrant->{team_number} }->{name}){
+      $teams->{ $team_number} = $entrant;
+      delete($teams->{$team_number}->{name});
+      delete($teams->{$team_number}->{complete});
+      delete($teams->{$team_number}->{waiting_time});
+      delete($teams->{$team_number}->{number});
+
+      $teams->{$team_number}->{name} = $entrant->{team_name};
+      $teams->{$team_number}->{number} = $entrant->{team_number};
+      $teams->{$team_number}->{route} = $entrant->{route};
+      $teams->{$team_number}->{representantive_member} = $entrant->{letter};
+    }
+    $teams->{$team_number}->{entrants}->{$entrant->{code}} = $entrant->{name};
+    debug("Adding $entrant->{letter} to team $team_number $teams->{$team_number}->{team_name}");
+  }
+}
+
+if (!$entrants || !$teams){
+  abort("Failed to create entrants or teams hash!");
+}
+
+my $return = {};
+$return->{file} = $in_file;
+$return->{file_mtime} = $file_mtime;
+$return->{time_generated} = $now;
+if($return_entrants){
+  $return->{entrants} = $entrants;
+}
+if($return_teams){
+  $return->{teams} = $teams;
+}
+print to_json($return);
+exit 0;
+
+
+sub mmhh_to_epoch{
+  my $time = shift;
+  my $added_days = shift || 0;
+  abort("[$.] Invalid time: '$time'") unless $time =~ m/^(\d\d?):(\d\d?)/;
+  my @_timebits = @timebits;
+  $_timebits[0] += $added_days;
+  my ($h,$m) = ($1,$2);
+  my $timestamp = timelocal(0, $m, $h, @_timebits);
+  return $timestamp;
+}
+
+sub abort{
+  my $message = shift;
+  error($message);
+  error("Aborting.");
+  exit 1;
+}
+
+sub error{
+  my $message = shift;
+  chomp($message);
+  print STDERR "ERROR: $message\n";
+}
+
+sub debug{
+	return unless $ENV{DEBUG};
+	my $message = shift;
+	chomp($message);
+	print STDERR "DEBUG: $message\n";
+}
