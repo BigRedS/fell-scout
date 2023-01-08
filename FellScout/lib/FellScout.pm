@@ -1,7 +1,8 @@
 package FellScout;
 
 use Dancer2;
-use JSON qw(decode_json encode_json);
+# https://stackoverflow.com/questions/15770114/prototype-mismatch-error-perl
+use JSON qw//;
 use Data::Dumper;
 use POSIX qw(strftime);
 
