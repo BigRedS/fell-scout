@@ -427,10 +427,10 @@ sub get_summary {
     my $t = $teams->{$team_name};
     warn ("Team $team_name has no min_cp") unless $s->{routes}->{ $t->{route} }->{min_cp};
     warn ("Team $team_name has no max_cp") unless $s->{routes}->{ $t->{route} }->{max_cp};
-    warn ("Team $team_name has no next_cp") unless $t->{next_cp};
-    if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_cp} ){
+    warn ("Team $team_name has no next_checkpoint") unless $t->{next_checkpoint};
+    if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_checkpoint} ){
       push(@{$s->{routes}->{teams_at_min_cp}}, $team_name);
-    }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_cp} ){
+    }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
       push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
     }
   }
