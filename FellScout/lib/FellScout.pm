@@ -1,8 +1,6 @@
 package FellScout;
 
 use Dancer2;
-# https://stackoverflow.com/questions/15770114/prototype-mismatch-error-perl
-use JSON qw//;
 use Data::Dumper;
 use POSIX qw(strftime);
 use Cwd;
@@ -89,7 +87,6 @@ sub create_checkpoint_legs_summary_table{
 };
 
 sub load_progress_csv {
-
   my $cmd = join(' ',
     cwd().'/bin/progress-to-json ',
     config->{commands}->{progress_to_json_args },
