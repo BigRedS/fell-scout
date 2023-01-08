@@ -92,7 +92,7 @@ get '/api/entrants' => sub {
 # # #
 
 get '/teams' => sub {
-  template 'teams';  
+  template 'teams';
 };
 
 get '/api/teams' => sub {
@@ -165,8 +165,8 @@ sub create_team_summary_table{
 }
 
 
-# Given three arguments - a teams_progress hash as returned from the progress-to-csv tool, a 
-# routes_checkpoints hash as returned by the get_routes_checkpoints_hash() function and a 
+# Given three arguments - a teams_progress hash as returned from the progress-to-csv tool, a
+# routes_checkpoints hash as returned by the get_routes_checkpoints_hash() function and a
 # checkpoint_times hash as returned by get_checkpoint_times - will return that teams_progress
 # hash with the addition of expected_time hashes on every checkpoint for which it can be
 # calculated, based on the 90th percentile of the times taken betwen checkpoints.
@@ -183,7 +183,7 @@ sub add_checkpoint_expected_at_times {
     #debug("[add_checkpoint_expected_at_times] Team $team_number checkpoints: ".join(" ", @route_cps));
 
     $teams_progress->{$team_number}->{route_checkpoints} = \@route_cps;
-     
+
     for (my $cp=1; $cp<=$#route_cps; $cp++){
       my $this_cp = $route_cps[$cp];
       my $prev_cp = $route_cps[$cp -1 ];
@@ -237,10 +237,10 @@ sub add_checkpoint_expected_at_times {
 
 
 # Given an entrants_progress hash, iterates through all the entrants and tots up how long each took
-# to do each leg, then calculates the 90th percentile of those figures (using get_percentile() and 
-# creates a hash checkpoint_times, with keys that are the leg (from-cp and to-cp separated by a 
+# to do each leg, then calculates the 90th percentile of those figures (using get_percentile() and
+# creates a hash checkpoint_times, with keys that are the leg (from-cp and to-cp separated by a
 # single space)
-# 
+#
 sub get_checkpoint_times {
   my $entrants = shift;
   my $checkpoint_times = {};
@@ -291,7 +291,7 @@ sub get_checkpoint_times {
       $checkpoint_times->{$leg}->{min} = $sorted_cp_times[0];
       $checkpoint_times->{$leg}->{max} = $sorted_cp_times[-1];
 
-      $checkpoint_times->{$leg}->{routes} = sort(@{$routes_per_leg->{$leg}});
+      @{$checkpoint_times->{$leg}->{routes}} = sort(@{$routes_per_leg->{$leg}});
 
     }
   }
@@ -316,7 +316,7 @@ sub get_percentile{
 # that comes from the config file to
 #   $routes->{route_name} = (1, 2, 3, 4, 5);
 # that's eaier to iterate over
- 
+
 sub get_route_checkpoints_hash{
   my $route_cps = {};
   my $route_config = config->{routes};
@@ -357,7 +357,7 @@ sub get_summary {
     }
     if($s->{routes}->{$route}->{min_cp} > $t->{last_checkpoint} or !$s->{routes}->{$route}->{min_cp}){
       $s->{routes}->{$route}->{min_cp} = $t->{last_checkpoint};
-    } 
+    }
 
     # Number of teams out/completed
     if($t->{completed_time} and $t->{completed_time} > 0){
