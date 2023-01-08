@@ -65,7 +65,6 @@ get '/api/legs/table' => sub{
   my $teams_progress = vars->{teams_progress};
   my $checkpoint_times = get_checkpoint_times( $entrants_progress );
   $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  my $checkpoint_times = get_checkpoint_times ( $entrants_progress );
   return encode_json(create_checkpoint_legs_summary_table($entrants_progress, $teams_progress, $checkpoint_times->{legs}));
 };
 
@@ -340,13 +339,7 @@ sub get_checkpoint_times {
     }
     $checkpoint_times->{furthest_forward_teams} = $route_furthest_forward_teams;
     foreach my $leg (keys(%{$checkpoint_times->{legs}})){
-      if(scalar(keys(@{$checkpoint_times->{legs}->{$leg}->{diffs}})) >= 4 ){
-        $checkpoint_times->{legs}->{$leg}->{ninetieth_percentile} = get_percentile(90, $checkpoint_times->{legs}->{$leg}->{diffs});
-        #debug("[get_checkpoint_times] 90th percentile for '$leg': $checkpoint_times->{legs}->{$leg}->{ninetieth_percentile}");
-      }else{
-#        #debug("[get_checkpoint_times] Not enough data for percentiles for leg $leg");
-        $checkpoint_times->{legs}->{$leg}->{ninetieth_percentile} = 0;
-      }
+      $checkpoint_times->{legs}->{$leg}->{ninetieth_percentile} = get_percentile(90, $checkpoint_times->{legs}->{$leg}->{diffs});
       my @sorted_cp_times = sort{ $a <=> $b } @{$checkpoint_times->{legs}->{$leg}->{diffs}};
       $checkpoint_times->{legs}->{$leg}->{min} = $sorted_cp_times[0];
       $checkpoint_times->{legs}->{$leg}->{max} = $sorted_cp_times[-1];
@@ -366,6 +359,12 @@ sub get_percentile{
   my $percentile = shift;
   my $n = shift;
   my @numbers = sort(@{$n});
+  if(scalar(@numbers) <=4){
+    #info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
+    my $sum = 0;
+    map { $sum += $_ } @numbers;
+    return $sum / scalar(@numbers);
+  }
   my $index = int(($percentile/100) * $#numbers - 1);
   return $numbers[$index];
 }
