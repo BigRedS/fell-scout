@@ -70,36 +70,36 @@ my $entrants = {};
 my $teams = {};
 
 while (my $line = readline($fh)){
-	chomp($line);
-	$line =~ s/",(\d)/","$1/;
-	$csv->parse($line);
-	my @row = $csv->fields();
+  chomp($line);
+  $line =~ s/",(\d)/","$1/;
+  $csv->parse($line);
+  my @row = $csv->fields();
 
-	#$line=~s/^"//;
-	#$line=~s/"$//;
-	#my @row = split(m/"?,"?/, $line);
+  #$line=~s/^"//;
+  #$line=~s/"$//;
+  #my @row = split(m/"?,"?/, $line);
 
-	my $entrant;
+  my $entrant;
 
-	next unless my $number = shift(@row);
-	next if $number eq '';
-	next if $number eq 'Number';
+  next unless my $number = shift(@row);
+  next if $number eq '';
+  next if $number eq 'Number';
 
-	$entrant->{code}      = $number;
-	$entrant->{name}      = shift(@row);
-	$entrant->{team_name} = shift(@row);
-	$entrant->{route}     = shift(@row);
+  $entrant->{code}      = $number;
+  $entrant->{name}      = shift(@row);
+  $entrant->{team_name} = shift(@row);
+  $entrant->{route}     = shift(@row);
 
-	debug("[Line $.] Entrant $entrant->{code}; name: $entrant->{name}");
+  debug("[Line $.] Entrant $entrant->{code}; name: $entrant->{name}");
 
-	# we never use the last three fields
-	pop(@row);
-	$entrant->{district} = pop(@row);
-	$entrant->{unit} = pop(@row);
+  # we never use the last three fields
+  pop(@row);
+  $entrant->{district} = pop(@row);
+  $entrant->{unit} = pop(@row);
 
-	$entrant->{total_time} = pop(@row);
-	$entrant->{completed_hhmm} = pop(@row);
-	$entrant->{waiting_time} = pop(@row);
+  $entrant->{total_time} = pop(@row);
+  $entrant->{completed_hhmm} = pop(@row);
+  $entrant->{waiting_time} = pop(@row);
 
   # Here we iterate over the entrant's checkpoints. Each will either be empty,
   # in which case it's not (yet) been visited (it might also be a skipped point
@@ -110,8 +110,8 @@ while (my $line = readline($fh)){
   #  R = Retired (and then the time is the time they retired)
   #  M = Manual Entry (the time is the manually-entered time)
   my $last_cp_hhmm_numeric = 0;
-	my @checkpoints = @row;
-	for (my $cp_number = 1; $cp_number <= @checkpoints; $cp_number++){
+  my @checkpoints = @row;
+  for (my $cp_number = 1; $cp_number <= @checkpoints; $cp_number++){
     my $hhmm = $checkpoints[$cp_number];
     next if !$hhmm or $hhmm eq '';
     if($hhmm =~ m/R$/){
@@ -144,7 +144,7 @@ while (my $line = readline($fh)){
         $added_days += 1;
       }
       $last_cp_hhmm_numeric = $hhmm_numeric;
-    	my $time = mmhh_to_epoch( $hhmm, $added_days );
+      my $time = mmhh_to_epoch( $hhmm, $added_days );
       debug("[Line $.] Entrant $entrant->{code} CP $cp_number: $time ( $hhmm ) ".localtime($time));
       $entrant->{checkpoints}->{$cp_number}->{arrived_time} = $time;
       $entrant->{checkpoints}->{$cp_number}->{arrived_localtime} = localtime($time);
@@ -152,7 +152,7 @@ while (my $line = readline($fh)){
       $entrant->{checkpoints}->{$cp_number}->{arrived_hhmm_numeric} = $hhmm_numeric;
       $entrant->{checkpoints}->{$cp_number}->{_added_days} = $added_days;
     }
-	}
+  }
   # The entrants hash contains every person who entered, so _everyone_ gets added to this hash...
   $entrants->{ $entrant->{code} } = $entrant;
 
@@ -230,8 +230,8 @@ sub error{
 }
 
 sub debug{
-	return unless $ENV{DEBUG};
-	my $message = shift;
-	chomp($message);
-	print STDERR "DEBUG: $message\n";
+  return unless $ENV{DEBUG};
+  my $message = shift;
+  chomp($message);
+  print STDERR "DEBUG: $message\n";
 }
