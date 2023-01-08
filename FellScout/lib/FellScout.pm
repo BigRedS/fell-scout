@@ -5,14 +5,12 @@ use Dancer2;
 use JSON qw//;
 use Data::Dumper;
 use POSIX qw(strftime);
+use Cwd;
 
 our $VERSION = '0.1';
 
 hook 'before' => sub{
-  my $cmd = config->{commands}->{get_data};
-  info(" Running command '$cmd'");
-  my $json = `$cmd`;
-  my $progress_data = decode_json( $json );
+  my $progress_data = load_progress_csv();
   var entrants_progress => $progress_data->{entrants};
   my $ignore_teams = config->{ignore_teams};
   foreach my $team_number (keys(%{$ignore_teams})){
@@ -77,6 +75,19 @@ sub create_checkpoint_legs_summary_table{
   return \@rows;
 };
 
+sub load_progress_csv {
+
+  my $cmd = join(' ',
+    cwd().'/bin/progress-to-json ',
+    config->{commands}->{progress_to_json_args },
+    '--file '.cwd().'/'.config->{progress_csv_path}
+  );
+  info(" Running command '$cmd'");
+  my $json = `$cmd`;
+  info(" got ".length($json)." bytes of JSON");
+  my $progress_data = decode_json( $json );
+  return $progress_data;
+}
 # # # # # ENTRANTS
 # # # #
 # # #

@@ -30,10 +30,11 @@ engines:
       log_dir: "/home/avi/logs/"
       file_name: "fellscout.log"
 
+progress_csv_path: progress.csv
 commands:
-  get_data: /home/avi/apps/fell-scout/FellScout/bin/progress-to-json --teams --entrants -f /home/avi/apps/fell-scout/FellScout/progress.csv
+  progress_to_json_args: --teams --entrants
 routes:
-  50mile: 
+  50mile:
     checkpoints: 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17
   50km:
     checkpoints: 1 2 3 4 5 6 8 9 14 15 16 17
