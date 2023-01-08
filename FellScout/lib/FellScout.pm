@@ -160,7 +160,7 @@ sub create_team_summary_table{
   my @table;
   foreach my $team_number (sort(keys(%{$teams_progress}))){
     my $t = $teams_progress->{$team_number};
-    #debug("[create_team_summary_table] Team $team_number: $t->{team_name}");
+    #debug("[create_team_summary_table] Team");
 
     my $expected_at_next = -1;
     my $lateness_at_last = -1;
@@ -175,13 +175,13 @@ sub create_team_summary_table{
       # likely just because there is no team who has got far enough yet for there
       # to be timings to use to estimate how long it will take to get here.
 
-      #error("Team $team_number ($t->{team_name}) has no expected_time for next checkpoint ($t->{next_checkpoint}, on route $t->{route})");
+      #error("Team $team_number has no expected_time for next checkpoint ($t->{next_checkpoint}, on route $t->{route})");
     }
 
     if($t->{checkpoints}->{ $t->{last_checkpoint} }->{arrived_time}){
       $checkin_at_last = $t->{checkpoints}->{ $t->{last_checkpoint} }->{arrived_time}
     }else{
-      error("Team $team_number ($t->{team_name}) has no arrived_time for last checkpoint");
+      error("Team $team_number has no arrived_time for last checkpoint");
     }
 
     my @row = ($team_number, $t->{team_name}, $t->{route}, strftime("%H:%M", localtime($checkin_at_last))." ($t->{last_checkpoint})", $t->{next_checkpoint}, strftime("%H:%M", localtime($expected_at_next)), $lateness_at_last);
