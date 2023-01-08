@@ -43,7 +43,7 @@ Options:
   --entrants     Return a hash of _all_ entrants; default is just a
                  hash of currently-competing teams
 
-  --help         Show this help 
+  --help         Show this help
 
   --now [string] Set 'now' to the given epoch time
 
@@ -58,10 +58,10 @@ open($fh, '<encoding(utf8)', $in_file) or abort("Error opening '$in_file': $!");
 my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
                 or abort("Cannot use CSV: ".Text::CSV->error_diag ());
 
-# All the times in the CSV file are simply HH:MM; we'll create a data structure that contains epoch
-# timestamps and for those we need to know the rest of the time. The event starts at 6am, so we
-# need to have some time at which we switch over to assuming small-hours are from after-midnight
-# during the event rather than during the morning; that's what we'll use $how_hour for.
+# All the times in the CSV file are simply HH:MM and we will want to convert these to a full
+# date so we can do normal maths with them.
+# To do that, we'll remember that the event starts at 6am, now_hour will be used later in this
+# maths
 
 my @timebits = (localtime($now))[3,4,5];
 my $now_hour = (localtime($now))[2];
@@ -81,11 +81,6 @@ while (my $line = readline($fh)){
 
 	my $entrant;
 
-  # TODO: See if this logic still holds
-	# The CSV is broken (quote marks in fields are not escaped) but this only 
-	# affects two teams, who we'll ignore for now. 
-	# This manifests in Text::CSV returning a load of empty fields, so skip
-	# lines with an empty first field, and the header.
 	next unless my $number = shift(@row);
 	next if $number eq '';
 	next if $number eq 'Number';
@@ -97,7 +92,7 @@ while (my $line = readline($fh)){
 
 	debug("[Line $.] Entrant $entrant->{code}; name: $entrant->{name}");
 
-	# I'm not sure what the last three fields are so lets strip them
+	# we never use the last three fields
 	pop(@row);
 	$entrant->{district} = pop(@row);
 	$entrant->{unit} = pop(@row);
@@ -106,41 +101,56 @@ while (my $line = readline($fh)){
 	$entrant->{completed_hhmm} = pop(@row);
 	$entrant->{waiting_time} = pop(@row);
 
+  # Here we iterate over the entrant's checkpoints. Each will either be empty,
+  # in which case it's not (yet) been visited (it might also be a skipped point
+  # that is used only by routes shorter than this entrant's), contain the word
+  # 'missed' which means that it _is_ en-route but the entrant has already
+  # checked-in to a checkpoint after it, or contain a time in the format HH:MM,
+  # optionally with a modifier letter:
+  #  R = Retired (and then the time is the time they retired)
+  #  M = Manual Entry (the time is the manually-entered time)
   my $last_cp_hhmm_numeric = 0;
 	my @checkpoints = @row;
-	for (my $i = 1; $i<=@checkpoints; $i++){
-    my $hhmm = $checkpoints[$i];
+	for (my $cp_number = 1; $cp_number <= @checkpoints; $cp_number++){
+    my $hhmm = $checkpoints[$cp_number];
     next if !$hhmm or $hhmm eq '';
     if($hhmm =~ m/R$/){
-      debug("[Line $.] $entrant->{code} retired at CP $i ($hhmm)");
-      $entrant->{retired} = $i;
+      debug("[Line $.] $entrant->{code} retired at CP $cp_number ($hhmm)");
+      $entrant->{retired} = $cp_number;
       $hhmm =~ s/R$//;
     }
     if($hhmm =~ m/^M/){
-      $entrant->{checkpoints}->{$i}->{manual} = 'true';
+      $entrant->{checkpoints}->{$cp_number}->{manual} = 'true';
       $hhmm =~ s/^M//;
     }
     if($hhmm eq 'missed'){
-      $entrant->{checkpoints}->{$i}->{missed} = 'true';
+      $entrant->{checkpoints}->{$cp_number}->{missed} = 'true';
       next;
     }
 
+    # Here we deal with the problem that all times are simple HH:MM with no date
+    # information.
+    # The first cp from any entrant will be on the first day of the event, so we
+    # assume that when the hour value drops this must be because midnight has
+    # happened. At the first checkpoint where the time goes 'backwards' we set the
+    # _added_days key on the entrant to '1', which persists for the rest of the
+    # checkpoints
     my $hhmm_numeric = $hhmm;
     $hhmm_numeric =~ s/://;
     unless( !$hhmm_numeric or $hhmm_numeric == 0){
-      my $added_days = $entrant->{checkpoints}->{$i -1 }->{_added_days} || 0;
-      if($hhmm_numeric < $last_cp_hhmm_numeric){ 
+      my $added_days = $entrant->{checkpoints}->{$cp_number -1 }->{_added_days} || 0;
+      if($hhmm_numeric < $last_cp_hhmm_numeric){
         debug("Went from $last_cp_hhmm_numeric to $hhmm_numeric; assuming midnight happened");
         $added_days += 1;
-      } 
+      }
       $last_cp_hhmm_numeric = $hhmm_numeric;
     	my $time = mmhh_to_epoch( $hhmm, $added_days );
-      debug("[Line $.] Entrant $entrant->{code} CP $i: $time ( $hhmm ) ".localtime($time));
-      $entrant->{checkpoints}->{$i}->{arrived_time} = $time;
-      $entrant->{checkpoints}->{$i}->{arrived_localtime} = localtime($time);
-      $entrant->{checkpoints}->{$i}->{arrived_hhmm} = $hhmm;
-      $entrant->{checkpoints}->{$i}->{arrived_hhmm_numeric} = $hhmm_numeric;
-      $entrant->{checkpoints}->{$i}->{_added_days} = $added_days;
+      debug("[Line $.] Entrant $entrant->{code} CP $cp_number: $time ( $hhmm ) ".localtime($time));
+      $entrant->{checkpoints}->{$cp_number}->{arrived_time} = $time;
+      $entrant->{checkpoints}->{$cp_number}->{arrived_localtime} = localtime($time);
+      $entrant->{checkpoints}->{$cp_number}->{arrived_hhmm} = $hhmm;
+      $entrant->{checkpoints}->{$cp_number}->{arrived_hhmm_numeric} = $hhmm_numeric;
+      $entrant->{checkpoints}->{$cp_number}->{_added_days} = $added_days;
     }
 	}
   # The entrants hash contains every person who entered, so _everyone_ gets added to this hash...
@@ -158,10 +168,10 @@ while (my $line = readline($fh)){
     my $team_number = $1;
     $entrant->{team_number} = $team_number;
     $entrant->{letter} = $2;
-
+    debug("Entrant $entrant->{code} ($entrant->{name}) is still going");
     # Pick an entrant and use them to represent the team
     unless($teams->{ $entrant->{team_number} }->{name}){
-      $teams->{ $team_number} = $entrant;
+      %{$teams->{ $team_number}} = %{$entrant};
       delete($teams->{$team_number}->{name});
       delete($teams->{$team_number}->{complete});
       delete($teams->{$team_number}->{waiting_time});
@@ -173,7 +183,7 @@ while (my $line = readline($fh)){
       $teams->{$team_number}->{representantive_member} = $entrant->{letter};
     }
     $teams->{$team_number}->{entrants}->{$entrant->{code}} = $entrant->{name};
-    debug("Adding $entrant->{letter} to team $team_number $teams->{$team_number}->{team_name}");
+    debug("Adding $entrant->{letter} ($entrant->{name}) to team $team_number $teams->{$team_number}->{team_name}");
   }
 }
 
