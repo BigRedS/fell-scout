@@ -1,8 +1,10 @@
 FROM debian:bullseye-slim
 RUN apt-get update && \
-    apt-get -y install cpanminus vim build-essential libdancer2-perl libtext-csv-perl
-#RUN cpanm --notest -L /usr/local/lib/site_perl Dancer2 && \
-#    cpanm --notest -L /usr/local/lib/site_perl Text::CSV ;
+    apt-get -y install vim \
+      libdancer2-perl \
+      libtext-csv-perl \
+      libjson-perl \
+      cron
 
 WORKDIR /app
 COPY FellScout /app
