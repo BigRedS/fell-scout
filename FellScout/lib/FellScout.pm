@@ -87,14 +87,20 @@ sub create_checkpoint_legs_summary_table{
 };
 
 sub load_progress_csv {
+  my $csv = cwd().'/'.config->{progress_csv_path};
+  unless (-f $csv){
+    die("No progress file found at '$csv'");
+  }
   my $cmd = join(' ',
     cwd().'/bin/progress-to-json ',
     config->{commands}->{progress_to_json_args },
-    '--file '.cwd().'/'.config->{progress_csv_path}
+    "--file $csv"
   );
   info(" Running command '$cmd'");
   my $json = `$cmd`;
-  info(" got ".length($json)." bytes of JSON");
+  my $length = length($json);
+  die("Got <100 bytes of json ($length); aborting") if $length <100;
+  info(" got $length bytes of JSON");
   my $progress_data = decode_json( $json );
   return $progress_data;
 }
