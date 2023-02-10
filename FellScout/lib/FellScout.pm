@@ -3,19 +3,27 @@ package FellScout;
 use Dancer2;
 use Data::Dumper;
 use POSIX qw(strftime);
+use LWP::UserAgent;
 use Cwd;
+use WWW::Mechanize;
 
 our $VERSION = '0.1';
 
+
 hook 'before' => sub{
-  my $progress_data = load_progress_csv();
-  var entrants_progress => $progress_data->{entrants};
-  my $ignore_teams = config->{ignore_teams};
-  foreach my $team_number (keys(%{$ignore_teams})){
-    delete($progress_data->{teams}->{$team_number});
+
+  # The get-data endpoint has to be hittable without there already
+  # being data
+  unless(request->path =~ m/get-data/){
+    my $progress_data = load_progress_csv();
+    var entrants_progress => $progress_data->{entrants};
+    my $ignore_teams = config->{ignore_teams};
+    foreach my $team_number (keys(%{$ignore_teams})){
+      delete($progress_data->{teams}->{$team_number});
+    }
+    var teams_progress => $progress_data->{teams};
+    var route_checkpoints => get_route_checkpoints_hash();
   }
-  var teams_progress => $progress_data->{teams};
-  var route_checkpoints => get_route_checkpoints_hash();
 };
 
 
@@ -64,6 +72,17 @@ get '/api/legs/table' => sub{
   my $checkpoint_times = get_checkpoint_times( $entrants_progress );
   $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
   return encode_json(create_checkpoint_legs_summary_table($entrants_progress, $teams_progress, $checkpoint_times->{legs}));
+};
+
+get '/api/get-data' => sub {
+  get_data();
+
+#  my $icmd = "sleep 20 &";
+#  #my $cmd = cwd().'/bin/get-data >> '.cwd().'/get-data.log';
+#  #my $cmd = 'echo ":)"';
+#  info(" Running command '$cmd'");
+#  my $json = system($cmd);
+#  return encode_json( {command => $cmd} );
 };
 
 sub create_checkpoint_legs_summary_table{
@@ -439,6 +458,37 @@ sub get_summary {
     }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
       push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
     }
+  }
+
+  sub get_data {
+    my $url = 'https://felltrack.com/cgi-bin/felltrack.cgi';
+    my $cookie = "FellTrackOWNER=$ENV{FELLTRACK_OWNER}; FellTrackUID=$ENV{FELLTRACK_USER}; FellTrackPWORD$ENV{FELLTRACK_USER}=$ENV{FELLTRACK_PASS}; ";
+       $cookie.= "FellTrackLASTREADRW$ENV{FELLTRACK_USER}=0; FellTrackLASTREADCORR$ENV{FELLTRACK_USER}=0; FellTrackLOC$ENV{FELLTRACK_USER}=none; ";
+       $cookie.= "FellTrackNUMBLANKS=20; FellTrackSCW=2400; FellTrackROLLING=%2C%2C0; FellTrackCOL=0; FellTrackLASTNAV=Entrant%20progress";
+    my $headers = {
+	    'Host' => 'felltrack.com',
+ 	    'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0',
+	    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+	    'Accept-Language' => 'en-US,en;q=0.5',
+	    'Accept-Encoding' => 'gzip, deflate, br',
+	    'Content-Type' => 'application/x-www-form-urlencoded',
+	    'Content-Length' => '56',
+	    'Origin' => 'https://felltrack.com',
+	    'Connection' => 'keep-alive',
+	    'Referer' => 'https://felltrack.com/cgi-bin/felltrack.cgi',
+	    'Cookie' => $cookie,
+	    'Upgrade-Insecure-Requests' => '1',
+    };
+    my $data = {
+      SCW       => 2400,
+      HIDDENNAV => 'correcthiker',
+      NAV       => 'Entrant+progress+CSV',
+    };
+
+    my $mech = WWW::Mechanize->new();
+    $mech->add_header($headers);
+    my $response = $mech->post($url, content => $data);
+    $mech->save_content( cwd().'/'.config->{progress_csv_path} );
   }
 
   return $s;
