@@ -1,4 +1,7 @@
 *.swp
 */local/
-*.csv
-*csv*
+*.csv*
+*.log
+*progresses*
+.pls_cache/*
+FellScout/.pls_cache
