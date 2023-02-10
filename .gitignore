@@ -5,3 +5,6 @@
 *progresses*
 .pls_cache/*
 FellScout/.pls_cache
+*.tfstate
+*.backup
+*/.terraform*
