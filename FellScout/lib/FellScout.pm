@@ -11,13 +11,20 @@ hook 'before' => sub{
   my $progress_data = load_progress_csv();
   var entrants_progress => $progress_data->{entrants};
   my $ignore_teams = config->{ignore_teams};
-  foreach my $team_number (keys(%{$ignore_teams})){
-    delete($progress_data->{teams}->{$team_number});
+  # ignore teams:
+  foreach my $var_name (keys(%ENV)){
+    if($var_name =~ m/^IGNORE_(\d+)/){
+      delete($progress_data->{teams}->{$1});
+    }
   }
+
   var teams_progress => $progress_data->{teams};
   var route_checkpoints => get_route_checkpoints_hash();
 };
 
+sub delete_ignored_teams {
+  my $progress_data = shift;
+}
 
 =item routes
 

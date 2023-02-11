@@ -33,6 +33,3 @@ engines:
 progress_csv_path: progress.csv
 commands:
   progress_to_json_args: --teams --entrants
-
-ignore_teams:
-  122: On bus but not retired / withdrawn
