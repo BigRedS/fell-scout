@@ -21,7 +21,9 @@ hook 'before' => sub{
   # Note that the route_checkpoints is used to determine the teams_progress,
   var route_checkpoints => get_route_checkpoints_hash();
   var checkpoint_times => get_checkpoint_times( vars->{entrants_progress} );
-  var teams_progress => add_checkpoint_expected_at_times($progress_data->{teams}, vars->{checkpoint_times});
+  my ($teams_progress, $legs) = add_checkpoint_expected_at_times($progress_data->{teams}, vars->{checkpoint_times});
+  var legs => $legs;
+  var teams_progress => $teams_progress;
 
   if (request->path =~ m{^/api/}) {
     header 'Content-Type' => 'application/json';
@@ -30,15 +32,13 @@ hook 'before' => sub{
 
 # # # # # SUMMARY
 get '/' => sub{
-  my $entrants_progress = vars->{entrants_progress};
-  my $teams_progress = vars->{teams_progress};
-  my $routes_cps = vars->{route_checkpoints};
-  my $checkpoint_times = vars->{checkpoint_times};
+  my $summary = get_summary( vars->{teams_progress} );
+  return template 'summary.tt', {summary => $summary};
+  encode_json($summary);
+};
 
-  my $summary = get_summary($teams_progress);
-
-  return template 'summary.tt', {test => "test", summary => $summary};
-
+get '/api/summary' => sub{
+  my $summary = get_summary( vars->{teams_progress} );
   encode_json($summary);
 };
 sub get_summary {
@@ -70,22 +70,24 @@ sub get_summary {
     warn ("Team $team_name has no min_cp") unless $s->{routes}->{ $t->{route} }->{min_cp};
     warn ("Team $team_name has no max_cp") unless $s->{routes}->{ $t->{route} }->{max_cp};
     warn ("Team $team_name has no next_checkpoint") unless $t->{next_checkpoint};
-    if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_checkpoint} ){
-      push(@{$s->{routes}->{teams_at_min_cp}}, $team_name);
-    }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
-      push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
-    }
+    # I don't remember what these mean
+    #if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_checkpoint} ){
+    #  push(@{$s->{routes}->{teams_at_min_cp}}, $team_name);
+    #}elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
+    #  push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
+    #}
   }
 
   return $s;
 }
 # # # # # LEGS + CHECKPOINTS
 get '/legs' => sub {
-  template 'legs';
+  my $legs = vars->{legs};
+  return template 'legs.tt', {legs => $legs};
 };
 
 get '/api/legs' => sub{
-  return encode_json(vars->{checkpoint_times});
+  return encode_json(vars->{legs});
 };
 
 get '/api/legs/table' => sub{
@@ -101,70 +103,27 @@ get '/api/entrants' => sub {
   encode_json($entrants_progress);
 };
 
-# # # # # TEAMS
-
-# displays the /api/teams/table output
-get '/teams' => sub {
-  template 'teams';
+get '/entrants' => sub {
+  my $entrants_progress = vars->{entrants_progress};
+  return template 'entrants.tt', {entrants => $entrants_progress};
 };
 
-get '/api/teams/progress' => sub {
+
+# # # # # TEAMS
+
+get '/api/teams' => sub {
   return encode_json(vars->{teams_progress});
 };
 
-get '/api/teams/table' => sub {
-  return encode_json(create_team_summary_table(vars->{teams_progress}));
+get '/teams' => sub {
+  return template 'teams2.tt', {teams => vars->{teams_progress}};
 };
 
-# Headings:
-# Team Number | Team Name | Route | Last checkpoint | Next chekpoint | time expected at next |  How late they are
-sub create_team_summary_table{
-  my $teams_progress = shift;
-  my @table;
-  foreach my $team_number (sort(keys(%{$teams_progress}))){
-    my $t = $teams_progress->{$team_number};
-    #debug("[create_team_summary_table] Team");
-
-    my $expected_at_next = -1;
-    my $lateness_at_last = -1;
-    my $checkin_at_last = -1;
-
-    if($t->{checkpoints}->{ $t->{next_checkpoint} }->{expected_time}){
-      $expected_at_next = $t->{checkpoints}->{ $t->{next_checkpoint} }->{expected_time};
-      $lateness_at_last = int((time() - $expected_at_next) / 60);
-    #}else{
-      # We now expect this to be okay; if the data is not there then it is not
-      # supposed to be there and we'd have caught this absence before now. It's
-      # likely just because there is no team who has got far enough yet for there
-      # to be timings to use to estimate how long it will take to get here.
-
-      #error("Team $team_number has no expected_time for next checkpoint ($t->{next_checkpoint}, on route $t->{route})");
-    }
-
-    if($t->{checkpoints}->{ $t->{last_checkpoint} }->{arrived_time}){
-      $checkin_at_last = $t->{checkpoints}->{ $t->{last_checkpoint} }->{arrived_time}
-    }else{
-      error("Team $team_number has no arrived_time for last checkpoint");
-    }
-
-    my $first_cell = "<a href='/team/$team_number'>$team_number</a>";
-    my $second_cell = "<a href='/team/$team_number'>$t->{team_name}</a>";
-    my @row = ($first_cell, $second_cell, $t->{route}, strftime("%H:%M", localtime($checkin_at_last))." ($t->{last_checkpoint})", $t->{next_checkpoint}, strftime("%H:%M", localtime($expected_at_next)), $lateness_at_last);
-
-    #info(" [create_team_summary_table] Team $team_number; next: $t->{next_checkpoint}; last: $t->{last_checkpoint}");
-    push(@table, \@row);
-  }
-  return \@table;
-}
 
 get '/api/team/:team' => sub {
   my $teams_progress = vars->{teams_progress};
   my $team = param('team');
-
-  if($teams_progress->{$team}){
-    return encode_json($teams_progress->{$team});
-  }
-  return encode_json({"Error" => "No team $team"});
+  return encode_json($teams_progress->{$team});
 };
 
 get '/team/:team' => sub {
@@ -275,6 +234,7 @@ sub get_route_checkpoints_hash{
 sub add_checkpoint_expected_at_times {
   my $teams_progress = shift;
   my $checkpoint_times = shift;
+  my $legs;
 
   my $routes_cps = vars->{route_checkpoints};
   foreach my $team_number (keys(%{$teams_progress})){
@@ -297,6 +257,7 @@ sub add_checkpoint_expected_at_times {
       my $leg = "$prev_cp $this_cp";
       my $time_from = undef;
 
+
       if($this_cp > $highest_visited_cp){
         #debug("No team has passed cp $highest_visited_cp, this is $this_cp; exiting loop");
         last;
@@ -311,7 +272,7 @@ sub add_checkpoint_expected_at_times {
           error("Missing expected_time and arrived_time for team $team_number at previous checkpoint $prev_cp (furthest forward is cp $highest_visited_cp)");
         next;
       }
-#     #debug("[add_checkpoint_expected_at_times] Team_number: $team_number, prev_cp: $prev_cp");
+      #debug("[add_checkpoint_expected_at_times] Team_number: $team_number, prev_cp: $prev_cp");
       if($teams_progress->{$team_number}->{checkpoints}->{$prev_cp}->{arrived_time}){
         $time_from = $teams_progress->{$team_number}->{checkpoints}->{$prev_cp}->{arrived_time};
       }else{
@@ -319,12 +280,16 @@ sub add_checkpoint_expected_at_times {
       }
 
       my $diff = $checkpoint_times->{legs}->{$leg}->{ninetieth_percentile};
+
+      $legs->{$leg}->{seconds} = $diff;
+      $legs->{$leg}->{minutes} = int($diff / 60);
+      $legs->{$leg}->{hours} = sprintf("%0.2f", $diff / (60 * 60));
+      #debug("[add_checkpoint_expected_at_times] Expected time between checkpoints '$leg' is $diff seconds");
+
       if (!$diff or $diff == 0){
         error("Got zero diff for leg '$leg'");
         next;
       }
-
-      #debug("[add_checkpoint_expected_at_times] Expected time between checkpoints '$leg' is $diff seconds");
 
       my $expected = $time_from + $diff;
 
@@ -332,16 +297,16 @@ sub add_checkpoint_expected_at_times {
 
       $teams_progress->{$team_number}->{checkpoints}->{$this_cp}->{expected_time} = $expected;
       $teams_progress->{$team_number}->{checkpoints}->{$this_cp}->{expected_localtime} = localtime($expected);
-#      #debug("[add_checkpoint_expected_at_times] Team $team_number is expected at $this_cp at ".strftime("%y-%m-%d %H:%M", localtime($expected))." ($expected)");
+      #debug("[add_checkpoint_expected_at_times] Team $team_number is expected at $this_cp at ".strftime("%y-%m-%d %H:%M", localtime($expected))." ($expected)");
     }
 
-    for (my $i=1; $i<=$#route_cps; $i++){
+    for (my $i=$#route_cps; $i>=0; $i--){
       my $cp = $route_cps[$i];
-      next if ($teams_progress->{$team_number}->{checkpoints}->{$cp}->{arrived_time});
-      $teams_progress->{$team_number}->{next_checkpoint} = $cp;
-      $teams_progress->{$team_number}->{last_checkpoint} = $route_cps[$i - 1];
-
-      last;
+      if($teams_progress->{$team_number}->{checkpoints}->{$cp}->{arrived_time}){
+        $teams_progress->{$team_number}->{last_checkpoint} = $cp;
+        $teams_progress->{$team_number}->{next_checkpoint} = $route_cps[$i + 1];
+        last;
+      }
     }
     # Add easily-accessible 'expected at next checkpoint' times
     my $team_next_cp = $teams_progress->{$team_number}->{next_checkpoint};
@@ -350,11 +315,21 @@ sub add_checkpoint_expected_at_times {
     $teams_progress->{$team_number}->{next_checkpoint_expected_localtime} = $teams_progress->{$team_number}->{checkpoints}->{$team_next_cp}->{expected_localtime};
     $teams_progress->{$team_number}->{next_checkpoint_expected_minutes} = int($teams_progress->{$team_number}->{next_checkpoint_expected_time} - time());
 
-    my $team_last_cp = $teams_progress->{$team_number}->{last_checkpoint};
-    $teams_progress->{$team_number}->{last_checkpoint_time} = $teams_progress->{$team_number}->{checkpoints}->{$team_last_cp}->{arrived_hhmm}
-  }
+    if ($teams_progress->{$team_number}->{next_checkpoint_expected_time} > time()){
+      my $lateness = int(  ($teams_progress->{$team_number}->{next_checkpoint_expected_time} - time()) / 60);
+      if($lateness > 0){
+        $teams_progress->{$team_number}->{next_checkpoint_lateness} = $lateness;
+      }
+    }
 
-  return $teams_progress;
+    my $team_last_cp = $teams_progress->{$team_number}->{last_checkpoint};
+    $teams_progress->{$team_number}->{last_checkpoint_time} = $teams_progress->{$team_number}->{checkpoints}->{$team_last_cp}->{arrived_hhmm};
+
+    $teams_progress->{$team_number}->{leg} = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
+
+    push( @{$legs->{ $teams_progress->{$team_number}->{teams} }}, $team_number);
+  }
+  return ($teams_progress, $legs);
 }
 
 
