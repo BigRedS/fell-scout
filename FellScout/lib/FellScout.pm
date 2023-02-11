@@ -10,6 +10,7 @@ our $VERSION = '0.1';
 hook 'before' => sub{
   my $progress_data = load_progress_csv();
   var entrants_progress => $progress_data->{entrants};
+  var entrants_stats => get_entrants_stats();
   my $ignore_teams = config->{ignore_teams};
   # ignore teams:
   foreach my $var_name (keys(%ENV)){
@@ -30,10 +31,20 @@ hook 'before' => sub{
   }
 };
 
+sub get_entrants_stats {
+  my $entrants_data = vars->{entrants_progress};
+  my $entrants_stats;
+  foreach my $entrant (keys %{$entrants_data}){
+    $entrants_stats->{total} += 1;
+    $entrants_stats->{out} += 1 unless $entrants_data->{$entrant}->{completed_hhmm} > 0;
+    $entrants_stats->{back} += 1 if $entrants_data->{$entrant}->{completed_hhmm} > 0;
+  }
+}
+
 # # # # # SUMMARY
 get '/' => sub{
   my $summary = get_summary( vars->{teams_progress} );
-  return template 'summary.tt', {summary => $summary};
+  return template 'summary.tt', {summary => $summary, entrants_stats => vars->{entrants_stats}};
   encode_json($summary);
 };
 
@@ -62,6 +73,7 @@ sub get_summary {
       $s->{routes}->{$route}->{num_completed}++;
     }else{
       $s->{routes}->{$route}->{num_not_completed}++;
+      push(@{$s->{routes}->{$route}->{teams_out}}, $t->{number});
     }
   }
 

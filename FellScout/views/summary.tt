@@ -2,11 +2,28 @@
 <div id='div_legs'>
   <table class="table">
     <thead>
-  <tr><th>Route</th><th>Earliest last-checkpoint</th><th>Latest last-checkpoint</th><th>Teams still out</th></tr>
-  </thead>
-  <% FOREACH route IN summary.routes.sort %>
+      <tr>
+        <th>Route</th>
+        <th>Furthest-back team</th>
+        <th>Furthest-forward team</th>
+        <th>Number of teams still out</th>
+        <th>Teams</th>
+      </tr>
+    </thead>
 
-  <tr><td><% route %></td><td><% summary.routes.$route.min_cp %></td><td><% summary.routes.$route.max_cp %></td><td><% summary.routes.$route.num_not_completed %></td></tr>
+  <% FOREACH route IN summary.routes.sort %>
+  <tr>
+    <td><% route %></td>
+    <td><% summary.routes.$route.min_cp %></td>
+    <td><% summary.routes.$route.max_cp %></td>
+    <td><% summary.routes.$route.num_not_completed %></td>
+    <td>
+      <% FOREACH team IN summary.routes.$route.teams_out.sort %>
+        <a href='/team/<% team %>'><% team %></a>,
+      <% END %>
+
+    </td>
+  </tr>
 
 <% end %>
   </table>
