@@ -18,24 +18,22 @@ hook 'before' => sub{
     }
   }
 
-  var teams_progress => $progress_data->{teams};
+  # Note that the route_checkpoints is used to determine the teams_progress,
   var route_checkpoints => get_route_checkpoints_hash();
+  var checkpoint_times => get_checkpoint_times( vars->{entrants_progress} );
+  var teams_progress => add_checkpoint_expected_at_times($progress_data->{teams}, vars->{checkpoint_times});
+
+  if (request->path =~ m{^/api/}) {
+    header 'Content-Type' => 'application/json';
+  }
 };
 
-=item routes
-
-Each page has two URLs; here /legs is just the HTML document that
-displays stuff, and /api/legs is the endpoint that the t
-hit to get actual-data. This pairing is common to all the views
-=cut
+# # # # # SUMMARY
 get '/' => sub{
   my $entrants_progress = vars->{entrants_progress};
   my $teams_progress = vars->{teams_progress};
   my $routes_cps = vars->{route_checkpoints};
-  my $checkpoint_times = get_checkpoint_times( $entrants_progress );
-
-  $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  #header 'Content-Type' => 'application/json';
+  my $checkpoint_times = vars->{checkpoint_times};
 
   my $summary = get_summary($teams_progress);
 
@@ -43,85 +41,80 @@ get '/' => sub{
 
   encode_json($summary);
 };
+sub get_summary {
+  my $teams = shift;
 
-=item legs
-A 'leg' is a gap between two checkpoints; there's a 'leg' between
-cp1 and cp2, another between cp2 and cp3 etc.
-=cut
+  my $s;
+  foreach my $team_name (keys(%{$teams})){
+    my $t = $teams->{$team_name};
+    my $route = $t->{route};
+    # Furthest ahead and furthest behind teams
 
+    if($s->{routes}->{$route}->{max_cp} < $t->{last_checkpoint} or !$s->{routes}->{$route}->{max_cp}){
+      $s->{routes}->{$route}->{max_cp} = $t->{last_checkpoint};
+    }
+    if($s->{routes}->{$route}->{min_cp} > $t->{last_checkpoint} or !$s->{routes}->{$route}->{min_cp}){
+      $s->{routes}->{$route}->{min_cp} = $t->{last_checkpoint};
+    }
 
+    # Number of teams out/completed
+    if($t->{completed_time} and $t->{completed_time} > 0){
+      $s->{routes}->{$route}->{num_completed}++;
+    }else{
+      $s->{routes}->{$route}->{num_not_completed}++;
+    }
+  }
+
+  foreach my $team_name (keys(%{$teams})){
+    my $t = $teams->{$team_name};
+    warn ("Team $team_name has no min_cp") unless $s->{routes}->{ $t->{route} }->{min_cp};
+    warn ("Team $team_name has no max_cp") unless $s->{routes}->{ $t->{route} }->{max_cp};
+    warn ("Team $team_name has no next_checkpoint") unless $t->{next_checkpoint};
+    if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_checkpoint} ){
+      push(@{$s->{routes}->{teams_at_min_cp}}, $team_name);
+    }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
+      push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
+    }
+  }
+
+  return $s;
+}
+# # # # # LEGS + CHECKPOINTS
 get '/legs' => sub {
   template 'legs';
 };
 
 get '/api/legs' => sub{
-  my $entrants_progress = vars->{entrants_progress};
-  header 'Content-Type' => 'application/json';
-  my $checkpoint_times = get_checkpoint_times($entrants_progress);
-  return encode_json($checkpoint_times);
+  return encode_json(vars->{checkpoint_times});
 };
 
 get '/api/legs/table' => sub{
   my $entrants_progress = vars->{entrants_progress};
-  my $teams_progress = vars->{teams_progress};
-  my $checkpoint_times = get_checkpoint_times( $entrants_progress );
-  $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  return encode_json(create_checkpoint_legs_summary_table($entrants_progress, $teams_progress, $checkpoint_times->{legs}));
+  my $checkpoint_times = vars->{checkpoint_times};
+  return encode_json(create_checkpoint_legs_summary_table($entrants_progress, vars->{teams_progress}, $checkpoint_times->{legs}));
 };
 
-
 # # # # # ENTRANTS
-# # # #
-# # #
 
 get '/api/entrants' => sub {
   my $entrants_progress = vars->{entrants_progress};
-  header 'Content-Type' => 'application/json';
   encode_json($entrants_progress);
 };
 
 # # # # # TEAMS
-# # # #
-# # #
 
+# displays the /api/teams/table output
 get '/teams' => sub {
   template 'teams';
 };
 
-get '/api/teams' => sub {
-  my $entrants_progress = vars->{entrants_progress};
-  my $teams_progress = vars->{teams_progress};
-  my $routes_cps = vars->{route_checkpoints};
-  my $checkpoint_times = get_checkpoint_times( $entrants_progress );
-
-  $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  header 'Content-Type' => 'application/json';
-  encode_json($teams_progress);
-};
-
 get '/api/teams/progress' => sub {
-  my $entrants_progress = vars->{entrants_progress};
-  my $teams_progress = vars->{teams_progress};
-  my $routes_cps = vars->{route_checkpoints};
-  my $checkpoint_times = get_checkpoint_times( $entrants_progress );
-  $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  header 'Content-Type' => 'application/json';
-  return encode_json($teams_progress);
+  return encode_json(vars->{teams_progress});
 };
 
 get '/api/teams/table' => sub {
-  my $entrants_progress = vars->{entrants_progress};
-  my $teams_progress = vars->{teams_progress};
-  my $routes_cps = vars->{route_checkpoints};
-  my $checkpoint_times = get_checkpoint_times( $entrants_progress );
-
-  $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
-  header 'Content-Type' => 'application/json';
-  return encode_json(create_team_summary_table($teams_progress));
+  return encode_json(create_team_summary_table(vars->{teams_progress}));
 };
-
-
-true;
 
 # Headings:
 # Team Number | Team Name | Route | Last checkpoint | Next chekpoint | time expected at next |  How late they are
@@ -162,6 +155,92 @@ sub create_team_summary_table{
   return \@table;
 }
 
+
+# # # # # DATA MUNGING
+sub get_percentile{
+  my $percentile = shift;
+  my $n = shift;
+  my @numbers = sort(@{$n});
+  if(scalar(@numbers) <=4){
+    #info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
+    my $sum = 0;
+    map { $sum += $_ } @numbers;
+    return $sum / scalar(@numbers);
+  }
+  my $index = int(($percentile/100) * $#numbers - 1);
+  return $numbers[$index];
+}
+
+sub get_routes_per_leg {
+  my $routes_cps = vars->{route_checkpoints};
+  my $legs;
+  foreach my $route_name (sort(keys(%{$routes_cps}))){
+    debug("get_routes_per_leg route: $route_name");
+    my @route_cps = @{$routes_cps->{$route_name}};
+    # An array of numbers, the list of checkpoints this entrant should check-in at
+    for (my $cp=1; $cp<=$#route_cps; $cp++){
+      my $this_cp = $route_cps[$cp];
+      my $prev_cp = $route_cps[$cp -1 ];
+      my $leg = "$prev_cp $this_cp";
+      push(@{$legs->{$leg}}, $route_name);
+    }
+  }
+  return $legs;
+}
+
+sub create_checkpoint_legs_summary_table{
+  my $entrants_progress = shift;
+  my $teams_progress = shift;
+  my $times = shift;
+
+  my %routes_per_leg;
+  my %teams_per_leg;
+  foreach my $team_number (sort(keys(%{$teams_progress}))){
+    my $cur_leg = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
+    $teams_per_leg{$cur_leg}++;
+
+    $routes_per_leg{ $teams_progress->{$team_number}->{route} }++;
+  }
+  my @rows;
+  foreach my $leg (sort(keys(%{$times}))){
+    push(@rows, [$leg, sprintf("%0.0f", $times->{$leg}->{ninetieth_percentile} / 60), $teams_per_leg{$leg}] );
+  }
+  return \@rows;
+};
+
+# # # # # BEFORE HOOK - BACKGROUND DATA GRABBING
+
+sub load_progress_csv {
+  my $csv = cwd().'/'.config->{progress_csv_path};
+  unless (-f $csv){
+    die("No progress file found at '$csv'");
+  }
+  my $cmd = join(' ',
+    cwd().'/bin/progress-to-json ',
+    config->{commands}->{progress_to_json_args },
+    "--file $csv"
+  );
+  info(" Running command '$cmd'");
+  my $json = `$cmd`;
+  my $length = length($json);
+  die("Got <100 bytes of json ($length); aborting") if $length <100;
+  info(" got $length bytes of JSON");
+  my $progress_data = decode_json( $json );
+  return $progress_data;
+}
+
+
+sub get_route_checkpoints_hash{
+  my $route_cps;
+  foreach my $var (sort(keys(%ENV))){
+    if($var =~/ROUTE_(\S+)/){
+      my $route_name = $1;
+      @{$route_cps->{$route_name}} = split(m/[ ,]/, $ENV{$var});
+      debug("[get_route_checkpoints_hash] Found route '$route_name': ".join(', ', @{$route_cps->{$route_name}}));
+    }
+  }
+  return $route_cps;
+}
 
 # Given three arguments - a teams_progress hash as returned from the progress-to-csv tool, a
 # routes_checkpoints hash as returned by the get_routes_checkpoints_hash() function and a
@@ -321,141 +400,3 @@ sub get_checkpoint_times {
   #}
   return $checkpoint_times;
 }
-
-sub get_percentile{
-  my $percentile = shift;
-  my $n = shift;
-  my @numbers = sort(@{$n});
-  if(scalar(@numbers) <=4){
-    #info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
-    my $sum = 0;
-    map { $sum += $_ } @numbers;
-    return $sum / scalar(@numbers);
-  }
-  my $index = int(($percentile/100) * $#numbers - 1);
-  return $numbers[$index];
-}
-
-
-# Convert from the
-#   $routes->{route_name} = "1 2 3 4 5"
-# that comes from the config file to
-#   $routes->{route_name} = (1, 2, 3, 4, 5);
-# that's eaier to iterate over
-
-sub get_route_checkpoints_hash{
-  my $route_cps = {};
-  my $route_config = get_routes_hash();
-  foreach my $route_name (keys(%{$route_config})){
-    @{$route_cps->{$route_name}} = split(m/\s+/, $route_config->{$route_name}->{checkpoints});
-    #debug("[get_route_checkpoints_hash] Found route '$route_name': ".join(', ', @{$route_cps->{$route_name}}));
-  }
-  return $route_cps;
-}
-
-sub get_routes_hash {
-  my %routes;
-  foreach my $var (sort(keys(%ENV))){
-    if($var =~/ROUTE_(\S+)/){
-      $routes{$1} = {checkpoints => $ENV{$var}};
-      #debug("route '$1': $ENV{$var}");
-    }
-  }
-  return \%routes;
-}
-
-sub get_routes_per_leg {
-  my $route_config = get_routes_hash();
-  my $legs;
-  foreach my $route_name (sort(keys(%{$route_config}))){
-    my @route_cps = split(m/\s+/, $route_config->{$route_name}->{checkpoints});
-    # An array of numbers, the list of checkpoints this entrant should check-in at
-    for (my $cp=1; $cp<=$#route_cps; $cp++){
-      my $this_cp = $route_cps[$cp];
-      my $prev_cp = $route_cps[$cp -1 ];
-      my $leg = "$prev_cp $this_cp";
-      push(@{$legs->{$leg}}, $route_name);
-    }
-  }
-  return $legs;
-}
-
-sub get_summary {
-  my $teams = shift;
-
-  my $s;
-  foreach my $team_name (keys(%{$teams})){
-    my $t = $teams->{$team_name};
-    my $route = $t->{route};
-    # Furthest ahead and furthest behind teams
-
-    if($s->{routes}->{$route}->{max_cp} < $t->{last_checkpoint} or !$s->{routes}->{$route}->{max_cp}){
-      $s->{routes}->{$route}->{max_cp} = $t->{last_checkpoint};
-    }
-    if($s->{routes}->{$route}->{min_cp} > $t->{last_checkpoint} or !$s->{routes}->{$route}->{min_cp}){
-      $s->{routes}->{$route}->{min_cp} = $t->{last_checkpoint};
-    }
-
-    # Number of teams out/completed
-    if($t->{completed_time} and $t->{completed_time} > 0){
-      $s->{routes}->{$route}->{num_completed}++;
-    }else{
-      $s->{routes}->{$route}->{num_not_completed}++;
-    }
-  }
-
-  foreach my $team_name (keys(%{$teams})){
-    my $t = $teams->{$team_name};
-    warn ("Team $team_name has no min_cp") unless $s->{routes}->{ $t->{route} }->{min_cp};
-    warn ("Team $team_name has no max_cp") unless $s->{routes}->{ $t->{route} }->{max_cp};
-    warn ("Team $team_name has no next_checkpoint") unless $t->{next_checkpoint};
-    if($s->{routes}->{ $t->{route} }->{min_cp} == $t->{next_checkpoint} ){
-      push(@{$s->{routes}->{teams_at_min_cp}}, $team_name);
-    }elsif($s->{routes}->{ $t->{route} }->{max_cp} == $t->{next_checkpoint} ){
-      push(@{$s->{routes}->{teams_at_max_cp}}, $team_name);
-    }
-  }
-
-  return $s;
-}
-
-
-sub create_checkpoint_legs_summary_table{
-  my $entrants_progress = shift;
-  my $teams_progress = shift;
-  my $times = shift;
-
-  my %routes_per_leg;
-  my %teams_per_leg;
-  foreach my $team_number (sort(keys(%{$teams_progress}))){
-    my $cur_leg = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
-    $teams_per_leg{$cur_leg}++;
-
-    $routes_per_leg{ $teams_progress->{$team_number}->{route} }++;
-  }
-  my @rows;
-  foreach my $leg (sort(keys(%{$times}))){
-    push(@rows, [$leg, sprintf("%0.0f", $times->{$leg}->{ninetieth_percentile} / 60), $teams_per_leg{$leg}] );
-  }
-  return \@rows;
-};
-
-sub load_progress_csv {
-  my $csv = cwd().'/'.config->{progress_csv_path};
-  unless (-f $csv){
-    die("No progress file found at '$csv'");
-  }
-  my $cmd = join(' ',
-    cwd().'/bin/progress-to-json ',
-    config->{commands}->{progress_to_json_args },
-    "--file $csv"
-  );
-  info(" Running command '$cmd'");
-  my $json = `$cmd`;
-  my $length = length($json);
-  die("Got <100 bytes of json ($length); aborting") if $length <100;
-  info(" got $length bytes of JSON");
-  my $progress_data = decode_json( $json );
-  return $progress_data;
-}
-
