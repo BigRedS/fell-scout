@@ -33,13 +33,6 @@ engines:
 progress_csv_path: progress.csv
 commands:
   progress_to_json_args: --teams --entrants
-routes:
-  50mile:
-    checkpoints: 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 17
-  50km:
-    checkpoints: 1 2 3 4 5 6 8 9 14 15 16 17
-  30km:
-    checkpoints: 1 2 3 4 5 6 7 17
 
 ignore_teams:
   122: On bus but not retired / withdrawn

@@ -381,7 +381,7 @@ sub get_percentile{
 
 sub get_route_checkpoints_hash{
   my $route_cps = {};
-  my $route_config = config->{routes};
+  my $route_config = get_routes_hash();
   foreach my $route_name (keys(%{$route_config})){
     @{$route_cps->{$route_name}} = split(m/\s+/, $route_config->{$route_name}->{checkpoints});
     #debug("[get_route_checkpoints_hash] Found route '$route_name': ".join(', ', @{$route_cps->{$route_name}}));
@@ -389,8 +389,19 @@ sub get_route_checkpoints_hash{
   return $route_cps;
 }
 
+sub get_routes_hash {
+  my %routes;
+  foreach my $var (sort(keys(%ENV))){
+    if($var =~/ROUTE_(\S+)/){
+      $routes{$1} = {checkpoints => $ENV{$var}};
+      #debug("route '$1': $ENV{$var}");
+    }
+  }
+  return \%routes;
+}
+
 sub get_routes_per_leg {
-  my $route_config = config->{routes};
+  my $route_config = get_routes_hash();
   my $legs;
   foreach my $route_name (sort(keys(%{$route_config}))){
     my @route_cps = split(m/\s+/, $route_config->{$route_name}->{checkpoints});
