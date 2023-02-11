@@ -6,6 +6,7 @@
       <th>ID</th>
       <th>Name</th>
       <th>Route</th>
+      <th>Last Checkin</th>
       <th>Last CP</th>
       <th>Next CP</th>
       <th>Expected at next CP</th>
@@ -18,7 +19,8 @@
         <td><a href='/team/<% id %>'> <% id %> </a> </td>
         <td><a href='/team/<% id %>'> <% teams.$id.team_name %> </a> </td>
         <td><% teams.$id.route %></td>
-        <td><% teams.$id.last_checkpoint %> ( <% teams.$id.last_checkpoint_time %> )</td>
+        <td><% teams.$id.last_checkpoint_time %></td>
+        <td><% teams.$id.last_checkpoint %></td>
         <td><% teams.$id.next_checkpoint %></td>
         <td><% teams.$id.next_checkpoint_expected_hhmm %></td>
         <td><% teams.$id.next_checkpoint_lateness %></td>
