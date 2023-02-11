@@ -341,15 +341,18 @@ sub add_checkpoint_expected_at_times {
 
     push( @{$legs->{ $teams_progress->{$team_number}->{teams} }}, $team_number);
 
+    my $last_cp = $teams_progress->{$team_number}->{last_checkpoint};
+    my $last_cp_time = $teams_progress->{$team_number}->{checkpoints}->{$last_cp}->{arrived_time};
     my $time_to_finish = 0;
     foreach (my $i=0; $i<=$#route_cps; $i++){
       next if $route_cps[$i] < $teams_progress->{$team_number}->{last_checkpoint};
       my $leg = $route_cps[$i].' '.$route_cps[$i + 1];
+      next unless $leg =~ m/^\d+ \d+$/;
       $time_to_finish += $legs->{$leg}->{seconds};
       $teams_progress->{$team_number}->{remaining_legs}->{$leg} = int($legs->{$leg}->{seconds} / 60);
     }
     $teams_progress->{$team_number}->{seconds_to_finish} = $time_to_finish;
-    $teams_progress->{$team_number}->{expected_finish_time} = to_hhmm(time() + $time_to_finish);
+    $teams_progress->{$team_number}->{expected_finish_time} = to_hhmm($last_cp_time + $time_to_finish);
   }
   return ($teams_progress, $legs);
 }
