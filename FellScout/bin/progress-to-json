@@ -72,6 +72,18 @@ my $teams = {};
 while (my $line = readline($fh)){
   chomp($line);
   $line =~ s/",(\d)/","$1/;
+
+  # Sometimes Felltrack double-quotes cells for some reason
+
+  if($line =~ m/,""[^,]/ or $line =~ m/[^,]"",/){
+    debug("[Line $.] Double-quotes found. Trimming");
+    debug("a line: $line");
+    $line =~ s/([^,])"",/$1",/g;
+    $line =~ s/,""([^,])/,"$1/g;
+    debug("b line: $line");
+  }
+
+
   $csv->parse($line);
   my @row = $csv->fields();
 
@@ -81,6 +93,7 @@ while (my $line = readline($fh)){
 
   my $entrant;
 
+  debug("[Line $.] First cell: ".$row[0]);
   next unless my $number = shift(@row);
   next if $number eq '';
   next if $number eq 'Number';
