@@ -22,10 +22,6 @@ hook 'before' => sub{
   var route_checkpoints => get_route_checkpoints_hash();
 };
 
-sub delete_ignored_teams {
-  my $progress_data = shift;
-}
-
 =item routes
 
 Each page has two URLs; here /legs is just the HTML document that
@@ -72,45 +68,6 @@ get '/api/legs/table' => sub{
   $teams_progress = add_checkpoint_expected_at_times( $teams_progress, $checkpoint_times);
   return encode_json(create_checkpoint_legs_summary_table($entrants_progress, $teams_progress, $checkpoint_times->{legs}));
 };
-
-sub create_checkpoint_legs_summary_table{
-  my $entrants_progress = shift;
-  my $teams_progress = shift;
-  my $times = shift;
-
-  my %routes_per_leg;
-  my %teams_per_leg;
-  foreach my $team_number (sort(keys(%{$teams_progress}))){
-    my $cur_leg = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
-    $teams_per_leg{$cur_leg}++;
-
-    $routes_per_leg{ $teams_progress->{$team_number}->{route} }++;
-  }
-  my @rows;
-  foreach my $leg (sort(keys(%{$times}))){
-    push(@rows, [$leg, sprintf("%0.0f", $times->{$leg}->{ninetieth_percentile} / 60), $teams_per_leg{$leg}] );
-  }
-  return \@rows;
-};
-
-sub load_progress_csv {
-  my $csv = cwd().'/'.config->{progress_csv_path};
-  unless (-f $csv){
-    die("No progress file found at '$csv'");
-  }
-  my $cmd = join(' ',
-    cwd().'/bin/progress-to-json ',
-    config->{commands}->{progress_to_json_args },
-    "--file $csv"
-  );
-  info(" Running command '$cmd'");
-  my $json = `$cmd`;
-  my $length = length($json);
-  die("Got <100 bytes of json ($length); aborting") if $length <100;
-  info(" got $length bytes of JSON");
-  my $progress_data = decode_json( $json );
-  return $progress_data;
-}
 
 
 # # # # # ENTRANTS
@@ -461,3 +418,44 @@ sub get_summary {
 
   return $s;
 }
+
+
+sub create_checkpoint_legs_summary_table{
+  my $entrants_progress = shift;
+  my $teams_progress = shift;
+  my $times = shift;
+
+  my %routes_per_leg;
+  my %teams_per_leg;
+  foreach my $team_number (sort(keys(%{$teams_progress}))){
+    my $cur_leg = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
+    $teams_per_leg{$cur_leg}++;
+
+    $routes_per_leg{ $teams_progress->{$team_number}->{route} }++;
+  }
+  my @rows;
+  foreach my $leg (sort(keys(%{$times}))){
+    push(@rows, [$leg, sprintf("%0.0f", $times->{$leg}->{ninetieth_percentile} / 60), $teams_per_leg{$leg}] );
+  }
+  return \@rows;
+};
+
+sub load_progress_csv {
+  my $csv = cwd().'/'.config->{progress_csv_path};
+  unless (-f $csv){
+    die("No progress file found at '$csv'");
+  }
+  my $cmd = join(' ',
+    cwd().'/bin/progress-to-json ',
+    config->{commands}->{progress_to_json_args },
+    "--file $csv"
+  );
+  info(" Running command '$cmd'");
+  my $json = `$cmd`;
+  my $length = length($json);
+  die("Got <100 bytes of json ($length); aborting") if $length <100;
+  info(" got $length bytes of JSON");
+  my $progress_data = decode_json( $json );
+  return $progress_data;
+}
+
