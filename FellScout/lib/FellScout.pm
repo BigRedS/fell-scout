@@ -315,8 +315,8 @@ sub add_checkpoint_expected_at_times {
     $teams_progress->{$team_number}->{next_checkpoint_expected_localtime} = $teams_progress->{$team_number}->{checkpoints}->{$team_next_cp}->{expected_localtime};
     $teams_progress->{$team_number}->{next_checkpoint_expected_minutes} = int($teams_progress->{$team_number}->{next_checkpoint_expected_time} - time());
 
-    if ($teams_progress->{$team_number}->{next_checkpoint_expected_time} > time()){
-      my $lateness = int(  ($teams_progress->{$team_number}->{next_checkpoint_expected_time} - time()) / 60);
+    if ($teams_progress->{$team_number}->{next_checkpoint_expected_time} < time()){
+      my $lateness = int(  (time() - $teams_progress->{$team_number}->{next_checkpoint_expected_time} ) / 60);
       if($lateness > 0){
         $teams_progress->{$team_number}->{next_checkpoint_lateness} = $lateness;
       }
