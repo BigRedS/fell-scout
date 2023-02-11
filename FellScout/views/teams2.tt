@@ -11,6 +11,7 @@
       <th>Next CP</th>
       <th>Expected at next CP</th>
       <th>Lateness (minutes)</th>
+      <th>Expected at finish</th>
       <th>District, Unit</th>
     </tr>
     </thead>
@@ -24,6 +25,7 @@
         <td><% teams.$id.next_checkpoint %></td>
         <td><% teams.$id.next_checkpoint_expected_hhmm %></td>
         <td><% teams.$id.next_checkpoint_lateness %></td>
+        <td><% teams.$id.expected_finish_time %></td>
         <td><% teams.$id.district %>, <% teams.$id.unit %></td>
       </tr>
     <% END %>

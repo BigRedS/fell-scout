@@ -25,6 +25,7 @@
     });
   </script>
 
+
   <meta charset="<% settings.charset %>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Fell Scout</title>
@@ -35,6 +36,8 @@
 </head>
 <body>
 <div id="header">
+ <% use DATE %>
+ <h3><% date.format %></h3>
 <a href='/'>Summary</a> | <a href='/teams'>Teams</a> | <a href='/legs'>Legs</a> | <a href='/entrants'>Entrants</a>
 <hr>
 </div>

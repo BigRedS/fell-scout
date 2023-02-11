@@ -1,0 +1,5 @@
+<h1>Team <% number </h1>
+<div id='div_team'>
+  <table class='table'>
+  </table>
+  <a href="/api/team/<% number %>">raw</a>
