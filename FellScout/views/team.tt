@@ -13,6 +13,16 @@
 
   <tr><td>Last Checkpoint time</td><td><% last_checkpoint_time %></td></tr>
 
+  <tr><td>Expected at finish</td><td><% expected_finish_time %></td></tr>
+
+  <tr><td>Remaining Legs</td>
+    <td>
+    <% FOREACH leg IN remaining_legs.keys.sort %>
+      <% leg %> ( <% remaining_legs.$leg %> mins)<br />
+    <% END %>
+    </td>
+  </tr>
+
   <tr><td>Entrants</td><td>
     <% FOREACH entrant IN entrants.keys %>
       <% entrant %>: <% entrants.$entrant %><br />
