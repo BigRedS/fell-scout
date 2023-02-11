@@ -11,6 +11,14 @@ It's called 'FellScout' because we're Scouts and that sounded less creepy than S
 
 # Running
 
+Ideally, in the root of the repo
+
+```
+./run.sh
+```
+
+Which will set the right env vars. More-directly:
+
 ```
 cd FellScout
 plackup bin/app.psgi
