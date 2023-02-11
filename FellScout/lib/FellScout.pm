@@ -147,7 +147,9 @@ sub create_team_summary_table{
       error("Team $team_number has no arrived_time for last checkpoint");
     }
 
-    my @row = ($team_number, $t->{team_name}, $t->{route}, strftime("%H:%M", localtime($checkin_at_last))." ($t->{last_checkpoint})", $t->{next_checkpoint}, strftime("%H:%M", localtime($expected_at_next)), $lateness_at_last);
+    my $first_cell = "<a href='/team/$team_number'>$team_number</a>";
+    my $second_cell = "<a href='/team/$team_number'>$t->{team_name}</a>";
+    my @row = ($first_cell, $second_cell, $t->{route}, strftime("%H:%M", localtime($checkin_at_last))." ($t->{last_checkpoint})", $t->{next_checkpoint}, strftime("%H:%M", localtime($expected_at_next)), $lateness_at_last);
 
     #info(" [create_team_summary_table] Team $team_number; next: $t->{next_checkpoint}; last: $t->{last_checkpoint}");
     push(@table, \@row);
@@ -155,8 +157,30 @@ sub create_team_summary_table{
   return \@table;
 }
 
+get '/api/team/:team' => sub {
+  my $teams_progress = vars->{teams_progress};
+  my $team = param('team');
+
+  if($teams_progress->{$team}){
+    return encode_json($teams_progress->{$team});
+  }
+  return encode_json({"Error" => "No team $team"});
+};
+
+get '/team/:team' => sub {
+  my $teams_progress = vars->{teams_progress};
+  my $team = param('team');
+  return template 'team.tt', $teams_progress->{$team};
+};
 
 # # # # # DATA MUNGING
+
+sub to_hhmm{
+  my $epoch_time = shift;
+  my ($h,$m) = (localtime($epoch_time))[2,1];
+  return(sprintf("%02s:%02s", $h, $m));
+}
+
 sub get_percentile{
   my $percentile = shift;
   my $n = shift;
@@ -175,7 +199,7 @@ sub get_routes_per_leg {
   my $routes_cps = vars->{route_checkpoints};
   my $legs;
   foreach my $route_name (sort(keys(%{$routes_cps}))){
-    debug("get_routes_per_leg route: $route_name");
+#    debug("get_routes_per_leg route: $route_name");
     my @route_cps = @{$routes_cps->{$route_name}};
     # An array of numbers, the list of checkpoints this entrant should check-in at
     for (my $cp=1; $cp<=$#route_cps; $cp++){
@@ -319,6 +343,15 @@ sub add_checkpoint_expected_at_times {
 
       last;
     }
+    # Add easily-accessible 'expected at next checkpoint' times
+    my $team_next_cp = $teams_progress->{$team_number}->{next_checkpoint};
+    $teams_progress->{$team_number}->{next_checkpoint_expected_time} = $teams_progress->{$team_number}->{checkpoints}->{$team_next_cp}->{expected_time};
+    $teams_progress->{$team_number}->{next_checkpoint_expected_hhmm} = to_hhmm($teams_progress->{$team_number}->{checkpoints}->{$team_next_cp}->{expected_time});
+    $teams_progress->{$team_number}->{next_checkpoint_expected_localtime} = $teams_progress->{$team_number}->{checkpoints}->{$team_next_cp}->{expected_localtime};
+    $teams_progress->{$team_number}->{next_checkpoint_expected_minutes} = int($teams_progress->{$team_number}->{next_checkpoint_expected_time} - time());
+
+    my $team_last_cp = $teams_progress->{$team_number}->{last_checkpoint};
+    $teams_progress->{$team_number}->{last_checkpoint_time} = $teams_progress->{$team_number}->{checkpoints}->{$team_last_cp}->{arrived_hhmm}
   }
 
   return $teams_progress;
