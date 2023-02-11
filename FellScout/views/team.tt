@@ -3,15 +3,21 @@
   <table class='table'>
   <tr><td>Route</td><td><% route %></td></tr>
 
-<% USE Dumper %>
-<% Dumper entrants.keys %>
   <tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
 
   <tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %></td></tr>
 
+  <tr><td>Next Checkpoint lateness</td><td><%next_checkpoint_lateness (minutes)%></td></tr>
+
   <tr><td>Last Checkpoint</td><td><% last_checkpoint %></td></tr>
 
   <tr><td>Last Checkpoint time</td><td><% last_checkpoint_time %></td></tr>
+
+  <tr><td>Entrants</td><td>
+    <% FOREACH entrant IN entrants.keys %>
+      <% entrant %>: <% entrants.$entrant %><br />
+    <% END %>
+  </td></tr>
 
   <tr><td>Unit, District</td><td><% unit %>, <% district %></td></tr>
   </table>

@@ -1,0 +1,21 @@
+<h1>Entrants</h1>
+
+
+<div id='div_entrants'>
+  <table class='table'>
+    <tr>
+      <th>ID</th>
+      <th>Team</th>
+      <th>Unit</th>
+      <th>District</th>
+    </tr>
+<% FOREACH id IN entrants.keys.sort %>
+  <tr>
+    <td><% id %> </td>
+    <td><a href='/teams/<% entrants.$id.team_number %>'><% entrants.$id.team_number %></a></td>
+    <td><a href='/teams/<% entrants.$id.team_number %>'><% entrants.$id.team_name %></a></td>
+    <td><% entrants.$id.unit %></td>
+    <td><% entrants.$id.district %></td>
+  </tr>
+<% END %>
+</table>

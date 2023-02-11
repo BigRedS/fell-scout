@@ -1,15 +1,13 @@
 <h1>Summary</h1>
 <div id='div_legs'>
   <table class="table">
+    <thead>
   <tr><th>Route</th><th>Earliest last-checkpoint</th><th>Latest last-checkpoint</th><th>Teams still out</th></tr>
-  
-  <tr><td>30km</td><td><% summary.routes.30km.min_cp %></td><td><% summary.routes.30km.max_cp %></td><td><% summary.routes.30km.num_not_completed %></td></tr>
+  </thead>
+  <% FOREACH route IN summary.routes.sort %>
 
+  <tr><td><% route %></td><td><% summary.routes.$route.min_cp %></td><td><% summary.routes.$route.max_cp %></td><td><% summary.routes.$route.num_not_completed %></td></tr>
 
-  <tr><td>50km</td><td><% summary.routes.50km.min_cp %></td><td><% summary.routes.50km.max_cp %></td><td><% summary.routes.50km.num_not_completed %></td></tr>
-  
-  
-  <tr><td>50mile</td><td><% summary.routes.50mile.min_cp %></td><td><% summary.routes.50mile.max_cp %></td><td><% summary.routes.50mile.num_not_completed %></td></tr>
-  
+<% end %>
   </table>
 </div>

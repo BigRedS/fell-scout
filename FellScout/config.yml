@@ -18,7 +18,7 @@ charset: "UTF-8"
 # simple: default and very basic template engine
 # template_toolkit: TT
 
-template: "simple"
+template: "template_toolkit"
 
 logger: "File"
 engines:
@@ -29,7 +29,10 @@ engines:
     File:
       log_dir: "/home/avi/logs/"
       file_name: "fellscout.log"
-
+  template:
+    template_toolkit:
+      start_tag: '<%'
+      end_tag: '%>'
 progress_csv_path: progress.csv
 commands:
   progress_to_json_args: --teams --entrants

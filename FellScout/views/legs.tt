@@ -1,11 +1,24 @@
-<script src='javascripts/legs.js'></script>
 <h1>Checkpoint Legs</h1>
+
+
 <div id='div_legs'>
-  <table id="tbl_legs" class='table'>
+  <table class='table'>
     <thead>
-      <tr><th class="felltrack">Leg</th><th>Expected Time Taken (minutes)</th><th>Teams on leg</th></tr>
+      <tr>
+        <th>Leg</th>
+        <th>Minutes</th>
+        <th>Teams on leg</th>
+      </tr>
     </thead>
-    <tbody>
-    </tbody>
+    <% FOREACH id IN legs.keys.sort %>
+      <tr>
+        <td><% id %></td>
+        <td><% legs.$id.minutes %></td>
+        <td>
+          <% FOREACH team IN legs.$id.teams %>
+            <a href='/team/<% team %>'><% team %></a>,
+          <% END %>
+        </td>
+      </tr>
+    <% END %>
   </table>
-</div>
