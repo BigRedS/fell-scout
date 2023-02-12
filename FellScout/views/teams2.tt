@@ -1,5 +1,17 @@
 <h1>Teams</h1>
 <div id='div'>
+  <% FOREACH id IN teams.keys.sort %>
+    <% FOREACH alert IN teams.$id.alerts %>
+    <% IF teams.$id.alerts.$alert == '' %>
+    <% ELSE %>
+     <div class="alert alert-danger" role="alert">
+       <% teams.$id.alerts.$alert %>
+     </div>
+     <% END %>
+     <% END %>
+  <% END %>
+  </div>
+
   <table class='table fancyTable'>
     <thead>
     <tr>

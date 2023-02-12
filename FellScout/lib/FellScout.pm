@@ -330,6 +330,15 @@ sub add_checkpoint_expected_at_times {
 
     push(@{ $legs->{ $teams_progress->{$team_number}->{leg} }->{teams} }, $team_number);
 
+    my $entrants = vars->{entrants_progress};
+    my $entrants_cps;
+    foreach my $entrant (keys %{$teams_progress->{$team_number}->{entrants}}){
+      my $entrant_cp = $entrants->{$entrant}->{last_checkpoint};
+      push(@{$entrants_cps->{$entrant_cp}}, $entrant);
+    }
+    if(scalar keys %{$entrants_cps}){
+      push(@{ $teams_progress->{$team_number}->{alerts} }, "Team is split between checkpoints ".join(',', sort keys %{$entrants_cps}));
+    }
   }
   return ($teams_progress, $legs);
 }

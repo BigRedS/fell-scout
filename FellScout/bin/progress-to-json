@@ -165,7 +165,14 @@ while (my $line = readline($fh)){
       $entrant->{checkpoints}->{$cp_number}->{arrived_hhmm_numeric} = $hhmm_numeric;
       $entrant->{checkpoints}->{$cp_number}->{_added_days} = $added_days;
     }
+
+    foreach my $cp ( keys %{$entrant->{checkpoints}}){
+      if ($entrant->{checkpoints}->{$cp}->{arrived_time}){
+        $entrant->{last_checkpoint} = $cp;
+      }
+    }
   }
+
   # The entrants hash contains every person who entered, so _everyone_ gets added to this hash...
   $entrants->{ $entrant->{code} } = $entrant;
 
