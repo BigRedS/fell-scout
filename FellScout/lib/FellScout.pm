@@ -102,12 +102,6 @@ get '/api/legs' => sub{
   return encode_json(vars->{legs});
 };
 
-get '/api/legs/table' => sub{
-  my $entrants_progress = vars->{entrants_progress};
-  my $checkpoint_times = vars->{checkpoint_times};
-  return encode_json(create_checkpoint_legs_summary_table($entrants_progress, vars->{teams_progress}, $checkpoint_times->{legs}));
-};
-
 # # # # # ENTRANTS
 
 get '/api/entrants' => sub {
@@ -183,26 +177,6 @@ sub get_routes_per_leg {
   return $legs;
 }
 
-sub create_checkpoint_legs_summary_table{
-  my $entrants_progress = shift;
-  my $teams_progress = shift;
-  my $times = shift;
-
-  my %routes_per_leg;
-  my %teams_per_leg;
-  foreach my $team_number (sort(keys(%{$teams_progress}))){
-    my $cur_leg = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
-    $teams_per_leg{$cur_leg}++;
-
-    $routes_per_leg{ $teams_progress->{$team_number}->{route} }++;
-  }
-  my @rows;
-  foreach my $leg (sort(keys(%{$times}))){
-    push(@rows, [$leg, sprintf("%0.0f", $times->{$leg}->{ninetieth_percentile} / 60), $teams_per_leg{$leg}] );
-  }
-  return \@rows;
-};
-
 # # # # # BEFORE HOOK - BACKGROUND DATA GRABBING
 
 sub load_progress_csv {
@@ -247,6 +221,8 @@ sub add_checkpoint_expected_at_times {
   my $teams_progress = shift;
   my $checkpoint_times = shift;
   my $legs;
+
+  my $teams_per_leg;
 
   my $routes_cps = vars->{route_checkpoints};
   foreach my $team_number (keys(%{$teams_progress})){
@@ -339,8 +315,6 @@ sub add_checkpoint_expected_at_times {
 
     $teams_progress->{$team_number}->{leg} = $teams_progress->{$team_number}->{last_checkpoint}.' '.$teams_progress->{$team_number}->{next_checkpoint};
 
-    push( @{$legs->{ $teams_progress->{$team_number}->{teams} }}, $team_number);
-
     my $last_cp = $teams_progress->{$team_number}->{last_checkpoint};
     my $last_cp_time = $teams_progress->{$team_number}->{checkpoints}->{$last_cp}->{arrived_time};
     my $time_to_finish = 0;
@@ -353,6 +327,9 @@ sub add_checkpoint_expected_at_times {
     }
     $teams_progress->{$team_number}->{seconds_to_finish} = $time_to_finish;
     $teams_progress->{$team_number}->{expected_finish_time} = to_hhmm($last_cp_time + $time_to_finish);
+
+    push(@{ $legs->{ $teams_progress->{$team_number}->{leg} }->{teams} }, $team_number);
+
   }
   return ($teams_progress, $legs);
 }

@@ -1,6 +1,6 @@
 <h1>Team <% number %> : <% team_name %> </h1>
 <div id='div_team'>
-  <table class='table'>
+  <table class='table' 'table-responsive'>
   <tr><td>Route</td><td><% route %></td></tr>
 
   <tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
