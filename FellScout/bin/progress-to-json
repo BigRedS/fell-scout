@@ -118,7 +118,11 @@ while (my $line = readline($fh)){
   #  R = Retired (and then the time is the time they retired)
   #  M = Manual Entry (the time is the manually-entered time)
   my $last_cp_hhmm_numeric = 0;
-  my @checkpoints = @row;
+  my @checkpoints;
+	foreach my $hhmm (@row){
+		$hhmm =~ tr[ ][]ds;
+		push(@checkpoints, $hhmm);
+	}
   for (my $cp_number = 1; $cp_number <= @checkpoints; $cp_number++){
     my $hhmm = $checkpoints[$cp_number];
     next if !$hhmm or $hhmm eq '';
