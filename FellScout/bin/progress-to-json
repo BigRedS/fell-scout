@@ -10,8 +10,6 @@ use utf8;
 
 use lib '../local/lib/perl5';
 
-binmode STDOUT, ":utf8";
-
 my $in_file = './progress.csv';
 my $return_teams = undef;
 my $return_entrants = undef;
@@ -54,7 +52,7 @@ EOF
 my $fh;
 my $file_mtime = undef;
 $file_mtime = (stat($in_file))[9];
-open($fh, '<encoding(utf8)', $in_file) or abort("Error opening '$in_file': $!");
+open($fh, '<', $in_file) or abort("Error opening '$in_file': $!");
 my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
                 or abort("Cannot use CSV: ".Text::CSV->error_diag ());
 
@@ -70,6 +68,7 @@ my $entrants = {};
 my $teams = {};
 
 while (my $line = readline($fh)){
+  $line =~ s/[^[:ascii:]]//g;
   chomp($line);
   $line =~ s/",(\d)/","$1/;
 
