@@ -86,10 +86,6 @@ while (my $line = readline($fh)){
   $csv->parse($line);
   my @row = $csv->fields();
 
-  #$line=~s/^"//;
-  #$line=~s/"$//;
-  #my @row = split(m/"?,"?/, $line);
-
   my $entrant;
 
   debug("[Line $.] First cell: ".$row[0]);
