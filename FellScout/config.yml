@@ -36,3 +36,19 @@ engines:
 progress_csv_path: progress.csv
 commands:
   progress_to_json_args: --teams --entrants
+
+
+plugins:
+  Database:
+    driver: 'mysql'
+    database: 'fellscout-dev'
+    host: 'localhost'
+    port: 3306
+    username: 'fellscout-dev'
+    password: '1Password'
+    connection_check_threshold: 10
+    dbi_params:
+      RaiseError: 1
+      AutoCommit: 1
+    on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
+    log_queries: 1
