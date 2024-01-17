@@ -1,5 +1,7 @@
 package FellScout;
 
+use 5.036;
+
 use Dancer2;
 use Dancer2::Plugin::Database;
 use Data::Dumper;
@@ -7,6 +9,11 @@ use POSIX qw(strftime);
 use Cwd;
 
 our $VERSION = '0.1';
+
+hook 'before' => sub {
+  header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
+};
+
 #TODO: Ignore teams configures as being for-ignoring
 # # # # # SUMMARY
 get '/' => sub{
@@ -183,7 +190,8 @@ sub get_team{
 };
 
 # # # # # CRON JOBS
-get '/cron/legs' => sub {
+get '/cron' => sub {
+  info("Cron: Updating legs");
   my $legs = {};
   my $sth = database->prepare("select checkpoint, previous_checkpoint, seconds_since_previous_checkpoint from checkpoints_teams");
   $sth->execute();
