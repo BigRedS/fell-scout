@@ -86,10 +86,10 @@ while(my $row = $sth->fetchrow_hashref()){
     $next_cps{$route}->{0} = $cps[0];
     if($cps[$i+1]){
       $next_cps{$route}->{ $cps[$i] } = $cps[$i+1];
-		  $sth_routes->execute($route, $i, $cps[$i] . '-' . $cps[$i+1]); 
+		  $sth_routes->execute($route, $i, $cps[$i] . '-' . $cps[$i+1]);
     }else{
       $next_cps{$route}->{ $cps[$i] } = 99;
-		  $sth_routes->execute($route, $i, $cps[$i] . '-' . 99); 
+		  $sth_routes->execute($route, $i, $cps[$i] . '-' . 99);
     }
   }
 }
@@ -97,7 +97,7 @@ while(my $row = $sth->fetchrow_hashref()){
 my %entrants;
 my %teams;
 foreach my $row (@{$data}){
-  my $entrant = $row->{Number};
+  next unless my $entrant = $row->{Number};
   debug("[row $rownum $entrant] name: $row->{Name}");
   $entrant =~ m/^(\d+)\w/;
   my $team_number = $1;
@@ -112,8 +112,7 @@ foreach my $row (@{$data}){
     error("[row $rownum] Entrant $entrant has no team number?");
   }
 
-  my $completed_time = undef;
-  $completed_time = $row->{'The finish'} if $row->{'The finish'};
+  $row->{'CP99'} = $row->{'The finish'} if $row->{'The finish'};
   my $retired = undef;
   my @checkpoints;
   my $this_cp_time_hhmm = undef;
@@ -126,7 +125,7 @@ foreach my $row (@{$data}){
       next;
     }
     my($this_cp, $cp_time_hhmm, $cp_time_epoch);
-    if ($key =~ m/^CP(\d+)$/){
+    if ($key =~ m/^CP0?(\d+)$/){
       $this_cp = $1;
       $this_cp_time_hhmm = $row->{$key};
       $this_cp_time_hhmm =~ s/://;
@@ -166,9 +165,14 @@ foreach my $row (@{$data}){
   $entrants{$team_number}->{$entrant}->{cps} = \@checkpoints;
   $entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
   $entrants{$team_number}->{$entrant}->{last_cp} = $checkpoints[-1]->{'cp'};
-  $entrants{$team_number}->{$entrant}->{completed} = $row->{Complete};
+  if($checkpoints[-1]->{'cp'} == 99){
+    debug("[row $rownum $entrant] has finished (at $checkpoints[-1]->{'cp'})");
+    $entrants{$team_number}->{$entrant}->{completed} = 1;
+  }else{
+    $entrants{$team_number}->{$entrant}->{completed} = 0;
+  }
   my $sth = $dbh->prepare("replace into entrants (team, entrant_name, completed, retired, code) values (?, ?, ?, ?, ?)");
-  $sth->execute($team_number, $row->{Name}, $row->{Complete}, $retired, $row->{Number});
+  $sth->execute($team_number, $row->{Name}, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
   $rownum++;
 }
 
@@ -184,7 +188,7 @@ foreach my $team_number (sort(keys(%entrants))){
   my $most_forward_cp = 0;
   my $most_forward_cp_time = undef;
   foreach my $entrant (sort(keys(%{$entrants{$team_number}}))){
-    debug("Entrant $entrant");
+    #debug("Entrant $entrant");
     if($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp){
       debug("Entrant $entrant is further ahead than $most_forward_entrant ($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp)") if $most_forward_cp > 0;
       $most_forward_cp = $entrants{$team_number}->{$entrant}->{last_cp};
@@ -198,11 +202,15 @@ foreach my $team_number (sort(keys(%entrants))){
   }
   my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed};
   my ($next_checkpoint, $current_leg);
-  if($entrants{$team_number}->{$most_forward_entrant}->{completed_time}){
+  if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
     $next_checkpoint = 0;
     $current_leg = '';
   }else{
     $next_checkpoint = $next_cps{ $teams{$team_number}->{route} }->{ $most_forward_cp };
+    unless($next_checkpoint){
+      error("No next_checkpoint found for team $team_number on route $teams{$team_number}->{route} with most_forward_cp $most_forward_cp");
+      error(Dumper(\%next_cps));
+    }
     $current_leg = $most_forward_cp . '-' . $next_checkpoint;
   }
 # and a route; $next_checkpoint = $next_cps->{$route}->{$current_checkpoint}
