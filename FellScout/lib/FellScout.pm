@@ -106,11 +106,22 @@ get '/teams' => sub {
 };
 
 sub get_teams{
-  my $sth = database->prepare("select concat(`from`, '-', `to`) as leg, seconds from legs;");
+
+  # First, a couple of look-up hashes which we'll use to estimate time-to-finish. We need to find out where in the ordered list
+  # of legs for a given route the current leg comes, and then retrieve each of those that come after it.
+  my %leg_to_index;
+  my %index_to_leg;
+  my %legs;
+  my $sth = database->prepare("select * from routes join legs on routes.leg_name = legs.leg_name");
   $sth->execute();
-  my $legs = $sth->fetchall_hashref("leg");
-  $sth = database->prepare("select team_number , team_name, route, district, unit, last_checkpoint, next_checkpoint,
-                              concat(last_checkpoint, '-', next_checkpoint) as leg,
+  while(my $row = $sth->fetchrow_hashref()){
+    $leg_to_index{ $row->{route_name} }->{ $row->{leg_name} } = $row->{index};
+    $index_to_leg{ $row->{route_name} }->{ $row->{index} } = $row->{leg_name};
+    $legs{ $row->{leg_name} } = $row->{seconds};
+  }
+
+  # Now we get a load of team info
+  $sth = database->prepare("select team_number , team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
                               date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time_hhmm,
                               timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
                               unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
@@ -118,10 +129,24 @@ sub get_teams{
   $sth->execute();
   my $teams = $sth->fetchall_hashref('team_number');
   foreach my $team_number (keys(%{$teams})){
-    my $expected_epoch = $teams->{$team_number}->{last_checkpoint_time_epoch} + $legs->{ $teams->{$team_number}->{leg} }->{seconds};
+    info("leg: $teams->{$team_number}->{current_leg} ($team_number)");
+    my $expected_epoch = $teams->{$team_number}->{last_checkpoint_time_epoch} + $legs{ $teams->{$team_number}->{current_leg} };
     $teams->{$team_number}->{next_checkpoint_expected_hhmm} = sprintf("%02d:%02d", (localtime($expected_epoch))[2,1]);
     $teams->{$team_number}->{next_checkpoint_lateness} = int((time() - $expected_epoch) / 60);
-    #TODO: Add expected-at-finish
+
+    # And here we do the workings out to figure out when we'll see this team at the finish
+    my $current_leg_idx = $leg_to_index{ $teams->{$team_number}->{route} }->{ $teams->{$team_number}->{current_leg} };
+    my $i = $current_leg_idx;
+    my $seconds_to_finish = $legs{$i};
+    while($index_to_leg{ $teams->{ $team_number}->{ route } }->{ $i} ){
+      my $leg = $index_to_leg{ $teams->{ $team_number }->{route} }->{$i};
+      info("Adding $legs{$leg} seconds for leg $leg");
+      $seconds_to_finish += $legs{$leg};
+      $i++;
+    }
+    my $expected_time_at_finish = $teams->{ $team_number }->{last_checkpoint_time_epoch} + $seconds_to_finish;
+    $teams->{ $team_number }->{expected_finish_time} = sprintf("%02d:%02d", (localtime($expected_time_at_finish))[2,1]);
+
     #TODO: another page (/all-teams?) to show also those teams who have already finished
   }
   return $teams;
