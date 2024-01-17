@@ -15,7 +15,7 @@
   <tr>
     <td><% entrants.$id.code %> </td>
 		<td><% entrants.$id.entrant_name %></td>
-    <td><a href='/teams/<% entrants.$id.team_number %>'><% entrants.$id.team_number %><% entrants.$id.team_name %></a></td>
+    <td><a href='/team/<% entrants.$id.team_number %>'><% entrants.$id.team_number %> - <% entrants.$id.team_name %></a></td>
     <td><% entrants.$id.unit %></td>
     <td><% entrants.$id.district %></td>
 		<td><% entrants.$id.last_checkpoint %></td>
