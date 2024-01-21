@@ -1,11 +1,12 @@
 #! /bin/bash
 
-export ROUTE_50mile="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
-export ROUTE_50km="3 4 5 6 7 8 12 13 14 15 16 17 18 19"
-export ROUTE_30km="3 4 5 14 15 16 17 18 19"
+export MYSQL_USERNAME=fellscout-dev
+export MYSQL_PASSWORD=1Password
+export MYSQL_HOST=localhost
+export MYSQL_PORT=3006
+export MYSQL_DATABASE_NAME=fellscout-dev
 
-#export IGNORE_122="on bus but not retired"
+export SKIP_FETCH_FROM_FELLTRACK=1
 
 cd FellScout
-
 plackup ./bin/app.psgi

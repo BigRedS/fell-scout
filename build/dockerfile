@@ -2,6 +2,7 @@ FROM debian:bullseye-slim
 RUN apt-get update && \
     apt-get -y install vim \
       libdancer2-perl \
+      libdancer2-plugin-database-perl \
       libtext-csv-perl \
       libjson-perl \
       cron
