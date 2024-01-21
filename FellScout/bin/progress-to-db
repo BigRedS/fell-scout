@@ -11,19 +11,15 @@ use DBI;
 use lib '../local/lib/perl5';
 
 my $in_file = './progress.csv';
-my $return_teams = undef;
-my $return_entrants = undef;
 my $team = undef;
 my $help = undef;
 my $now = time();
 
+my @timebits = (localtime($now))[3,4,5];
+
 GetOptions (
   "file|f=s" => \$in_file,
-  "teams"  => \$return_teams,
-  "entrants" => \$return_entrants,
   "help" => \$help,
-  "now" => \$now,
-  "debug" => \$ENV{DEBUG},
 ) or abort("Failed to parse command-line options. Try with --help?");
 
 sub usage{
@@ -40,8 +36,6 @@ Options:
 
   --help         Show this help
 
-  --now [string] Set 'now' to the given epoch time
-
 EOF
 
 }
@@ -55,10 +49,12 @@ EOF
 my $dbh = DBI->connect('dbi:MariaDB:fellscout-dev', "fellscout-dev", "1Password")
   or die ("Failed to connect to db: $DBI::errstr");
 
-my @timebits = (localtime($now))[3,4,5];
-my $now_hour = (localtime($now))[2];
+my $sth_config = $dbh->prepare("select name, value from config");
+$sth_config->execute();
+my $config = $sth_config->fetchall_hashref('name');
 
-my $file_mtime = undef;
+my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
+debug("Ignoring teams: ".join(',', @ignore_teams));
 
 my $data = Text::CSV::csv(in => $in_file, headers => "auto", escape_char => "\\", binary => 1, auto_diag => 1, allow_loose_quotes => 1);
 
@@ -101,6 +97,10 @@ foreach my $row (@{$data}){
   debug("[row $rownum $entrant] name: $row->{Name}");
   $entrant =~ m/^(\d+)\w/;
   my $team_number = $1;
+	if(grep (/^$team_number$/, @ignore_teams)){
+		debug("Ignoring team $team_number; skipping entrant $entrant");
+		next;
+	}
   if($team_number){
     $teams{$team_number} = {
       team_name => $row->{'Team'},
@@ -196,6 +196,7 @@ foreach my $team_number (sort(keys(%entrants))){
       $most_forward_entrant = $entrant;
     }
   }
+
   debug("Team $team_number is represented by entrant $most_forward_entrant");
   foreach my $cp (@{$entrants{$team_number}->{$most_forward_entrant}->{cps}}){
     $cp_team_sth->execute($cp->{cp}, $team_number, $cp->{time}, $cp->{previous_checkpoint}, $cp->{seconds_since_last_checkpoint});

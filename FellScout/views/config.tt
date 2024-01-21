@@ -1,0 +1,11 @@
+<h1>Fell Scout Config</h1>
+<div id='div'>
+	<form action=/config method='post'>
+		<table class='table'>
+			<% FOREACH name IN config.keys.sort %>
+				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td></tr>
+			<% END %>
+		</table>
+	  <input type='submit' value='update' name='update'>
+	</form>
+</div>

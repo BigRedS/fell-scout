@@ -12,9 +12,15 @@ our $VERSION = '0.1';
 
 hook 'before' => sub {
   header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
+
+
+	my $sth = database->prepare("select name, value from config");
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		var $row->{name} => $row->{value};
+	}
 };
 
-#TODO: Ignore teams configures as being for-ignoring
 # # # # # SUMMARY
 get '/' => sub{
   return template 'summary.tt', {summary => get_summary()};
@@ -189,7 +195,24 @@ sub get_team{
   #TODO: Sub out remaining legs
 };
 
-# # # # # CRON JOBS
+# # # # # UTILITIES
+any ['get','post'] => '/config' => sub {
+	my $sth = database->prepare("select name, value from config");
+	if(param('update')){
+		my $sth_update = database->prepare("replace into config (name, value) values (?, ?)");
+
+		$sth->execute();
+		while (my $row = $sth->fetchrow_hashref()){
+			if(param( $row->{name}) and !(param($row->{name}) eq $row->{value}) ){
+				debug("Updating config setting $row->{name} to '".param($row->{name})."' from $row->{value}");
+				$sth_update->execute( $row->{name}, param($row->{name}) );
+			}				
+		}
+  }
+	$sth->execute();
+	return template 'config.tt', {config => $sth->fetchall_hashref('name')};
+};
+
 get '/cron' => sub {
   info("Cron: Updating legs");
   my $legs = {};
@@ -202,10 +225,11 @@ get '/cron' => sub {
   $sth = database->prepare("replace into legs (`leg_name`, `from`, `to`, `seconds`) values (?, ?, ?, ?)");
   foreach my $leg(keys(%{$legs})){
     my ($from,$to) = split(m/-/, $leg);
-    # TODO: Make this a config option
-    my $expected_seconds = get_percentile(90, $legs->{$leg});
+    my $expected_seconds = get_percentile($legs->{$leg});
     $sth->execute($leg, $from, $to, $expected_seconds);
   }
+
+
 };
 # # # # # DATA MUNGING
 
@@ -216,9 +240,9 @@ sub to_hhmm{
 }
 
 sub get_percentile{
-  my $percentile = shift;
   my $n = shift;
   my @numbers = sort(@{$n});
+  my $percentile = vars->{percentile};
   if(scalar(@numbers) <=4){
     #info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
     my $sum = 0;
