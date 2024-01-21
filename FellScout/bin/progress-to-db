@@ -90,6 +90,8 @@ while(my $row = $sth->fetchrow_hashref()){
   }
 }
 
+my $num_teams_added = 0;
+my $num_entrants_added = 0;
 my %entrants;
 my %teams;
 foreach my $row (@{$data}){
@@ -215,9 +217,11 @@ foreach my $team_number (sort(keys(%entrants))){
     $current_leg = $most_forward_cp . '-' . $next_checkpoint;
   }
 # and a route; $next_checkpoint = $next_cps->{$route}->{$current_checkpoint}
+  $num_teams_added++;  	
   $team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
-
 }
+
+print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 
 sub mmhh_to_epoch{
   my $time = shift;

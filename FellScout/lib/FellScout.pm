@@ -214,6 +214,22 @@ any ['get','post'] => '/config' => sub {
 };
 
 get '/cron' => sub {
+
+	my $cmd = join(" ", cwd()."/bin/get-data", vars->{felltrack_owner}, vars->{felltrack_username}, vars->{felltrack_password});
+  info("Cron: Getting data: $cmd");
+	foreach my $line (qx/$cmd/){
+		info(">  $line");
+	}
+	info("Exited: $?");
+
+  $cmd = cwd().'/bin/progress-to-db';
+  info("Cron: Updating DB from CSV : $cmd");
+	foreach my $line (qx/$cmd/){
+		info(">  $line");
+	}
+	info("Exited: $?");
+	
+
   info("Cron: Updating legs");
   my $legs = {};
   my $sth = database->prepare("select checkpoint, previous_checkpoint, seconds_since_previous_checkpoint from checkpoints_teams");
