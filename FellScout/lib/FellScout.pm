@@ -1,7 +1,5 @@
 package FellScout;
 
-use 5.036;
-
 use Dancer2;
 use Dancer2::Plugin::Database;
 use Data::Dumper;
@@ -9,6 +7,18 @@ use POSIX qw(strftime);
 use Cwd;
 
 our $VERSION = '0.1';
+
+if($ENV{'MYSQL_HOST'}){
+	database({
+		driver => 'mysql',
+			username => $ENV{'MYSQL_USERNAME'},
+			password => $ENV{'MYSQL_PASSWORD'},
+			host => $ENV{'MYSQL_HOST'},
+			port => $ENV{'MYSQL_PORT'},
+			database => $ENV{'MYSQL_DATABASE_NAME'}
+	});
+}
+
 
 hook 'before' => sub {
   header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};

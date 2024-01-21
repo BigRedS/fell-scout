@@ -1,10 +1,26 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./build/dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5000"
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: supersecret
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE_NAME: felltrack
+
   mysql:
     image: "mysql:latest"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD=supersecret 
+      MYSQL_ROOT_PASSWORD: supersecret
+
+  cron:
+    build:
+      context: build/
+      dockerfile: ./cron.dockerfile
+    environment:
+      CRON_INTERVAL_SECONDS: 60
