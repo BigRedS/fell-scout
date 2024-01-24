@@ -69,7 +69,7 @@ my $rownum = 2;
 # and a route; $next_checkpoint = $next_cps{$route}->{$current_checkpoint}
 my %next_cps;
 
-my $sth_routes = $dbh->prepare("insert into routes (`route_name`, `index`, `leg_name`) values (?, ?, ?)");
+my $sth_routes = $dbh->prepare("replace into routes (`route_name`, `index`, `leg_name`) values (?, ?, ?)");
 
 my $sth = $dbh->prepare("select name, value from config where name like 'route_%'");
 $sth->execute();
