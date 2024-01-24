@@ -5,15 +5,11 @@
 
   <tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
 
-  <tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %></td></tr>
+  <tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
 
-  <tr><td>Next Checkpoint lateness</td><td><%next_checkpoint_lateness (minutes)%></td></tr>
+  <tr><td>Last Checkpoint</td><td><% last_checkpoint %> at <% last_checkpoint_time_hhmm %></td></tr>
 
-  <tr><td>Last Checkpoint</td><td><% last_checkpoint %></td></tr>
-
-  <tr><td>Last Checkpoint time</td><td><% last_checkpoint_time %></td></tr>
-
-  <tr><td>Expected at finish</td><td><% expected_finish_time %></td></tr>
+  <tr><td>Expected at finish</td><td><% finish_expected_hhmm %></td></tr>
 
   <tr><td>Remaining Legs</td>
     <td>
