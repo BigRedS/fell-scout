@@ -1,0 +1,25 @@
+<h1>Late Teams</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Unit</th>
+        <th>District</th>
+        <th>Route</th>
+        <th>Last Checkpoint</th>
+        <th>Next Checkpoint</th>
+        <th>Next Checkpoint Lateness</th>
+      </tr>
+    </thead>
+  <% FOREACH team IN laterunners %>
+    <tr>
+      <td><a href='/team/<%team.team_number%>'><% team.team_name %></a></ td>
+      <td><% team.unit %></ td>
+      <td><% team.district %></ td>
+      <td><% team.route %></ td>
+      <td><% team.last_checkpoint %></ td>
+      <td><% team.next_checkpoint %></ td>
+      <td><% team.next_checkpoint_expected_in %></ td>
+    </tr>
+  <% END %>
+  </table>

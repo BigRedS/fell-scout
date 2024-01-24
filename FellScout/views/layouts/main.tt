@@ -38,10 +38,12 @@
 <div id="header">
  <% use DATE %>
  <h3><% date.format %></h3>
-<a href='/'>Summary</a> | <a href='/teams'>Teams</a> | <a href='/legs'>Legs</a> | <a href='/entrants'>Entrants</a>
+<a href='/'>Summary</a> | <a href='/laterunners'>Laterunners</a> | <a href='/teams'>Teams</a> | <a href='/legs'>Legs</a> | <a href='/entrants'>Entrants</a>
 <hr>
 </div>
+<div style='width:90%;margin:auto;'>
 <% content %>
+</div>
 <div id="footer">
 Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %>
 </div>

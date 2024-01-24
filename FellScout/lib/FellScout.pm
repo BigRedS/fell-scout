@@ -43,32 +43,88 @@ get '/api/summary' => sub{
 #TODO: Better name or display for "furthest-back team" (it's actually the checkpoint the teams are at
 sub get_summary {
 	my %summary;
-	my $sth = database->prepare("select distinct route_name from routes order by route_name");
-	my @routes;
+
+	my $sth = database->prepare("select team_number, team_name, unit from teams where completed = 0 order by finish_expected_time asc limit 1");
 	$sth->execute();
-	while (my $row = $sth->fetchrow_hashref()){
+	$summary{general}->{earliest_finish} = $sth->fetchrow_hashref();
+	$sth = database->prepare("select team_number, team_name, unit from teams where completed = 0 order by finish_expected_time desc limit 1");
+	$sth->execute();
+	$summary{general}->{latest_finish} = $sth->fetchrow_hashref();
+
+	$sth = database->prepare("select last_checkpoint from teams where completed = 0 order by last_checkpoint asc limit 1");
+	$sth->execute();
+	$summary{general}->{min_cp} = ($sth->fetchrow_array())[0];
+
+	$sth = database->prepare("select last_checkpoint from teams where completed = 0 order by last_checkpoint desc limit 1");
+	$sth->execute();
+	$summary{general}->{max_cp} = ($sth->fetchrow_array())[0];
+
+	$sth = database->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0 order by team_number asc");
+	$sth->execute();
+	my $num_out = 0;
+	while ( my $row = $sth->fetchrow_hashref()){
+		$num_out++;
+		push(@{$summary{general}->{teams_out}}, $row->{team_number});
+	}
+	$summary{general}->{num_not_completed} = $num_out;
+
+	my $routes_sth = database->prepare("select distinct route_name from routes order by route_name");
+	my @routes;
+	$routes_sth->execute();
+	while (my $row = $routes_sth->fetchrow_hashref()){
 		my $route = $row->{route_name};
 
-		my $t_min_cp_sth = database->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint asc limit 1");
-		$t_min_cp_sth->execute($route);
-		$summary{routes}->{$route}->{min_cp} = ($t_min_cp_sth->fetchrow_array())[0];
+		my $sth = database->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint asc limit 1");
+		$sth->execute($route);
+		$summary{routes}->{$route}->{min_cp} = ($sth->fetchrow_array())[0];
 
-		my $t_max_cp_sth = database->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint desc limit 1");
-		$t_max_cp_sth->execute($route);
-		$summary{routes}->{$route}->{max_cp} = ($t_max_cp_sth->fetchrow_array())[0];
+		$sth = database->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint desc limit 1");
+		$sth->execute($route);
+		$summary{routes}->{$route}->{max_cp} = ($sth->fetchrow_array())[0];
 
-		my $t_still_out_sth = database->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0 and route = ? order by team_number asc");
-		$t_still_out_sth->execute($route);
+		$sth = database->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0 and route = ? order by team_number asc");
+		$sth->execute($route);
 		my $num_out = 0;
-		while ( my $row = $t_still_out_sth->fetchrow_hashref()){
+		while ( my $row = $sth->fetchrow_hashref()){
 			$num_out++;
 			push(@{$summary{routes}->{$route}->{teams_out}}, $row->{team_number});
 		}
 		$summary{routes}->{$route}->{num_not_completed} = $num_out;
+
+		$sth = database->prepare("select team_number, team_name, unit, date_format(finish_expected_time, \"%H:%i\") as finish_expected_time from teams where completed = 0 and route = ? order by finish_expected_time asc limit 1");
+		$sth->execute($route);
+		$summary{routes}->{$route}->{earliest_finish} = $sth->fetchrow_hashref();
+
+		$sth = database->prepare("select team_number, team_name, unit, date_format(finish_expected_time, \"%H:%i\") as finish_expected_time from teams where completed = 0 and route = ? order by finish_expected_time desc limit 1");
+		$sth->execute($route);
+		$summary{routes}->{$route}->{latest_finish} = $sth->fetchrow_hashref();
 	}
+
+	$summary{laterunners} = get_laterunners();
+
 	return \%summary;
 }
+# # # # # laterunners
+get '/laterunners' => sub {
+	return template 'laterunners.tt', {laterunners => get_laterunners()};
+};
+get '/api/laterunners/' => sub{
+	return encode_json(laterunners => get_laterunners());
+};
 
+sub get_laterunners(){
+	my @laterunners;
+	my $sth=database->prepare("select team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, 
+	                       date_format( timediff( next_checkpoint_expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in,
+	                       date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time
+	                       from teams where next_checkpoint_expected_time < now()
+	                       order by next_checkpoint_expected_time desc;");
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		push(@laterunners, $row);
+	}
+	return \@laterunners;
+}
 # # # # # LEGS + CHECKPOINTS
 get '/legs' => sub {
 	my $legs = get_legs();
