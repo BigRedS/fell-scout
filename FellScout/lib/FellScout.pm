@@ -144,15 +144,14 @@ sub get_legs(){
 	}
 
 	my $legs = {};
-	$sth = database->prepare("select `from`, `to`, `seconds` from legs");
+	$sth = database->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
-		my $leg_name = $row->{from} . '-' . $row->{'to'};
-		$legs->{$leg_name} = {
-			seconds => $row->{seconds},
-			minutes => sprintf("%0.2f", $row->{seconds} / 60 ),
-			hours => sprintf("%0.2f", $row->{seconds} / 3600),
-			teams => $teams{$leg_name},
+		$legs->{ $row->{leg_name} } = $row;
+		my $sth = database->prepare("select team_number from teams where current_leg = ?");
+		$sth->execute($row->{leg_name});
+		while(my $r = $sth->fetchrow_hashref()){
+			push(@{ $legs->{ $row->{leg_name} }->{teams} }, $r->{team_number});
 		}
 	}
 	return $legs;
