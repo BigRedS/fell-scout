@@ -6,6 +6,6 @@
 				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td></tr>
 			<% END %>
 		</table>
-	  <input type='submit' value='update' name='update'>
+		<input type='submit' value='update' name='update'>
 	</form>
 </div>

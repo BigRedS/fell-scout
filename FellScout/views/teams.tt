@@ -1,11 +1,31 @@
-<script src='javascripts/teams.js'></script>
-<h1>Teams Progress</h1>
-<div id='div_teams'>
-  <table id="tbl_teams" class='display'>
-    <thead>
-      <tr><th class="felltrack">Team</th><th>Name</th><th>Route</th><th>Last CP</th><th>Next CP</th><th>Expected Time @ Next</th><th>Lateness</th></tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-</div>
+<h1>Teams</h1>
+<table class='table fancyTable'>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Route</th>
+			<th>Last Checkin</th>
+			<th>Last CP</th>
+			<th>Next CP</th>
+			<th>Next CP expected at</th>
+			<th>Next CP expected in</th>
+			<th>Expected at finish</th>
+			<th>District, Unit</th>
+		</tr>
+	</thead>
+	<% FOREACH id IN teams.keys.sort %>
+		<tr>
+			<td><a href='/team/<% id %>'> <% id %> </a> </td>
+			<td><a href='/team/<% id %>'> <% teams.$id.team_name %> </a> </td>
+			<td><% teams.$id.route %></td>
+			<td><% teams.$id.last_checkpoint_hhmm %></td>
+			<td><% teams.$id.last_checkpoint			%></td>
+			<td><% teams.$id.next_checkpoint			%></td>
+			<td><% teams.$id.next_checkpoint_expected_hhmm %></td>
+			<td><% teams.$id.next_checkpoint_expected_in %></td>
+			<td><% teams.$id.finish_expected_hhmm %></td>
+			<td><% teams.$id.district %>, <% teams.$id.unit %></td>
+		</tr>
+	<% END %>
+</table>

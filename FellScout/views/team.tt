@@ -1,56 +1,35 @@
 <h1>Team <% number %> : <% team_name %> </h1>
-<div id='div_team'>
-  <table class='table' 'table-responsive'>
-  <tr><td>Route</td><td><% route %></td></tr>
+<table class='table' 'table-responsive'>
 
-  <tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
+	<tr><td>Route</td><td><% route %></td></tr>
 
-  <tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
+	<tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
 
-  <tr><td>Last Checkpoint</td><td><% last_checkpoint %> at <% last_checkpoint_time_hhmm %></td></tr>
+	<tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
 
-  <tr><td>Expected at finish</td><td><% finish_expected_hhmm %></td></tr>
+	<tr><td>Last Checkpoint</td><td><% last_checkpoint %> at <% last_checkpoint_time_hhmm %></td></tr>
 
-  <tr><td>Remaining Checkpoints</td>
-    <td>
-    <ul>
-    <% FOREACH cp IN remaining_checkpoints.keys.sort %>
-      <li><% cp %> ( <% remaining_checkpoints.$cp.expected_hhmm %>, in <% remaining_checkpoints.$cp.expected_in %>)</li>
-    <% END %>
-</ul>
-    </td>
-  </tr>
+	<tr><td>Expected at finish</td><td><% finish_expected_hhmm %></td></tr>
 
-  <tr><td>Entrants</td><td>
-    <% FOREACH entrant IN entrants.keys.sort %>
-	
-      <% entrant %>: <% entrants.$entrant.entrant_name %>
-       <% IF entrants.$entrant.retired %>
-	( retired at checkpoint <% entrants.$entrant.retired %> )
-	<% END %>
-      <br />
-    <% END %>
-  </td></tr>
+	<tr><td>Remaining Checkpoints</td>
+		<td>
+			<ul>
+				<% FOREACH cp IN remaining_checkpoints.keys.sort %>
+					<li><% cp %> (expected at <% remaining_checkpoints.$cp.expected_hhmm %>, in <% remaining_checkpoints.$cp.expected_in %>)</li>
+				<% END %>
+			</ul>
+		</td>
+	</tr>
 
-  <tr><td>Unit, District</td><td><% unit %>, <% district %></td></tr>
-  </table>
+	<tr><td>Entrants</td><td>
+		<% FOREACH entrant IN entrants.keys.sort %>
+			<% entrant %>: <% entrants.$entrant.entrant_name %>
+			<% IF entrants.$entrant.retired %>
+				( retired at checkpoint <% entrants.$entrant.retired %> )
+			<% END %>
+			<br />
+		<% END %>
+	</td></tr>
 
-<h2> Remaining checkpoints </h2>
-  <table class='table' 'table-responsive'>
-    <thead>
-    <tr>
-      <th>Checkpoint</th>
-      <th>Expected At</th>
-      <th>Expected In</th>
-    </tr>
-</thead>
-    <% FOREACH checkpoint in remaining_checkpoints.keys %>
-    <tr>
-      <td><% checkpoint %></td>
-      <td><% remaining_checkpoints.$checkpoint.expected_at_time %></td>
-      <td><% remaining_checkpoints.$checkpoint.expected_in %> (<% remaining_checkpoints.$checkpoint.gap %> gap)</td>
-   </tr>
-   <% END %>
-  </table>
-
-  <a href="/api/team/<% number %>">raw</a>
+	<tr><td>Unit, District</td><td><% unit %>, <% district %></td></tr>
+</table>
