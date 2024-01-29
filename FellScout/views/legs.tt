@@ -15,8 +15,8 @@
     <% FOREACH id IN legs.keys.sort %>
       <tr>
         <td><% id %></td>
-        <td><% legs.$id.from %></td>
-        <td><% legs.$id.to %></td>
+        <td><a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
+        <td><a href='/checkpoint/<% legs.$id.to   %>' ><% legs.$id.to   %></td>
         <td><% legs.$id.time %></td>
         <td>
           <% FOREACH team IN legs.$id.teams %>
