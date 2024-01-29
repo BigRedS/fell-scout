@@ -1,76 +1,74 @@
 <h1>Summary</h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Route</th>
-        <th>Hightest CP</th>
-        <th>Lowest CP</th>
-        <th>Earliest-finishing team</th>
-        <th>Latest-finishing team</th>
-        <th>Number of teams still out</th>
-      </tr>
-    </thead>
-  <tr>
-    <td>All</td>
-    <td><% summary.general.min_cp %></td>
-    <td><% summary.general.max_cp %></td>
-    <td>
-      <a href="/team/<% summary.general.latest_finish.team_number %>">
-      <% summary.general.latest_finish.team_name %>
-      <br />
-      <% summary.general.latest_finish.unit %>
-      </a>
-      <br>
-      <% summary.general.latest_finish.finish_expected_time %>
-    </td>
-    <td>
-      <a href="/team/<% summary.general.earliest_finish.team_number %>">
-      <% summary.general.earliest_finish.team_name %>
-      <br />
-      <% summary.general.earliest_finish.unit %>
-      </a>
-      <br>
-      <% summary.general.earliest_finish.finish_expected_time %>
-    </td>
-    <td>
-      <% summary.general.num_not_completed %>
-      <br />
-      <% FOREACH team IN summary.general.teams_out.nsort %>
-        <a href='/team/<% team %>'><% team %></a>,
-      <% END %>
-    </td>
-  <% FOREACH route IN summary.routes.nsort %>
-  <tr>
-    <td><% route %></td>
-    <td><% summary.routes.$route.min_cp %></td>
-    <td><% summary.routes.$route.max_cp %></td>
-    <td>
-      <a href="/team/<% summary.routes.$route.latest_finish.team_number %>">
-      <% summary.routes.$route.latest_finish.team_name %>
-      <br />
-      <% summary.routes.$route.latest_finish.unit %>
-      </a>
-      <br>
-      <% summary.routes.$route.latest_finish.finish_expected_time %>
-    </td>
-    <td>
-      <a href="/team/<% summary.routes.$route.earliest_finish.team_number %>">
-      <% summary.routes.$route.earliest_finish.team_name %>
-      <br />
-      <% summary.routes.$route.earliest_finish.unit %>
-      </a>
-      <br>
-      <% summary.routes.$route.earliest_finish.finish_expected_time %>
-    </td>
-    <td>
-      <% summary.routes.$route.num_not_completed %>
-      <br />
-      <% FOREACH team IN summary.routes.$route.teams_out.nsort %>
-        <a href='/team/<% team %>'><% team %></a>,
-      <% END %>
-    </td>
-  </tr>
-
-<% end %>
-  </table>
-</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Route</th>
+			<th>Hightest CP</th>
+			<th>Lowest CP</th>
+			<th>Earliest-finishing team</th>
+			<th>Latest-finishing team</th>
+			<th>Number of teams still out</th>
+		</tr>
+	</thead>
+<tr>
+	<td>All</td>
+	<td><% summary.general.min_cp %></td>
+	<td><% summary.general.max_cp %></td>
+	<td>
+		<a href="/team/<% summary.general.latest_finish.team_number %>">
+		<% summary.general.latest_finish.team_name %>
+		<br />
+		<% summary.general.latest_finish.unit %>
+		</a>
+		<br>
+		<% summary.general.latest_finish.finish_expected_time %>
+	</td>
+	<td>
+		<a href="/team/<% summary.general.earliest_finish.team_number %>">
+		<% summary.general.earliest_finish.team_name %>
+		<br />
+		<% summary.general.earliest_finish.unit %>
+		</a>
+		<br>
+		<% summary.general.earliest_finish.finish_expected_time %>
+	</td>
+	<td>
+		<% summary.general.num_not_completed %>
+		<br />
+		<% FOREACH team IN summary.general.teams_out.nsort %>
+			<a href='/team/<% team %>'><% team %></a>,
+		<% END %>
+	</td>
+	<% FOREACH route IN summary.routes.nsort %>
+		<tr>
+			<td><% route %></td>
+			<td><% summary.routes.$route.min_cp %></td>
+			<td><% summary.routes.$route.max_cp %></td>
+			<td>
+				<a href="/team/<% summary.routes.$route.latest_finish.team_number %>">
+				<% summary.routes.$route.latest_finish.team_name %>
+				<br />
+				<% summary.routes.$route.latest_finish.unit %>
+				</a>
+				<br>
+				<% summary.routes.$route.latest_finish.finish_expected_time %>
+			</td>
+			<td>
+				<a href="/team/<% summary.routes.$route.earliest_finish.team_number %>">
+				<% summary.routes.$route.earliest_finish.team_name %>
+				<br />
+				<% summary.routes.$route.earliest_finish.unit %>
+				</a>
+				<br>
+				<% summary.routes.$route.earliest_finish.finish_expected_time %>
+			</td>
+			<td>
+				<% summary.routes.$route.num_not_completed %>
+				<br />
+				<% FOREACH team IN summary.routes.$route.teams_out.nsort %>
+					<a href='/team/<% team %>'><% team %></a>,
+				<% END %>
+			</td>
+		</tr>
+	<% end %>
+</table>

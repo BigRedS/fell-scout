@@ -1,32 +1,29 @@
 <h1>Checkpoints</h1>
-
-
-<div id='div_legs'>
-  <table class='table'>
-    <thead>
-      <tr>
-        <th>Checkpoint</th>
-        <th>Arrivals</th>
-        <th>Departures</th>
-      </tr>
-    </thead>
-    <% FOREACH checkpoint IN checkpoints.keys.sort %>
-      <tr>
-        <td><a href='/checkpoint/<% checkpoint %>'><% checkpoint %></a></td>
-        <td>
-          <ul>
-            <% FOREACH team in checkpoints.$checkpoint.arrivals  %>
-	      <li><% team.team_name %> expected from <% team.last_checkpoint %> at <% team.next_checkpoint_expected_hhmm %> (in <% team.next_checkpoint_expected_in %>)</li>
-            <% END %>
-          </ul>
-        </td>
-        <td>
-          <ul>
-            <% FOREACH team in checkpoints.$checkpoint.departures  %>
-	      <li><% team.team_name %></li>
-            <% END %>
-          </ul>
-        </td>
-      </tr>
-    <% END %>
-  </table>
+<table class='table'>
+	<thead>
+		<tr>
+			<th>Checkpoint</th>
+			<th>Arrivals</th>
+			<th>Departures</th>
+		</tr>
+	</thead>
+	<% FOREACH checkpoint IN checkpoints.keys.sort %>
+		<tr>
+			<td><a href='/checkpoint/<% checkpoint %>'><% checkpoint %></a></td>
+			<td>
+				<ul>
+					<% FOREACH team in checkpoints.$checkpoint.arrivals	%>
+						<li><% team.team_name %> expected from <% team.last_checkpoint %> at <% team.next_checkpoint_expected_hhmm %> (in <% team.next_checkpoint_expected_in %>)</li>
+					<% END %>
+				</ul>
+			</td>
+			<td>
+				<ul>
+					<% FOREACH team in checkpoints.$checkpoint.departures	%>
+						<li><% team.team_name %></li>
+					<% END %>
+				</ul>
+			</td>
+		</tr>
+	<% END %>
+</table>

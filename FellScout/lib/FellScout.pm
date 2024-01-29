@@ -321,7 +321,7 @@ get '/api/entrants' => sub {
 };
 
 get '/entrants' => sub {
-	return template 'entrants2.tt', {entrants => get_entrants()};
+	return template 'entrants.tt', {entrants => get_entrants()};
 };
 
 sub get_entrants(){
@@ -337,7 +337,7 @@ get '/api/teams' => sub {
 };
 
 get '/teams' => sub {
-	return template 'teams2.tt', {teams => get_teams()};
+	return template 'teams.tt', {teams => get_teams()};
 };
 
 sub get_teams{
