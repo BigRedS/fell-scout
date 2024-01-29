@@ -23,7 +23,6 @@ if($ENV{'MYSQL_HOST'}){
 hook 'before' => sub {
 	header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
 
-
 	my $sth = database->prepare("select name, value from config");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
@@ -554,6 +553,9 @@ sub add_expected_times_to_teams {
 			}
 			if($legs{$leg_name}->{seconds}){
 				$expected_time += $legs{$leg_name}->{seconds};
+				if(vars->{checkpoint_pause_minutes}){
+					$expected_time += vars->{checkpoint_pause_minutes} * 60;
+				}
 			#debug("Team $team_number expected at cp $legs{$leg_name}->{to} at $expected_time - ".to_hhmm($expected_time)."  (added $legs{$leg_name}->{seconds}s, ".$legs{$leg_name}->{seconds} / 60 ."min)");
 			$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
 			}else{
@@ -589,7 +591,10 @@ sub to_hh_mm{
 sub get_percentile{
 	my $n = shift;
 	my @numbers = sort(@{$n});
-	my $percentile = vars->{percentile};
+	my $percentile = 90;
+	if(vars->{percentile}){
+		$percentile = vars->{percentile};
+	}
 	if(scalar(@numbers) <=4){
 		#info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
 		my $sum = 0;
