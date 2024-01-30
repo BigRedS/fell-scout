@@ -540,19 +540,22 @@ sub get_team{
 # # # # # UTILITIES
 any ['get','post'] => '/admin' => sub {
 	my $sth = database->prepare("select name, value, notes from config");
+	my %return;
 	if(param('update')){
-		my $sth_update = database->prepare("replace into config (name, value) values (?, ?)");
+		my $sth_update = database->prepare("update config set value = ? where name = ?");
 
 		$sth->execute();
 		while (my $row = $sth->fetchrow_hashref()){
-			if(param( $row->{name}) and !(param($row->{name}) eq $row->{value}) ){
-				debug("Updating config setting $row->{name} to '".param($row->{name})."' from $row->{value}");
-				$sth_update->execute( $row->{name}, param($row->{name}) );
+			unless(param($row->{name}) eq $row->{value}){
+				debug("Updating config setting $row->{name} to '".param($row->{name})."' from '$row->{value}'");
+				push(@{$return{changes}}, "Updated $row->{name} to '".param($row->{name})."' from '$row->{value}'");
+				$sth_update->execute( param($row->{name}), $row->{name} );
 			}
 		}
 	}
 	$sth->execute();
-	return template 'admin.tt', {config => $sth->fetchall_hashref('name')};
+	$return{config} = $sth->fetchall_hashref('name');
+	return template 'admin.tt', \%return;
 };
 
 get '/clear-cache' => sub {
