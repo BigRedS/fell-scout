@@ -299,7 +299,7 @@ sub get_checkpoint(){
 		                            checkpoints_teams_predictions.team_number = teams.team_number
 		                              and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 		                            where teams.completed < 1 and current_leg in
-		                              (select leg_name from routes where route_name = ? and `index` <
+		                              (select leg_name from routes where route_name = ? and `index` <=
 		                                (select `index` from routes where route_name=? and leg_name like '%-$checkpoint'))");
 		$sth->execute($route, $route);
 		while(my $team = $sth->fetchrow_hashref()){
