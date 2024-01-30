@@ -689,9 +689,6 @@ sub add_expected_times_to_teams {
 			}
 			if($legs{$leg_name}->{seconds}){
 				$expected_time += $legs{$leg_name}->{seconds};
-				if(vars->{checkpoint_pause_minutes}){
-					$expected_time += vars->{checkpoint_pause_minutes} * 60;
-				}
 			#debug("Team $team_number expected at cp $legs{$leg_name}->{to} at $expected_time - ".to_hhmm($expected_time)."  (added $legs{$leg_name}->{seconds}s, ".$legs{$leg_name}->{seconds} / 60 ."min)");
 			$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
 			}else{
