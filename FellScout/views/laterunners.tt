@@ -1,16 +1,23 @@
 <h1>Late Teams</h1>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Team</th>
-				<th>Unit</th>
-				<th>District</th>
-				<th>Route</th>
-				<th>Last Checkpoint</th>
-				<th>Next Checkpoint</th>
-				<th>Next Checkpoint Lateness</th>
-			</tr>
-		</thead>
+
+<p>These are the teams that are running later-than-expected</p>
+
+<p>For each 'leg' between two checkpoints we calculate the average time for all teams so far. </p>
+
+<p>This table is those teams currently running later than that</p>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Team</th>
+			<th>Unit</th>
+			<th>District</th>
+			<th>Route</th>
+			<th>Last Checkpoint</th>
+			<th>Next Checkpoint</th>
+			<th>Next Checkpoint Lateness</th>
+		</tr>
+	</thead>
 	<% FOREACH team IN laterunners %>
 		<tr>
 			<td><a href='/team/<%team.team_number%>'><% team.team_name %></a></ td>

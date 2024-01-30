@@ -4,10 +4,10 @@
 		<tr>
 			<th>Checkpoint</th>
 			<th>Arrivals</th>
-			<th>Departures</th>
+			<th>Recent Departures</th>
 		</tr>
 	</thead>
-	<% FOREACH checkpoint IN checkpoints.keys.sort %>
+	<% FOREACH checkpoint IN checkpoints.keys.nsort %>
 		<tr>
 			<td><a href='/checkpoint/<% checkpoint %>'><% checkpoint %></a></td>
 			<td>

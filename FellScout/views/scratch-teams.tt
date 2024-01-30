@@ -47,7 +47,7 @@
 		<% FOREACH team in teams.keys.sort %>
 			<tr>
 				<form>
-					<td> -<% teams.$team.team_number %> </td>
+					<td> <a href='/team/-<% teams.$team.team_number %>'>-<% teams.$team.team_number %></a> </td>
 					<td> <input type='text'   name='team_name'   value='<% teams.$team.team_name %>'> </td>
 					<td> <input type='text'   name='entrants'    value='<% teams.$team.entrants  %>'> </td>
 					<td ><input type='submit' name='update'      value='update'> </td>
