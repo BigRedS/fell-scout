@@ -283,7 +283,7 @@ sub get_checkpoint(){
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $route = $row->{'route_name'};
-		my $sth = database->prepare("select teams.team_number, team_name, next_checkpoint, route, unit, district,
+		my $sth = database->prepare("select teams.team_number as team_number, team_name, next_checkpoint, route, unit, district,
 		                            date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
 		                            unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch,
 		                            date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time_hhmm,
@@ -565,10 +565,12 @@ get '/clear-cache' => sub {
 		$sth->execute();
 		debug("Cleared $table");
 	}
+	return "Cleanup done, you can now click 'back' to get back to where you were";
 };
 
 get '/cron' => sub {
 	run_cronjobs();
+	return "Cronjobs done, you can now click 'back' to get back to where you were";
 };
 
 sub run_cronjobs(){
@@ -636,7 +638,6 @@ sub run_cronjobs(){
 
 	info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
-	return "Done, you can now click 'back' to get back to where you were";
 }
 
 
