@@ -1,0 +1,59 @@
+<h1>Scratch Teams</h1>
+
+<p>A scratch team is a team made up ad-hoc of members of other teams. On this page you can create or edit them.</p>
+
+<p>Scratch teams will show up on the normal <a href='/teams'>teams list</a>, they all have an team number that is negative.</p>
+
+<p>This page is for creating or modifying them. To do this use the form below. There are two fields:</p>
+
+<ul>
+	<li><b>Team Name</b> Anything you like, doesn't need to be unique or even set at all. You can change this later (here)</li>
+	<li><b>Entrants</b> A space-separated list of entrant IDs, which you can read off the <a href=/entrants>entrants page</a></li>
+</ul>
+
+<h3> Add a new Scratch Team </h3>
+
+<% foreach error in errors %>
+	<div class="alert alert-warning" role="alert">
+		Error: <% error %>
+	</div>
+<% end %>
+
+<div style='width:40%'>
+	<form method='post'>
+		<div class="form-group">
+			<label for="team_name">Scratch Team Name</label>
+			<input class="form-control" type='text'   name='team_name' value='<% new_team.team_name %>'> </td>
+		</div>
+		<div class="form-group">
+			<label for="entrants">Entrants list</label>
+			<input class="form-control" type='text'   name='entrants' value='<% new_team.entrants %>  '> 
+		</div>
+	<input type='submit' name='add' value='add'>
+	</form>
+</div>
+
+<h3>Edit existing Scratch Teams</h3>
+<div style='width:40%;'>
+	<table class='table'>
+		<thead>
+			<tr>
+				<th>Team Number</th>
+				<th>Scratch Team Name</th>
+				<th>Entrants</th>
+				<th></th>
+			</tr>
+		</thead>
+		<% FOREACH team in teams.keys.sort %>
+			<tr>
+				<form>
+					<td> -<% teams.$team.team_number %> </td>
+					<td> <input type='text'   name='team_name'   value='<% teams.$team.team_name %>'> </td>
+					<td> <input type='text'   name='entrants'    value='<% teams.$team.entrants  %>'> </td>
+					<td ><input type='submit' name='update'      value='update'> </td>
+					<input type='hidden' name='team_number' value='<% team %>'>
+				</form>
+			</tr>
+		<% END %>
+	</table>
+</div>

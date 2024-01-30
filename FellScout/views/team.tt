@@ -1,4 +1,8 @@
-<h1>Team <% number %> : <% team_name %> </h1>
+<% IF team_number < 0 %>
+  <h1>Scratch Team <% team_number %>: <% team_name %> </h1>
+<% ELSE %>
+  <h1>Team <% team_number %>: <% team_name %> </h1>
+<% END %>
 <table class='table' 'table-responsive'>
 
 	<tr><td>Route</td><td><% route %></td></tr>
