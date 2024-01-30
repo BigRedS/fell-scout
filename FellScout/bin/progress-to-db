@@ -154,6 +154,11 @@ foreach my $row (@{$data}){
 		}
 		my $this_cp_time_epoch = mmhh_to_epoch($this_cp_time_hhmm, $add_a_day);
 
+		if($ENV{IGNORE_FUTURE_EVENTS} and ($this_cp_time_epoch > time()) ){
+			debug("[row $rownum $entrant] IGNORE_FUTURE_EVENTS is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
+			last;
+		}
+
 		my $seconds_gap = 0;
 		if($previous_cp_time_epoch > 0){
 			$seconds_gap = $this_cp_time_epoch - $previous_cp_time_epoch;

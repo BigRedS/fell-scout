@@ -573,6 +573,11 @@ get '/cron' => sub {
 
 sub run_cronjobs(){
 	my $cmd = join(" ", cwd()."/bin/get-data", vars->{felltrack_owner}, vars->{felltrack_username}, vars->{felltrack_password});
+
+	if (vars->{ignore_future_events} and vars->{ignore_future_events} eq 'on'){
+		$ENV{IGNORE_FUTURE_EVENTS} = 1;
+	}
+
 	info("Cron: Getting data: $cmd");
 	foreach my $line (qx/$cmd/){
 		info(">  $line");
