@@ -1,0 +1,17 @@
+<h1>Fell Scout Admin</h1>
+<h2>Config</h2>
+<div style='width:60%;'>
+	<form action=/config method='post'>
+		<table class='table'>
+			<% FOREACH name IN config.keys.sort %>
+				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td><td><% config.$name.notes %></td></tr>
+			<% END %>
+		</table>
+		<input type='submit' value='update' name='update'>
+	</form>
+</div>
+<h2>Tools</h2>
+<ul>
+	<li> <a href='/cron'>Trigger a (manual) update from Felltrack</a> </li>
+	<li> <a href='/clear-cache'>Clear the cached Felltrack data (click above afterwards</a>) </li>
+</ul>

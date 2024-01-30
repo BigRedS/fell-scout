@@ -539,8 +539,8 @@ sub get_team{
 };
 
 # # # # # UTILITIES
-any ['get','post'] => '/config' => sub {
-	my $sth = database->prepare("select name, value from config");
+any ['get','post'] => '/admin' => sub {
+	my $sth = database->prepare("select name, value, notes from config");
 	if(param('update')){
 		my $sth_update = database->prepare("replace into config (name, value) values (?, ?)");
 
@@ -553,7 +553,7 @@ any ['get','post'] => '/config' => sub {
 		}
 	}
 	$sth->execute();
-	return template 'config.tt', {config => $sth->fetchall_hashref('name')};
+	return template 'admin.tt', {config => $sth->fetchall_hashref('name')};
 };
 
 get '/clear-cache' => sub {
@@ -576,6 +576,9 @@ sub run_cronjobs(){
 
 	if (vars->{ignore_future_events} and vars->{ignore_future_events} eq 'on'){
 		$ENV{IGNORE_FUTURE_EVENTS} = 1;
+	}
+	if (vars->{fetch_from_felltrack} and vars->{fetch_from_felltrack} eq 'off'){
+		$ENV{SKIP_FETCH_FROM_FELLTRACK} = 1;
 	}
 
 	info("Cron: Getting data: $cmd");
