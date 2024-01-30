@@ -330,6 +330,108 @@ sub get_entrants(){
 }
 
 # # # # # TEAMS
+any ['get','post'] => '/scratch-teams' => sub {
+
+	my @errors;
+
+	my $sth_all_entrants = database->prepare("select code from entrants");
+	$sth_all_entrants->execute;
+	my $all_entrants = $sth_all_entrants->fetchall_hashref('code');
+
+	my $sth_t = database->prepare("select team_number, team_name from scratch_teams");
+	my $sth_e = database->prepare("select entrant_code from scratch_team_entrants where team_number = ? order by entrant_code asc");
+
+	my %scratch_teams;
+	my %scratch_team_names;
+	my %scratch_entrants;
+	$sth_t->execute();
+	while ( my $team = $sth_t->fetchrow_hashref()){
+		$sth_e->execute($team->{team_number});
+		my @entrants;
+		while (my $entrant = $sth_e->fetchrow_hashref()){
+			push(@entrants, $entrant->{entrant_code});
+
+			$scratch_entrants{ $entrant->{entrant_code} } = $team->{team_number};
+		}
+
+		$scratch_teams{teams}->{ $team->{team_number} } = $team;
+		$scratch_teams{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
+
+		$scratch_team_names{ lc($team->{team_name}) } = $team->{team_number};
+	}
+
+	if(param('update') or param('add')){
+		my $team_name = param('team_name');
+		$team_name =~ s/[^\w\s\.\,\?\!\"\']//;
+		if($scratch_team_names{ lc($team_name) }){
+			push(@errors, "There is already a scratch team called '$team_name'; names need to be unique (this check doesn't consider capital letters)");
+			error("Duplicate scratch team: '$team_name'");
+		}
+		
+		my @entrants;
+		foreach my $entrant (split(m/\s+/, param('entrants'))){
+			if($entrant =~ m/(\d+[a-zA-Z])/){
+				$entrant = uc($entrant);
+				if($scratch_entrants{ $entrant }){
+					push(@errors, "Entrant '$entrant' is already in scratch team -$scratch_entrants{ $entrant }; perhaps remove them from that first?");
+					error("Entrant $entrant tried to be added to two scratch teams");
+				}
+				unless($all_entrants->{$entrant}){
+					push(@errors, "There is no entrant with code '$entrant'");
+					error("Tried to add non-existent entrant $entrant");
+				}
+				push(@entrants, uc($1));
+			}
+		}
+
+
+		if(@errors){
+			$scratch_teams{new_team} = { team_name => $team_name, entrants => join(' ', @entrants) };
+			$scratch_teams{errors} = \@errors;
+		}else{
+			if(param('add')){
+				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
+				my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, entrant_code) values (?,?)");
+				
+				$sth_team->execute($team_name);
+				my $team_number = database->{mysql_insertid};
+				foreach my $entrant_code (@entrants){
+					$sth_entrant->execute($team_number, $entrant_code);
+				}
+				info("Created scratch team $team_number as $team_name with entrants ".join(' ', @entrants));
+
+			}elsif(param('update')){
+				my $team_number = param('team_number');
+				$team_number =~ s/[^\d]//;
+
+				my $sth_team = database->prepare("update scratch_teams set team_name = ? where team_number = ?");
+				my $sth_entrant = database->prepare("replace into scratch_team_entrants (team_number, entrant_code) values (?,?)");
+
+				$sth_team->execute($team_name, $team_number);
+				foreach my $entrant_code (@entrants){
+					$sth_entrant->execute($team_number, $entrant_code);
+				}
+				info("Updated scratch team $team_number as '$team_name' with entrants ".join(' ', @entrants));
+			}
+			# Now update the scratch_teams hash to show the new ones
+			$sth_t->execute();
+			while ( my $team = $sth_t->fetchrow_hashref()){
+				$sth_e->execute($team->{team_number});
+				my @entrants;
+				while (my $entrant = $sth_e->fetchrow_hashref()){
+					push(@entrants, $entrant->{entrant_code});
+				}
+				$scratch_teams{teams}->{ $team->{team_number} } = $team;
+				$scratch_teams{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
+			}
+			# And update all the other tables:
+			info("Triggering cron");
+			run_cronjobs();
+		}
+	}
+	return template 'scratch-teams.tt', \%scratch_teams;
+	#return encode_json(\%scratch_teams);
+};
 
 get '/api/teams' => sub {
 	return encode_json(get_teams());
@@ -377,7 +479,8 @@ get '/team/:team' => sub {
 
 sub get_team{
 	my $team_number = shift;
-	$team_number =~ s/[^\d]+//;
+	$team_number =~ s/[^-\d]+//;
+	info("Team number: $team_number");
 
 	my %cp_times;
 	my $sth = database->prepare("select checkpoint,
@@ -404,8 +507,15 @@ sub get_team{
 	                           and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 	                         where teams.team_number = ?");
 	$sth->execute($team_number);
+	my %team;
+	eval {
+		%team = %{ ($sth->fetchrow_hashref())[0] };
+	};
+	if($@){
+		error("Team $team_number does not exist");
+		return %team;
+	}
 
-	my %team = %{ ($sth->fetchrow_hashref())[0] };
 	$team{finish_expected_in} = $cp_times{99}->{expected_in};
 	$team{finish_expected_hhmm} = $cp_times{99}->{expected_hhmm};
 
@@ -446,8 +556,22 @@ any ['get','post'] => '/config' => sub {
 	return template 'config.tt', {config => $sth->fetchall_hashref('name')};
 };
 
-get '/cron' => sub {
+get '/clear-cache' => sub {
+	info("Clearing cache");
+	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams/;
+	foreach my $table (@tables){
+		# Can't use placeholders here because dbh adds quotes and   delete from 'table_name'  is invalid
+		my $sth = database->prepare("delete from $table");
+		$sth->execute();
+		debug("Cleared $table");
+	}
+};
 
+get '/cron' => sub {
+	run_cronjobs();
+};
+
+sub run_cronjobs(){
 	my $cmd = join(" ", cwd()."/bin/get-data", vars->{felltrack_owner}, vars->{felltrack_username}, vars->{felltrack_password});
 	info("Cron: Getting data: $cmd");
 	foreach my $line (qx/$cmd/){
@@ -503,8 +627,9 @@ get '/cron' => sub {
 	}
 
 	info("Cron: Adding expected times to teams");
-	add_expected_times_to_teams()
-};
+	add_expected_times_to_teams();
+	return "Done, you can now click 'back' to get back to where you were";
+}
 
 
 sub add_expected_times_to_teams {

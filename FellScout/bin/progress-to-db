@@ -40,6 +40,14 @@ my $config = $sth_config->fetchall_hashref('name');
 my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
 debug("Ignoring teams: ".join(',', @ignore_teams));
 
+my $sth = $dbh->prepare("select entrant_code, team_name, scratch_teams.team_number from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
+$sth->execute();
+my $scratch_entrants = $sth->fetchall_hashref('entrant_code');
+
+$sth = $dbh->prepare("select * from scratch_teams");
+$sth->execute();
+my $scratch_teams = $sth->fetchall_hashref('team_number');
+
 my $data = Text::CSV::csv(in => $in_file, headers => "auto", escape_char => "\\", binary => 1, auto_diag => 1, allow_loose_quotes => 1);
 
 # Starts at 2 since the heading is row 1. Used entirely in debug output.
@@ -55,7 +63,7 @@ my %next_cps;
 
 my $sth_routes = $dbh->prepare("replace into routes (`route_name`, `index`, `leg_name`) values (?, ?, ?)");
 
-my $sth = $dbh->prepare("select name, value from config where name like 'route_%'");
+$sth = $dbh->prepare("select name, value from config where name like 'route_%'");
 $sth->execute();
 while(my $row = $sth->fetchrow_hashref()){
 	my $route = $row->{name};
@@ -83,10 +91,18 @@ foreach my $row (@{$data}){
 	debug("[row $rownum $entrant] name: $row->{Name}");
 	$entrant =~ m/^(\d+)\w/;
 	my $team_number = $1;
+	
+	if($scratch_entrants->{$entrant}){
+		debug("[row $rownum] Entrant $entrant is in scratch team $scratch_entrants->{$entrant}->{team_number}\n");
+		$team_number = 0 - $scratch_entrants->{$entrant}->{team_number};
+		$row->{Team} = $scratch_entrants->{$entrant}->{team_name};
+	}
+
 	if(grep (/^$team_number$/, @ignore_teams)){
 		debug("Ignoring team $team_number; skipping entrant $entrant");
 		next;
 	}
+	
 	if($team_number){
 		$teams{$team_number} = {
 			team_name => $row->{'Team'},
@@ -159,6 +175,7 @@ foreach my $row (@{$data}){
 	}
 	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, completed, retired, code) values (?, ?, ?, ?, ?)");
 	$sth->execute($team_number, $row->{Name}, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
+	debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
 	$rownum++;
 }
 
