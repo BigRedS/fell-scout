@@ -494,18 +494,14 @@ sub get_team{
 	}
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
-	$sth = database->prepare("select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
+	$sth = database->prepare("select team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
 	                         current_leg, current_leg_index,
-	                         date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
 	                         date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time_hhmm,
-	                         date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in,
 	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
 	                         from teams
-	                         join checkpoints_teams_predictions on
-	                           checkpoints_teams_predictions.team_number = teams.team_number
-	                           and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
-	                         where teams.team_number = ?");
+	                         where team_number = ?");
+
 	$sth->execute($team_number);
 	my %team;
 	eval {
@@ -516,7 +512,10 @@ sub get_team{
 		return %team;
 	}
 
-	$team{finish_expected_in} = $cp_times{99}->{expected_in};
+	$team{next_checkpoint_expected_in}   = $cp_times{ $team{next_checkpoint} }->{expected_in};
+	$team{next_checkpoint_expected_hhmm} = $cp_times{ $team{next_checkpoint} }->{expected_hhmm};
+
+	$team{finish_expected_in}   = $cp_times{99}->{expected_in};
 	$team{finish_expected_hhmm} = $cp_times{99}->{expected_hhmm};
 
 	$team{remaining_checkpoints} = \%cp_times;
