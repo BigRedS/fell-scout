@@ -1,5 +1,10 @@
 <h1>Checkpoint Legs</h1>
 
+<p>A 'leg' is the route between two checkpoints; each route is a series of legs, and since some routes 
+skip checkpoints that are found on other routes, not all checkpoints are visited sequentially</p>
+
+<p>This page shows each leg, along with the average times taken to complete them, and which teams are on them</p>
+
 <table class='table'>
 	<thead>
 		<tr>

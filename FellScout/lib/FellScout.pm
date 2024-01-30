@@ -367,7 +367,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 			push(@errors, "There is already a scratch team called '$team_name'; names need to be unique (this check doesn't consider capital letters)");
 			error("Duplicate scratch team: '$team_name'");
 		}
-		
+
 		my @entrants;
 		foreach my $entrant (split(m/\s+/, param('entrants'))){
 			if($entrant =~ m/(\d+[a-zA-Z])/){
@@ -392,7 +392,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 			if(param('add')){
 				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
 				my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, entrant_code) values (?,?)");
-				
+
 				$sth_team->execute($team_name);
 				my $team_number = database->{mysql_insertid};
 				foreach my $entrant_code (@entrants){
