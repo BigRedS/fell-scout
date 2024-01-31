@@ -4,23 +4,36 @@ services:
       context: .
       dockerfile: ./build/dockerfile
     ports:
-      - "5001:5000"
+      - "127.0.0.1:5001:5000"
     environment:
-      MYSQL_USERNAME: root
-      MYSQL_PASSWORD: supersecret
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE_NAME: felltrack
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=supersecret
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=fellscout
+      - SKIP_FETCH_FROM_FELLTRACK=1
 
-  mysql:
-    image: "mysql:latest"
+  db:
+    image: "mariadb:latest"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: supersecret
+      MARIADB_ROOT_PASSWORD: supersecret
+    volumes:
+      - fellscout_db:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
 
   cron:
     build:
       context: build/
       dockerfile: ./cron.dockerfile
     environment:
-      CRON_INTERVAL_SECONDS: 60
+      - CRON_INTERVAL_SECONDS=60
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=supersecret
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=fellscout
+      - SKIP_FETCH_FROM_FELLTRACK=1
+
+volumes:
+  fellscout_db:

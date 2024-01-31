@@ -4,6 +4,8 @@ RUN apt-get update && \
       libdancer2-perl \
       libdancer2-plugin-database-perl \
       libtext-csv-perl \
+      libdbd-mariadb-perl \
+      libdbd-mysql-perl \
       libjson-perl \
       cron
 

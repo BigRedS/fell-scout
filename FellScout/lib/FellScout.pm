@@ -6,18 +6,13 @@ use Data::Dumper;
 use POSIX qw(strftime);
 use Cwd;
 
-our $VERSION = '0.1';
+setting('plugins')->{'Database'}->{'host'}=$ENV{'MYSQL_HOST'};
+setting('plugins')->{'Database'}->{'database'}=$ENV{MYSQL_DATABASE};
+setting('plugins')->{'Database'}->{'username'}=$ENV{MYSQL_USERNAME};
+setting('plugins')->{'Database'}->{'password'}=$ENV{MYSQL_PASSWORD};
+setting('plugins')->{'Database'}->{'port'}=$ENV{MYSQL_PORT};
 
-if($ENV{'MYSQL_HOST'}){
-	database({
-		driver => 'mysql',
-			username => $ENV{'MYSQL_USERNAME'},
-			password => $ENV{'MYSQL_PASSWORD'},
-			host => $ENV{'MYSQL_HOST'},
-			port => $ENV{'MYSQL_PORT'},
-			database => $ENV{'MYSQL_DATABASE_NAME'}
-	});
-}
+our $VERSION = '0.1';
 
 
 hook 'before' => sub {
@@ -689,8 +684,7 @@ sub add_expected_times_to_teams {
 			}
 			if($legs{$leg_name}->{seconds}){
 				$expected_time += $legs{$leg_name}->{seconds};
-			#debug("Team $team_number expected at cp $legs{$leg_name}->{to} at $expected_time - ".to_hhmm($expected_time)."  (added $legs{$leg_name}->{seconds}s, ".$legs{$leg_name}->{seconds} / 60 ."min)");
-			$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
+				$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
 			}else{
 				info("No prediction data for leg $leg_name for team $team_number; skipping the rest of the legs");
 				last;

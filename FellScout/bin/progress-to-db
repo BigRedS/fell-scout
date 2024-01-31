@@ -4,25 +4,30 @@ use warnings;
 use Data::Dumper;
 use Text::CSV qw/csv/;
 use Time::Local;
+use Cwd;
 use DBI;
 
 use lib '../local/lib/perl5';
 
-my $in_file = './progress.csv';
-my @timebits = (localtime(time()))[3,4,5];
+my $in_file = '../progress.csv';
 
 if($ARGV[0]){
 	if ( -f $ARGV[0] ){
 		$in_file = $ARGV[0];
 	}else{
-		print "Usage:";
-		print " $0 (path to progress.csv file)";
-		print "Path defaults to ./progress.csv";
-		print "DB access requires env vars be set";
+		print "Usage:\n";
+		print " $0 (path to progress.csv file)\n";
+		print "Path defaults to ./progress.csv\n";
+		print "DB access requires env vars be set\n";
 		exit 1;
 	}
 }
 		
+unless (-f "$in_file"){
+	print "File $in_file does not exist, aborting\n";
+	print "(PWD is ".cwd().")\n";
+	exit 255;
+}
 
 # All the times in the CSV file are simply HH:MM and we will want to convert these to a full
 # date so we can do normal maths with them.
@@ -30,8 +35,7 @@ if($ARGV[0]){
 # maths
 
 # TODO: Make the db creds based on env vars
-my $dbh = DBI->connect('dbi:MariaDB:fellscout-dev', "fellscout-dev", "1Password")
-	or die ("Failed to connect to db: $DBI::errstr");
+my $dbh = DBI->connect("dbi:MariaDB:database=$ENV{MYSQL_DATABASE};host=$ENV{MYSQL_HOST};port=$ENV{MYSQL_PORT}", "$ENV{MYSQL_USERNAME}", "$ENV{MYSQL_PASSWORD}") or die ("Failed to connect to db: $DBI::errstr");
 
 my $sth_config = $dbh->prepare("select name, value from config");
 $sth_config->execute();
@@ -182,6 +186,8 @@ foreach my $row (@{$data}){
 	$sth->execute($team_number, $row->{Name}, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
 	debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
 	$rownum++;
+	$num_entrants_added++;
+
 }
 
 # We now have a hash, $entrants, which has a series of 'team' keys, each of which has a series of entrants.
