@@ -437,30 +437,33 @@ get '/teams' => sub {
 };
 
 sub get_teams{
-	# First, everyone's finish times
-	my $sth = database->prepare("select team_number, date_format(expected_time, \"%H:%i\") as finish_expected_hhmm from checkpoints_teams_predictions where checkpoint = 99");
+	# First, checkpoint times
+	my %times;
+	my $sth = database->prepare("select team_number, checkpoint,
+	                             date_format(expected_time, \"%H:%i\") as expected_hhmm,
+	                             date_format( timediff( expected_time, now() ), \"%kh%im\") as expected_in
+	                             from checkpoints_teams_predictions");
 	$sth->execute();
-	my $finish_times = $sth->fetchall_hashref('team_number');
+	while(my $row = $sth->fetchrow_hashref()){
+		$times{ $row->{team_number} }->{ $row->{checkpoint} } = $row;
+	}
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
 	$sth = database->prepare("select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
-	                         date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
-	                         date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in,
-	                         date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_hhmm,
 	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
+	                         date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_hhmm,
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
-	                         from teams
-	                         join checkpoints_teams_predictions on
-	                           checkpoints_teams_predictions.team_number = teams.team_number
-	                           and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
-	                         where completed = 0");
+	                         from teams");
 	$sth->execute();
 	my $teams;
 	while (my $row = $sth->fetchrow_hashref()){
-		$row->{finish_expected_hhmm} = $finish_times->{ $row->{team_number} }->{finish_expected_hhmm};
+		$row->{finish_expected_hhmm} = $times{ $row->{team_number} }->{99}->{expected_hhmm};
+		$row->{finish_expected_in} = $times{ $row->{team_number} }->{99}->{expected_in};
+		$row->{next_checkpoint_expected_hhmm} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_hhmm};
+		$row->{next_checkpoint_expected_in} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_in};
+
 		$teams->{ $row->{team_number} } = $row;
 	}
-
 	return $teams;
 }
 
