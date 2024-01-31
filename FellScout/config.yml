@@ -41,11 +41,6 @@ commands:
 plugins:
   Database:
     driver: 'mysql'
-    database: 'fellscout-dev'
-    host: 'localhost'
-    port: 3306
-    username: 'fellscout-dev'
-    password: '1Password'
     connection_check_threshold: 10
     dbi_params:
       RaiseError: 1

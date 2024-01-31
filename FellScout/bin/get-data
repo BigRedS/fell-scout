@@ -35,8 +35,8 @@ if [ -z "$csv" ]; then
 	echo "$(date) fail"
 else
 	echo "$(date) success"
-	echo "$csv" > ./progress.csv
+	echo "$csv" > ../progress.csv
 	if [ -d ./progresses ]; then
-		cp ./progress.csv ./progresses/progress.csv-$(date +%F-%T)
+		cp ./progress.csv ../progresses/progress.csv-$(date +%F-%T)
 	fi
 fi

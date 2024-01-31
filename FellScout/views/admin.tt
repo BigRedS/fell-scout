@@ -7,7 +7,7 @@
 	</div>
 <% end %>
 <div style='width:60%;'>
-	<form m2ethod='post'>
+	<form method='post'>
 		<table class='table'>
 			<% FOREACH name IN config.keys.sort %>
 				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td><td><% config.$name.notes %></td></tr>
