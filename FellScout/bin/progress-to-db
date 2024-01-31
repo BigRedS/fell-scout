@@ -237,11 +237,15 @@ print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 sub mmhh_to_epoch{
 	my $time = shift;
 	my $added_days = shift || 0;
+
 	abort("Invalid time: '$time'") unless $time =~ m/^(\d\d?)(\d\d?)/;
-	my @_timebits = @timebits;
-	$_timebits[0] += $added_days;
 	my ($h,$m) = ($1,$2);
-	my $timestamp = timelocal(0, $m, $h, @_timebits);
+
+	my $now = time();
+	$now += (60 * 60 * 24); # if $added_days > 0;
+
+	my $timestamp = timelocal(0, $m, $h, (localtime($now))[3,4,5]);
+
 	return $timestamp;
 }
 
