@@ -39,7 +39,7 @@
 	<form method='post'>
 		<ul>
 			<li> <input type='submit' name='do' value='Update from FellTrack' /> </li>
-			<li> <input type='submit' name='do' value='Clear database' /> </li>
+			<li> <input type='submit' name='do' value='Clear database' /> This will also delete scratch teams, which will need to be manually reimplemented</li>
 		</ul>
 	</form>
 </ul>
