@@ -20,6 +20,20 @@
 		<input type='submit' value='update' name='update'>
 	</form>
 </div>
+<h2>Logs</h2>
+<table class='table'>
+	<tr><thead>
+		<th>Time</th><th>Job</th><th>Message</th>
+	</thead></tr>
+	<% FOREACH log IN logs %>
+	<tr>
+		<td><% log.time %> ( <% log.time_since %> ago )</td>
+		<td><% log.name %></td>
+		<td><% log.message %></td>
+	</tr>
+	<% END %>
+</table>
+
 <h2>Tools</h2>
 <ul>
 	<form method='post'>
