@@ -1,6 +1,10 @@
 <h1>Fell Scout Admin</h1>
 <h2>Config</h2>
-
+<% foreach thing in done %>
+	<div class="alert alert-success" role="alert">
+		<% thing %>
+	</div>
+<% end %>
 <% foreach change in changes %>
 	<div class="alert alert-success" role="alert">
 		<% change %>
@@ -18,6 +22,10 @@
 </div>
 <h2>Tools</h2>
 <ul>
-	<li> <a href='/cron'>Trigger a (manual) update from Felltrack</a> </li>
-	<li> <a href='/clear-cache'>Clear the cached Felltrack data (click above afterwards</a>) </li>
+	<form method='post'>
+		<ul>
+			<li> <input type='submit' name='do' value='Update from FellTrack' /> </li>
+			<li> <input type='submit' name='do' value='Clear database' /> </li>
+		</ul>
+	</form>
 </ul>
