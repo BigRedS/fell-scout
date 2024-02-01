@@ -177,7 +177,7 @@ sub get_legs(){
 	}
 
 	my $legs = {};
-	$sth = database->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs");
+	$sth = database->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		$legs->{ $row->{leg_name} } = $row;
@@ -385,13 +385,18 @@ any ['get','post'] => '/scratch-teams' => sub {
 			$scratch_teams{errors} = \@errors;
 		}else{
 			if(param('add')){
+				my $sth_orig_team = database->prepare("select team from entrants where code = ?");
+
 				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
-				my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, entrant_code) values (?,?)");
+				my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, previous_team_number, entrant_code) values (?,?,?)");
 
 				$sth_team->execute($team_name);
 				my $team_number = database->{mysql_insertid};
 				foreach my $entrant_code (@entrants){
-					$sth_entrant->execute($team_number, $entrant_code);
+					$sth_orig_team->execute($entrant_code);
+					my $orig_team_number = ($sth_orig_team->fetchrow_array())[0];
+
+					$sth_entrant->execute($team_number, $orig_team_number, $entrant_code);
 				}
 				info("Created scratch team $team_number as $team_name with entrants ".join(' ', @entrants));
 
@@ -524,6 +529,22 @@ sub get_team{
 		$team{entrants}->{ $row->{code} } = $row;
 	}
 
+	$sth = database->prepare("select team_name as scratch_team_name, 
+	                         entrants.entrant_name,
+	                         scratch_teams.team_number as scratch_team_number,
+	                         entrant_code as code,
+	                         previous_team_number
+	                         from scratch_team_entrants 
+                                 join scratch_teams on 
+                                   scratch_teams.team_number = scratch_team_entrants.team_number
+	                         join entrants on entrants.code = scratch_team_entrants.entrant_code
+
+	                         where scratch_team_entrants.previous_team_number = ?");
+	$sth->execute($team_number);
+	while(my $row = $sth->fetchrow_hashref()){
+		$team{entrants}->{ $row->{code} } = $row;
+	}
+
 	my %legs_seconds;
 	$sth = database->prepare("select seconds, legs.leg_name as leg_name, route_name, `index`, `to`
 	                          from routes join legs on legs.leg_name = routes.leg_name where route_name = ?");
@@ -633,6 +654,7 @@ sub run_cronjobs(){
 	foreach my $leg(keys(%{$legs})){
 		my ($from,$to) = split(m/-/, $leg);
 		my $expected_seconds = get_percentile($legs->{$leg});
+		next if $leg eq '0-0';
 		$sth->execute($leg, $from, $to, $expected_seconds);
 	}
 
