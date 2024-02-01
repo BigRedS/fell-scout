@@ -119,6 +119,7 @@ foreach my $row (@{$data}){
 	}
 
 	$row->{'CP99'} = $row->{'The finish'} if $row->{'The finish'};
+	$row->{'CP0'} = $row->{'Main start'} if $row->{'Main start'};
 	my $retired = undef;
 	my @checkpoints;
 	my $this_cp_time_hhmm = undef;

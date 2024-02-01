@@ -31,6 +31,9 @@
 			<% IF entrants.$entrant.retired %>
 				( retired at checkpoint <% entrants.$entrant.retired %> )
 			<% END %>
+			<% IF entrants.$entrant.scratch_team_number %>
+				( in scratch team <a href='/team/-<% entrants.$entrant.scratch_team_number %>'> -<% entrants.$entrant.scratch_team_number %>: <% entrants.$entrant.scratch_team_name %></a>)
+			<% END %>
 			<br />
 		<% END %>
 	</td></tr>

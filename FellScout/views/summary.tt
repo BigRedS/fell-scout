@@ -7,7 +7,7 @@
 			<th>Lowest CP</th>
 			<th>Earliest-finishing team</th>
 			<th>Latest-finishing team</th>
-			<th>Number of teams still out</th>
+			<th>Teams still out</th>
 		</tr>
 	</thead>
 <tr>

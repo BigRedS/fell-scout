@@ -11,18 +11,19 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/jquery.fancytable/dist/fancyTable.min.js"></script>
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$(".table").fancyTable({
-				sortColumn:0,
-				pagination: false,
-				globalSearch:true,
-				searchable:true,
-				sortable:true
+	<% IF page.table_is_searchable %>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".table").fancyTable({
+					sortColumn:0,
+					pagination: false,
+					globalSearch:true,
+					searchable:true,
+					sortable:true
+				});
 			});
-		});
-	</script>
-
+		</script>
+	<% END %>
 
 	<meta charset="<% settings.charset %>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">

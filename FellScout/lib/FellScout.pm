@@ -135,7 +135,11 @@ sub get_summary {
 }
 # # # # # laterunners
 get '/laterunners' => sub {
-	return template 'laterunners.tt', {laterunners => get_laterunners()};
+	my $return = {
+		laterunners => get_laterunners(),
+		page => { table_is_searchable => 1 },
+	};
+	return template 'laterunners.tt', $return;
 };
 get '/api/laterunners/' => sub{
 	return encode_json(laterunners => get_laterunners());
@@ -192,8 +196,11 @@ sub get_legs(){
 
 
 get '/checkpoints' => sub {
-	my $checkpoints = get_checkpoints();
-	return template 'checkpoints.tt', {checkpoints => $checkpoints};
+	my $return = {
+		checkpoints => get_checkpoints(),
+		page => { table_is_searchable => 1 },
+	};
+	return template 'checkpoints.tt', $return;
 };
 
 get '/api/checkpoints' => sub{
@@ -315,7 +322,11 @@ get '/api/entrants' => sub {
 };
 
 get '/entrants' => sub {
-	return template 'entrants.tt', {entrants => get_entrants()};
+	my $return = {
+		entrants => get_entrants(),
+		page => { table_is_searchable => 1 },
+	};
+	return template 'entrants.tt', $return;
 };
 
 sub get_entrants(){
@@ -438,7 +449,11 @@ get '/api/teams' => sub {
 };
 
 get '/teams' => sub {
-	return template 'teams.tt', {teams => get_teams()};
+	my $return = {
+		teams => get_teams(),
+		page => { table_is_searchable => 1 },
+	};
+	return template 'teams.tt', $return;
 };
 
 sub get_teams{
@@ -560,6 +575,14 @@ sub get_team{
 any ['get','post'] => '/admin' => sub {
 	my $sth = database->prepare("select name, value, notes from config");
 	my %return;
+	if(param('do') and param('do') eq 'Update from FellTrack'){
+		my $output = run_cronjobs();
+		$return{'done'} = 'Updated from felltrack: '.$output;
+	}
+	if(param('do') and param('do') eq 'Clear database'){
+		clear_cache();
+		$return{'done'} = 'Cleared database tables';
+	}
 	if(param('update')){
 		my $sth_update = database->prepare("update config set value = ? where name = ?");
 
@@ -578,6 +601,11 @@ any ['get','post'] => '/admin' => sub {
 };
 
 get '/clear-cache' => sub {
+	clear_cache();
+	return "Cleanup done, you can now click 'back' to get back to where you were";
+};
+
+sub clear_cache(){
 	info("Clearing cache");
 	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams/;
 	foreach my $table (@tables){
@@ -586,8 +614,7 @@ get '/clear-cache' => sub {
 		$sth->execute();
 		debug("Cleared $table");
 	}
-	return "Cleanup done, you can now click 'back' to get back to where you were";
-};
+}
 
 get '/cron' => sub {
 	run_cronjobs();
@@ -612,7 +639,10 @@ sub run_cronjobs(){
 
 	$cmd = cwd().'/bin/progress-to-db';
 	info("Cron: Updating DB from CSV : $cmd");
+	my $progress_output = '';
 	foreach my $line (qx/$cmd/){
+		chomp($line);
+		$progress_output.' '.$line;
 		info(">  $line");
 	}
 	info("Exited: $?");
@@ -660,6 +690,8 @@ sub run_cronjobs(){
 
 	info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
+
+	return $progress_output;
 }
 
 
