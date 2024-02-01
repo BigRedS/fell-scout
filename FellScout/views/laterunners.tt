@@ -6,16 +6,16 @@
 
 <p>This table is those teams currently running later than that</p>
 
-<table class="table">
+<table class="table table-hover table-sm">
 	<thead>
 		<tr>
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
 			<th>Route</th>
-			<th>Last Checkpoint</th>
-			<th>Next Checkpoint</th>
-			<th>Next Checkpoint Lateness</th>
+			<th>Last<br> Checkpoint</th>
+			<th>Next<br>Checkpoint</th>
+			<th>Next Checkpoint<br> Lateness</th>
 		</tr>
 	</thead>
 	<% FOREACH team IN laterunners %>
