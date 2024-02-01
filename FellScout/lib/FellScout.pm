@@ -390,110 +390,122 @@ sub get_entrants(){
 # # # # # TEAMS
 any ['get','post'] => '/scratch-teams' => sub {
 
-	my @errors;
+	my %return;
 
-	my $sth_all_entrants = database->prepare("select code from entrants");
-	$sth_all_entrants->execute;
-	my $all_entrants = $sth_all_entrants->fetchall_hashref('code');
+	if(param('update') or param('add')){
+		my %existing_teams;
+		my %existing_entrants;
+		my %team_names;
+		my $sth = database->prepare("select * from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
+		$sth->execute();
+		while(my $row = $sth->fetchrow_hashref()){
+			$team_names{$row->{team_number}} = $row->{team_name};
+			$existing_teams{ $row->{team_number} }->{ $row->{entrant} } = 1;
+			$existing_entrants{ $row->{entrant} } = $row->{team_number};
+		}
 
+		$sth = database->prepare("select * from scratch_teams");
+		$sth->execute();
+		my $scratch_team_names = $sth->fetchall_hashref('team_number');
+
+		if(param('entrants') eq ''){
+			info("Deleting scratch team ".param('team_name'));
+			my $sth = database->prepare("delete from scratch_teams where team_number = ?");
+			$sth->execute(param('team_number'));
+			$sth = database->prepare("delete from scratch_team_entrants where team_number = ?");
+			$sth->execute(param('team_number'));
+			my $number = 0 - param('team_number');
+			$sth = database->prepare("delete from teams where team_number = ? and team_number < 0");
+			$sth->execute($number);
+			push(@{$return{successes}}, "Deleted team '".param('team_name')."'");	
+		}else{
+			my $team_name = param('team_name');
+			$team_name =~ s/[^\w\s\.\,\?\!\"\']//;
+			unless($team_name eq param('team_name')){
+				push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$team_name'");
+			}	
+			if($existing_teams{ lc($team_name) }){
+				push(@{$return{errors}}, "There is already a scratch team called '$team_name'; names need to be unique (this check doesn't consider capital letters)");
+				error("Duplicate scratch team: '$team_name'");
+			}
+
+			$sth = database->prepare("select code, team from entrants");
+			$sth->execute();
+			my $all_entrants = $sth->fetchall_hashref('code');	
+			my @entrants;
+			foreach my $entrant (split(m/\s+/, param('entrants'))){
+				next if $entrant eq '';
+				if($entrant =~ m/(\d+[a-zA-Z])/){
+					$entrant = uc($entrant);
+					if($existing_entrants{ $entrant }){
+						push(@{$return{errors}}, "Entrant '$entrant' is already in scratch team -$existing_entrants{ $entrant }; perhaps remove them from that first?");
+						error("Entrant $entrant already in $existing_entrants{$entrant}");
+					}
+					unless($all_entrants->{$entrant}){
+						push(@{$return{errors}}, "There is no entrant with code '$entrant'");
+						error("Tried to add non-existent entrant $entrant");
+					}
+					push(@entrants, uc($1));
+				}else{ 
+					push(@entrants, $entrant);
+					push(@{$return{errors}}, "'$entrant' is not a valid entrant");
+				}
+			}
+			if($return{errors}){
+				$return{new_team} = { team_name => $team_name, entrants => join(' ', @entrants) };
+			}elsif(@entrants){
+				if(param('add')){
+
+					my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
+					my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, previous_team_number, entrant_code) values (?,?,?)");
+
+					$sth_team->execute($team_name);
+					my $team_number = database->{mysql_insertid};
+					foreach my $entrant_code (@entrants){
+						$sth_entrant->execute($team_number, $all_entrants->{$entrant_code}->{team}, $entrant_code);
+						info(" $team_number, $all_entrants->{$entrant_code}->{team}, $entrant_code")
+					}
+					push(@{$return{successes}}, "Created scratch team '$team_name' with entrants ".join(' ', @entrants));
+					info("Created scratch team $team_number as $team_name with entrants ".join(' ', @entrants));
+
+				}elsif(param('update')){
+					my $team_number = param('team_number');
+					$team_number =~ s/[^\d]//;
+
+					my $team_name = $scratch_team_names->{$team_number}->{team_name};
+
+					my $sth_team = database->prepare("update scratch_teams set team_name = ? where team_number = ?");
+					my $sth_entrant = database->prepare("replace into scratch_team_entrants (team_number, entrant_code) values (?,?)");
+
+					$sth_team->execute($team_name, $team_number);
+					foreach my $entrant_code (@entrants){
+						$sth_entrant->execute($team_number, $entrant_code);
+					}
+					push(@{$return{successes}}, "Updated scratch team '$team_name' with entrants ".join(' ', @entrants));
+					info("Updated scratch team $team_number as '$team_name' with entrants ".join(' ', @entrants));
+				}
+			}
+			# Now update the scratch_teams hash to show the new ones
+			# And update all the other tables:
+			info("Triggering cron");
+			run_cronjobs();
+		}
+	}
 	my $sth_t = database->prepare("select team_number, team_name from scratch_teams");
 	my $sth_e = database->prepare("select entrant_code from scratch_team_entrants where team_number = ? order by entrant_code asc");
-
-	my %scratch_teams;
-	my %scratch_team_names;
-	my %scratch_entrants;
 	$sth_t->execute();
 	while ( my $team = $sth_t->fetchrow_hashref()){
 		$sth_e->execute($team->{team_number});
 		my @entrants;
 		while (my $entrant = $sth_e->fetchrow_hashref()){
 			push(@entrants, $entrant->{entrant_code});
-
-			$scratch_entrants{ $entrant->{entrant_code} } = $team->{team_number};
 		}
-
-		$scratch_teams{teams}->{ $team->{team_number} } = $team;
-		$scratch_teams{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
-
-		$scratch_team_names{ lc($team->{team_name}) } = $team->{team_number};
+		$return{teams}->{ $team->{team_number} } = $team;
+		$return{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
 	}
 
-	if(param('update') or param('add')){
-		my $team_name = param('team_name');
-		$team_name =~ s/[^\w\s\.\,\?\!\"\']//;
-		if($scratch_team_names{ lc($team_name) }){
-			push(@errors, "There is already a scratch team called '$team_name'; names need to be unique (this check doesn't consider capital letters)");
-			error("Duplicate scratch team: '$team_name'");
-		}
-
-		my @entrants;
-		foreach my $entrant (split(m/\s+/, param('entrants'))){
-			if($entrant =~ m/(\d+[a-zA-Z])/){
-				$entrant = uc($entrant);
-				if($scratch_entrants{ $entrant }){
-					push(@errors, "Entrant '$entrant' is already in scratch team -$scratch_entrants{ $entrant }; perhaps remove them from that first?");
-					error("Entrant $entrant tried to be added to two scratch teams");
-				}
-				unless($all_entrants->{$entrant}){
-					push(@errors, "There is no entrant with code '$entrant'");
-					error("Tried to add non-existent entrant $entrant");
-				}
-				push(@entrants, uc($1));
-			}
-		}
-
-
-		if(@errors){
-			$scratch_teams{new_team} = { team_name => $team_name, entrants => join(' ', @entrants) };
-			$scratch_teams{errors} = \@errors;
-		}else{
-			if(param('add')){
-				my $sth_orig_team = database->prepare("select team from entrants where code = ?");
-
-				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
-				my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, previous_team_number, entrant_code) values (?,?,?)");
-
-				$sth_team->execute($team_name);
-				my $team_number = database->{mysql_insertid};
-				foreach my $entrant_code (@entrants){
-					$sth_orig_team->execute($entrant_code);
-					my $orig_team_number = ($sth_orig_team->fetchrow_array())[0];
-
-					$sth_entrant->execute($team_number, $orig_team_number, $entrant_code);
-				}
-				info("Created scratch team $team_number as $team_name with entrants ".join(' ', @entrants));
-
-			}elsif(param('update')){
-				my $team_number = param('team_number');
-				$team_number =~ s/[^\d]//;
-
-				my $sth_team = database->prepare("update scratch_teams set team_name = ? where team_number = ?");
-				my $sth_entrant = database->prepare("replace into scratch_team_entrants (team_number, entrant_code) values (?,?)");
-
-				$sth_team->execute($team_name, $team_number);
-				foreach my $entrant_code (@entrants){
-					$sth_entrant->execute($team_number, $entrant_code);
-				}
-				info("Updated scratch team $team_number as '$team_name' with entrants ".join(' ', @entrants));
-			}
-			# Now update the scratch_teams hash to show the new ones
-			$sth_t->execute();
-			while ( my $team = $sth_t->fetchrow_hashref()){
-				$sth_e->execute($team->{team_number});
-				my @entrants;
-				while (my $entrant = $sth_e->fetchrow_hashref()){
-					push(@entrants, $entrant->{entrant_code});
-				}
-				$scratch_teams{teams}->{ $team->{team_number} } = $team;
-				$scratch_teams{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
-			}
-			# And update all the other tables:
-			info("Triggering cron");
-			run_cronjobs();
-		}
-	}
-	$scratch_teams{page} = vars->{page},
-	return template 'scratch-teams.tt', \%scratch_teams;
+	$return{page} = vars->{page},
+	return template 'scratch-teams.tt', \%return;
 };
 
 get '/api/teams' => sub {
@@ -675,7 +687,7 @@ get '/clear-cache' => sub {
 
 sub clear_cache(){
 	info("Clearing cache");
-	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams logs/;
+	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams logs scratch_teams scratch_team_entrants/;
 	foreach my $table (@tables){
 		# Can't use placeholders here because dbh adds quotes and   delete from 'table_name'  is invalid
 		my $sth = database->prepare("delete from $table");
@@ -684,6 +696,8 @@ sub clear_cache(){
 	}
 	my $sth = database->prepare("replace into logs (`message`, `name`) values ('Cleared all tables', 'clear_cache')");
 	$sth->execute();
+
+	$sth->execute('alter table scratch_teams auto_increment = 1');
 }
 
 get '/cron' => sub {
