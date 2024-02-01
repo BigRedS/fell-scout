@@ -34,9 +34,9 @@
 		</tr>
 	</thead>
 	<% FOREACH team IN laterunners %>
-		<% if team.percent_late > 30 %>
+		<% if team.percent_late > page.lateness_percent_red %>
 			<tr class='table-danger'>
-		<% elsif team.percent_late > 10 %>
+		<% elsif team.percent_late > page.lateness_percent_amber %>
 			<tr class='table-warning'>
 		<% else %>
 			<tr>
