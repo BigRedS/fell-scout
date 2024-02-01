@@ -544,13 +544,13 @@ sub get_team{
 		$team{entrants}->{ $row->{code} } = $row;
 	}
 
-	$sth = database->prepare("select team_name as scratch_team_name, 
+	$sth = database->prepare("select team_name as scratch_team_name,
 	                         entrants.entrant_name,
 	                         scratch_teams.team_number as scratch_team_number,
 	                         entrant_code as code,
 	                         previous_team_number
-	                         from scratch_team_entrants 
-                                 join scratch_teams on 
+	                         from scratch_team_entrants
+                                 join scratch_teams on
                                    scratch_teams.team_number = scratch_team_entrants.team_number
 	                         join entrants on entrants.code = scratch_team_entrants.entrant_code
 
@@ -607,13 +607,15 @@ get '/clear-cache' => sub {
 
 sub clear_cache(){
 	info("Clearing cache");
-	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams/;
+	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams logs/;
 	foreach my $table (@tables){
 		# Can't use placeholders here because dbh adds quotes and   delete from 'table_name'  is invalid
 		my $sth = database->prepare("delete from $table");
 		$sth->execute();
 		debug("Cleared $table");
 	}
+	my $sth = database->prepare("replace into logs (`message`, `name`) values ('Cleared all tables', 'clear_cache')");
+	$sth->execute();
 }
 
 get '/cron' => sub {
@@ -624,6 +626,8 @@ get '/cron' => sub {
 sub run_cronjobs(){
 	my $cmd = join(" ", cwd()."/bin/get-data", vars->{felltrack_owner}, vars->{felltrack_username}, vars->{felltrack_password});
 
+	my $sth_log = database->prepare("replace into logs (`message`, `name`) values (?, ?)");
+
 	if (vars->{ignore_future_events} and vars->{ignore_future_events} eq 'on'){
 		$ENV{IGNORE_FUTURE_EVENTS} = 1;
 	}
@@ -632,19 +636,24 @@ sub run_cronjobs(){
 	}
 
 	info("Cron: Getting data: $cmd");
+	my $output = '';
 	foreach my $line (qx/$cmd/){
+		chomp($line);
 		info(">  $line");
+		$output .= $line;
 	}
+	$sth_log->execute($output, 'get-data');
 	info("Exited: $?");
 
 	$cmd = cwd().'/bin/progress-to-db';
 	info("Cron: Updating DB from CSV : $cmd");
-	my $progress_output = '';
+	$output = '';
 	foreach my $line (qx/$cmd/){
 		chomp($line);
-		$progress_output.' '.$line;
+		$output .= $line;
 		info(">  $line");
 	}
+	$sth_log->execute($output, 'progress-to-db');
 	info("Exited: $?");
 
 
@@ -690,8 +699,8 @@ sub run_cronjobs(){
 
 	info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
-
-	return $progress_output;
+	$sth_log->execute('completed', 'periodic-jobs');
+	return $output;
 }
 
 
