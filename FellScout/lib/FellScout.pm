@@ -23,11 +23,25 @@ hook 'before' => sub {
 	while(my $row = $sth->fetchrow_hashref()){
 		var $row->{name} => $row->{value};
 	}
+
+	$sth = database->prepare("select
+	                          timestampdiff(MINUTE, time, CURTIME()) as minutes_since,
+	                          date_format( time , \"%H:%i\") as time
+	                          from logs
+	                          where
+	                          name = 'periodic-jobs'");
+	$sth->execute();
+	my $row = $sth->fetchrow_hashref();
+	var page => { last_update_time => $row->{time}, last_update_minutes_ago => $row->{minutes_since} };
 };
 
 # # # # # SUMMARY
 get '/' => sub{
-	return template 'summary.tt', {summary => get_summary()};
+	my $return = {
+		summary => get_summary(),
+		page => vars->{page},
+	};
+	return template 'summary.tt', $return;
 };
 
 get '/api/summary' => sub{
@@ -137,8 +151,9 @@ sub get_summary {
 get '/laterunners' => sub {
 	my $return = {
 		laterunners => get_laterunners(),
-		page => { table_is_searchable => 1 },
+		page => vars->{page}
 	};
+	$return->{page}->{table_is_searchable} = 1;
 	return template 'laterunners.tt', $return;
 };
 get '/api/laterunners/' => sub{
@@ -164,8 +179,11 @@ sub get_laterunners(){
 }
 # # # # # LEGS + CHECKPOINTS
 get '/legs' => sub {
-	my $legs = get_legs();
-	return template 'legs.tt', {legs => $legs};
+	my $return = {
+		legs => get_legs(),
+		page => vars->{page},
+	};
+	return template 'legs.tt', $return;
 };
 
 get '/api/legs' => sub{
@@ -198,8 +216,9 @@ sub get_legs(){
 get '/checkpoints' => sub {
 	my $return = {
 		checkpoints => get_checkpoints(),
-		page => { table_is_searchable => 1 },
+		page => vars->{page},
 	};
+	$return->{page}->{table_is_searchable} = 1;
 	return template 'checkpoints.tt', $return;
 };
 
@@ -252,8 +271,11 @@ sub get_checkpoints(){
 }
 
 get '/checkpoint/:checkpoint' => sub {
-	my $checkpoint = get_checkpoint(param('checkpoint'));
-	return template 'checkpoint.tt', {checkpoint => $checkpoint};
+	my $return = {
+		checkpoint => get_checkpoint(param('checkpoint')),
+		page => vars->{page},
+	};
+	return template 'checkpoint.tt', $return;
 };
 
 get '/api/checkpoint/:checkpoint' => sub{
@@ -323,9 +345,10 @@ get '/api/entrants' => sub {
 
 get '/entrants' => sub {
 	my $return = {
+		page => vars->{page},
 		entrants => get_entrants(),
-		page => { table_is_searchable => 1 },
 	};
+	$return->{page}->{table_is_searchable} = 1;
 	return template 'entrants.tt', $return;
 };
 
@@ -440,8 +463,8 @@ any ['get','post'] => '/scratch-teams' => sub {
 			run_cronjobs();
 		}
 	}
+	$scratch_teams{page} = vars->{page},
 	return template 'scratch-teams.tt', \%scratch_teams;
-	#return encode_json(\%scratch_teams);
 };
 
 get '/api/teams' => sub {
@@ -451,8 +474,9 @@ get '/api/teams' => sub {
 get '/teams' => sub {
 	my $return = {
 		teams => get_teams(),
-		page => { table_is_searchable => 1 },
+		page => vars->{page},
 	};
+	$return->{page}->{table_is_searchable} = 1;
 	return template 'teams.tt', $return;
 };
 
@@ -492,7 +516,11 @@ get '/api/team/:team' => sub {
 };
 
 get '/team/:team' => sub {
-	return template 'team.tt', get_team( param('team'));
+	my $return = {
+		page => vars->{page},
+		team => get_team( param('team') ),
+	};
+	return template 'team.tt', $return;
 };
 
 sub get_team{
@@ -597,6 +625,17 @@ any ['get','post'] => '/admin' => sub {
 	}
 	$sth->execute();
 	$return{config} = $sth->fetchall_hashref('name');
+
+	$sth = database->prepare("select name, message,
+	                          date_format(time, \"%H:%i\") as time,
+	                          date_format( timediff(now(), time ), \"%kh%im\") as time_since
+				  from logs order by time desc");
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		push(@{ $return{logs} }, $row);
+	}
+
+	$return{page} = vars->{page};
 	return template 'admin.tt', \%return;
 };
 
