@@ -150,30 +150,59 @@ sub get_summary {
 # # # # # laterunners
 get '/laterunners' => sub {
 	my $return = {
-		laterunners => get_laterunners(),
+		laterunners => get_laterunners(param('threshold')),
+		threshold => param('threshold'),
 		page => vars->{page}
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{table_sort_column} = 7;
+	$return->{page}->{table_sort_order} = 'desc';
 	return template 'laterunners.tt', $return;
 };
 get '/api/laterunners/' => sub{
-	return encode_json(laterunners => get_laterunners());
+	return encode_json(laterunners => get_laterunners( param('threshold') ) )
 };
 
 sub get_laterunners(){
 	my @laterunners;
-	my $sth = database->prepare("select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint,
-	                             date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
-	                             date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_time,
-	                             date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
-	                             from teams
-	                             join checkpoints_teams_predictions on
-	                               checkpoints_teams_predictions.team_number = teams.team_number
-	                               and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
-	                             order by checkpoints_teams_predictions.expected_time desc;");
+	my $legs;
+	my $threshold = shift;
+
+	my $sth = database->prepare("select leg_name, seconds from legs");
+	$sth->execute;
+	$legs = $sth->fetchall_hashref('leg_name');
+
+	$sth = database->prepare("select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, current_leg,
+	                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
+	                          unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch,
+	                          date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
+	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
+	                          from teams
+	                          join checkpoints_teams_predictions on
+	                            checkpoints_teams_predictions.team_number = teams.team_number
+	                            and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
+	                          where checkpoints_teams_predictions.expected_time < NOW()
+	                          order by checkpoints_teams_predictions.expected_time desc;");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
-		push(@laterunners, $row);
+		my $expected_duration = $legs->{ $row->{current_leg} }->{seconds};
+		my $actual_duration = time() - $row->{last_checkpoint_time_epoch};
+		my $diff = $actual_duration - $expected_duration;
+		$row->{minutes_late} = sprintf("%0.0f", ($diff / 60));
+		$row->{percent_late} = sprintf("%0.0f", ($diff / $actual_duration) * 100);
+		$row->{current_leg_duration} = to_hh_mm($legs->{ $row->{current_leg} }->{seconds} );
+
+		my $is_late = 1;
+		if($threshold){
+			if($threshold =~ m/(\d+)%$/){
+				my $threshold = $1;
+				$is_late = 0 unless $row->{percent_late} > $threshold;
+			}elsif($threshold =~ m/^(\d+)m$/){
+				my $threshold = $1;
+				$is_late = 0 unless $row->{minutes_late} > $threshold;
+			}
+		}
+		push(@laterunners, $row) if $is_late > 0;
 	}
 	return \@laterunners;
 }

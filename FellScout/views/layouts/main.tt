@@ -17,11 +17,12 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$(".table").fancyTable({
-					sortColumn:0,
+					sortColumn:<% if page.table_sort_column %> <% page.table_sort_column %> <% else %> 0 <% end %>,
 					pagination: false,
 					globalSearch:true,
 					searchable:true,
-					sortable:true
+					sortable:true,
+					sortOrder:<% if page.table_sort_order %>'<% page.table_sort_order %>' <% else %> 'ascending' <% end %>,
 				});
 			});
 		</script>
