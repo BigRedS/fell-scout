@@ -154,6 +154,11 @@ get '/laterunners' => sub {
 		threshold => param('threshold'),
 		page => vars->{page}
 	};
+	my $sth = database->prepare("select name,value from config where name like 'lateness_percent_%'");
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		$return->{page}->{ $row->{name} } = $row->{value};
+	}
 	$return->{page}->{table_is_searchable} = 1;
 	$return->{page}->{table_sort_column} = 7;
 	$return->{page}->{table_sort_order} = 'desc';
