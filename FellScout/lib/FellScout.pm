@@ -773,7 +773,7 @@ sub run_cronjobs(){
 	# Then use the teams stats to update the checkpoints_teams table (which stores the
 	# arrival time at each checkpoint for each team)
 	my $legs = {};
-	$sth = database->prepare("select checkpoint, previous_checkpoint, seconds_since_previous_checkpoint from checkpoints_teams");
+	$sth = database->prepare("select checkpoint, previous_checkpoint, seconds_since_previous_checkpoint from checkpoints_teams order by time desc");
 	$sth->execute();
 	while (my $row = $sth->fetchrow_hashref()){
 		my $leg_name = $row->{previous_checkpoint}."-".$row->{checkpoint};
@@ -874,18 +874,38 @@ sub to_hh_mm{
 }
 
 sub get_percentile{
-	my $n = shift;
-	my @numbers = sort(@{$n});
+	my @in = @{$_[0]};
+
 	my $percentile = 90;
 	if(vars->{percentile}){
 		$percentile = vars->{percentile};
 	}
-	if(scalar(@numbers) <=4){
-		#info("Not enough samples for pcile, getting mean of ".scalar(@numbers)." numbers: ".join(', ', @numbers));
-		my $sum = 0;
-		map { $sum += $_ } @numbers;
-		return $sum / scalar(@numbers);
+
+	my @numbers;
+	# If the whole set of numbers we have is already smaller than the percentile_min_sample
+	# then we do not want to shrink it further by taking only the most-recent percentile_sample_size
+	if (vars->{'percentile_min_sample'} and scalar(@in) >= vars->{percentile_min_sample} and
+	    vars->{'percentile_sample_size'} and vars->{'percentile_sample_size'} > 0 ){
+		#info("Pcile sample before: ".scalar(@in));
+		my $index = int((vars->{'percentile_sample_size'}/100) * $#in - 1 );
+		for(0 .. $index){
+			push(@numbers, $in[$index]);
+		}
+		#info("Pcile sample after: ".scalar(@numbers));
+		#info("Index: $index");
+		@numbers = sort(@numbers);
+	}else{
+		@numbers = reverse(@in);
 	}
+
+	# Having potentially shrunk the sample above, check it's still big enough for a percentile. 
+	if (vars->{percentile_min_sample} and scalar(@numbers) < vars->{percentile_min_sample} ){
+		info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of ".vars->{percentile_min_sample}."), using mean");
+		my $sum = 0;
+		map { $sum += $_ } @in;
+		return $sum / scalar(@in);
+	}
+
 	my $index = int(($percentile/100) * $#numbers - 1);
 	return $numbers[$index];
 }
