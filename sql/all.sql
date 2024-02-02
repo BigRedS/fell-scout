@@ -104,6 +104,22 @@ CREATE TABLE `legs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `logs`
+--
+
+DROP TABLE IF EXISTS `logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logs` (
+  `name` text DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `time` datetime DEFAULT current_timestamp(),
+  UNIQUE KEY `name_2` (`name`) USING HASH,
+  KEY `name` (`name`(768))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `routes`
 --
 
@@ -142,6 +158,7 @@ DROP TABLE IF EXISTS `scratch_team_entrants`;
 CREATE TABLE `scratch_team_entrants` (
   `team_number` smallint(6) NOT NULL,
   `entrant_code` char(4) NOT NULL,
+  `previous_team_number` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`team_number`,`entrant_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -158,7 +175,7 @@ CREATE TABLE `scratch_teams` (
   `team_name` text DEFAULT NULL,
   PRIMARY KEY (`team_number`),
   UNIQUE KEY `team_name` (`team_name`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +211,7 @@ CREATE TABLE `teams` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-30 21:47:24
+-- Dump completed on 2024-02-02  9:36:49
 -- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -235,8 +252,8 @@ CREATE TABLE `config` (
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
 INSERT INTO `config` VALUES
-('route_50mile','','space-separated list of checkpoints on 50 mile route'),
-('route_50km','3 4 5 6 7 8 12 13 14 15 16 17 18 19','space-separated list of checkpoints on 50km route'),
+('route_50mile','1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19','space-separated list of checkpoints on 50 mile route'),
+('route_50km','3 4 5 6 7 8 13 14 15 16 17 18 19','space-separated list of checkpoints on 50km route'),
 ('route_30km','3 4 5 14 15 16 17 18 19','space-separated list of checkpoints on 30km route'),
 ('percentile','80','percentile used to calculate average time to complete legs'),
 ('felltrack_owner','chiltern2',NULL),
@@ -244,7 +261,11 @@ INSERT INTO `config` VALUES
 ('felltrack_password','supersecret',NULL),
 ('ignore_teams','','space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
-('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file');
+('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
+('lateness_percent_amber','30','Percent over time at which to highlight a team as late, in yellow'),
+('lateness_percent_red','80','Percent over time at which to highlight a team as late, in red'),
+('percentile_sample_size','80','The most-recent proportion of all entrants to use to calculate the percentiles for legs'),
+('percentile_min_sample','8','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a mean will be taken instead');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -257,4 +278,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-30 21:48:45
+-- Dump completed on 2024-02-02  9:36:49
