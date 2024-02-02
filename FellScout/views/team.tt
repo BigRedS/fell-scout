@@ -1,42 +1,42 @@
-<% IF team_number < 0 %>
-  <h1>Scratch Team <% team_number %>: <% team_name %> </h1>
+<% IF team.team_number < 0 %>
+  <h1>Scratch Team <% team.team_number %>: <% team.team_name %> </h1>
 <% ELSE %>
-  <h1>Team <% team_number %>: <% team_name %> </h1>
+  <h1>Team <% team.team_number %>: <% team.team_name %> </h1>
 <% END %>
-<table class='table' 'table-responsive'>
+<table class='table table-responsive'>
 
-	<tr><td>Route</td><td><% route %></td></tr>
+	<tr><td>Route</td><td><% team.route %></td></tr>
 
-	<tr><td>Next Checkpoint</td><td><% next_checkpoint %></td></tr>
+	<tr><td>Next Checkpoint</td><td><% team.next_checkpoint %></td></tr>
 
-	<tr><td>Next Checkpoint expected time</td><td><% next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
+	<tr><td>Next Checkpoint expected time</td><td><% team.next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
 
-	<tr><td>Last Checkpoint</td><td><% last_checkpoint %> at <% last_checkpoint_time_hhmm %></td></tr>
+	<tr><td>Last Checkpoint</td><td><% team.last_checkpoint %> at <% team.last_checkpoint_time_hhmm %></td></tr>
 
-	<tr><td>Expected at finish</td><td><% finish_expected_hhmm %></td></tr>
+	<tr><td>Expected at finish</td><td><% team.finish_expected_hhmm %></td></tr>
 
 	<tr><td>Remaining Checkpoints</td>
 		<td>
 			<ul>
-				<% FOREACH cp IN remaining_checkpoints.keys.sort %>
-					<li><% cp %> (expected at <% remaining_checkpoints.$cp.expected_hhmm %>, in <% remaining_checkpoints.$cp.expected_in %>)</li>
+				<% FOREACH cp IN team.remaining_checkpoints.keys.sort %>
+					<li><% cp %> (expected at <% team.rememaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
 				<% END %>
 			</ul>
 		</td>
 	</tr>
 
 	<tr><td>Entrants</td><td>
-		<% FOREACH entrant IN entrants.keys.sort %>
-			<% entrant %>: <% entrants.$entrant.entrant_name %>
-			<% IF entrants.$entrant.retired %>
-				( retired at checkpoint <% entrants.$entrant.retired %> )
+		<% FOREACH entrant IN team.entrants.keys.sort %>
+			<% entrant %>: <% team.entrants.$entrant.entrant_name %>
+			<% IF team.entrants.$entrant.retired %>
+				( retired at checkpoint <% team.entrants.$entrant.retired %> )
 			<% END %>
-			<% IF entrants.$entrant.scratch_team_number %>
-				( in scratch team <a href='/team/-<% entrants.$entrant.scratch_team_number %>'> -<% entrants.$entrant.scratch_team_number %>: <% entrants.$entrant.scratch_team_name %></a>)
+			<% IF team.entrants.$entrant.scratch_team_number %>
+				( in scratch team <a href='/team/-<% team.entrants.$entrant.scratch_team_number %>'> -<% team.entrants.$entrant.scratch_team_number %>: <% team.entrants.$entrant.scratch_team_name %></a>)
 			<% END %>
 			<br />
 		<% END %>
 	</td></tr>
 
-	<tr><td>Unit, District</td><td><% unit %>, <% district %></td></tr>
+	<tr><td>Unit, District</td><td><% team.unit %>, <% team.district %></td></tr>
 </table>

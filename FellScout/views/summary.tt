@@ -1,5 +1,5 @@
 <h1>Summary</h1>
-<table class="table table-hover">
+<table class="table table-hover table-responsive">
 	<thead>
 		<tr>
 			<th>Route</th>
@@ -39,7 +39,7 @@
 			<a href='/team/<% team %>'><% team %></a>,
 		<% END %>
 	</td>
-	<% FOREACH route IN summary.routes.nsort %>
+	<% FOREACH route IN summary.routes.keys.nsort %>
 		<tr>
 			<td><% route %></td>
 			<td><% summary.routes.$route.min_cp %></td>
