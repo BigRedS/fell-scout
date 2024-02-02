@@ -539,11 +539,11 @@ sub get_teams{
 	}
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
-	$sth = database->prepare("select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
+	$sth = database->prepare('select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
 	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
-	                         date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_hhmm,
+	                         date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_hhmm,
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
-	                         from teams");
+	                         from teams');
 	$sth->execute();
 	my $teams;
 	while (my $row = $sth->fetchrow_hashref()){
@@ -558,6 +558,11 @@ sub get_teams{
 }
 
 get '/api/team/:team' => sub {
+	my $return = {
+		page => vars->{page},
+		team => get_team( param('team') ),
+	};
+	return encode_json($return);
 	return encode_json(get_team( param('team')));
 };
 
