@@ -199,7 +199,7 @@ sub get_laterunners(){
 
 		my $is_late = 1;
 		if($threshold){
-			if($threshold =~ m/(\d+)%$/){
+			if($threshold =~ m/^(\d+)$/){
 				my $threshold = $1;
 				$is_late = 0 unless $row->{percent_late} > $threshold;
 			}elsif($threshold =~ m/^(\d+)m$/){
