@@ -12,16 +12,18 @@
 <% end %>
 <div style='width:60%;'>
 	<form method='post'>
-		<table class='table'>
+		<table class='table table-responsive'>
 			<% FOREACH name IN config.keys.sort %>
 				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td><td><% config.$name.notes %></td></tr>
 			<% END %>
+		<tr><td><button class='btn btn-primary' type='submit' value='update' name='update'>Update</button></td><td></td><td></td></tr>
 		</table>
-		<input type='submit' value='update' name='update'>
 	</form>
 </div>
+
+
 <h2>Logs</h2>
-<table class='table'>
+<table class='table table-responsive'>
 	<tr><thead>
 		<th>Time</th><th>Job</th><th>Message</th>
 	</thead></tr>
@@ -37,9 +39,9 @@
 <h2>Tools</h2>
 <ul>
 	<form method='post'>
-		<ul>
-			<li> <input type='submit' name='do' value='Update from FellTrack' /> </li>
-			<li> <input type='submit' name='do' value='Clear database' /> This will also delete scratch teams, which will need to be manually reimplemented</li>
+		<ul class='list-group'>
+			<li class='list-group-item'> <button class='btn btn-primary' type='submit' name='do' value='crons'>Update From FellTrack</button> This should happen automatically every five minutes, but you can trigger it manually here if need be. This runs get-data, progress-to-db and periodic-jobs</li>
+			<li class='list-group-item'> <button class='btn btn-primary' type='submit' name='do' value='clear-database'>Clear Database</button> Clear all the data fetched from Fell Track, and also delete the scratch teams. You can trigger a manual re-update from Fell Scout above, but will need to manually re-enter scratch teams (and their IDs will change)</li>
 		</ul>
 	</form>
 </ul>

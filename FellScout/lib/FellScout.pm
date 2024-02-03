@@ -387,7 +387,9 @@ get '/entrants' => sub {
 };
 
 sub get_entrants(){
-	my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
+#my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
+	my $sth = database->prepare("select code, entrant_name, teams.team_numb, team_name, entrants.unit, entrants.district, teams.last_checkpoint
+	                             from entrants join teams on entrants.team = teams.team_number left join scratch_team_entrants on entrants.code = scratch_team_entrants.entrant_code");
 	$sth->execute();
 	return $sth->fetchall_hashref('code');
 }
@@ -398,100 +400,127 @@ any ['get','post'] => '/scratch-teams' => sub {
 	my %return;
 
 	if(param('update') or param('add')){
-		my %existing_teams;
-		my %existing_entrants;
-		my %team_names;
-		my $sth = database->prepare("select * from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
+		my %scratch_team_names;
+		my %existing_scratch_entrants;
+		my $sth = database->prepare("select * from scratch_teams
+		                             join scratch_team_entrants
+		                             on scratch_team_entrants.team_number = scratch_teams.team_number");
 		$sth->execute();
 		while(my $row = $sth->fetchrow_hashref()){
-			$team_names{$row->{team_number}} = $row->{team_name};
-			$existing_teams{ $row->{team_number} }->{ $row->{entrant} } = 1;
-			$existing_entrants{ $row->{entrant} } = $row->{team_number};
+			$scratch_team_names{$row->{team_number}} = $row->{team_name};
+			$existing_scratch_entrants{ $row->{entrant_code} } = $row->{team_number};
 		}
-
-		$sth = database->prepare("select * from scratch_teams");
-		$sth->execute();
-		my $scratch_team_names = $sth->fetchall_hashref('team_number');
 
 		if(param('entrants') eq ''){
 			info("Deleting scratch team ".param('team_name'));
-			my $sth = database->prepare("delete from scratch_teams where team_number = ?");
+			my $sth = database->prepare("select entrant_code from scratch_team_entrants where team_number = ?");
+			$sth->execute( param('team_number') );
+			foreach (my $row = $sth->fetchrow_hashref()){
+				my $entrant = $row->{entrant_code};
+				$entrant =~ m/^(\d+)/;
+				my $team = $1;
+				info("Resetting $entrant to $team");
+				my $sth = database->prepare("update entrants set team = ? where code = ?");
+				$sth->execute($team, $entrant);
+			}
+			$sth = database->prepare("delete from scratch_teams where team_number = ?");
 			$sth->execute(param('team_number'));
 			$sth = database->prepare("delete from scratch_team_entrants where team_number = ?");
 			$sth->execute(param('team_number'));
 			my $number = 0 - param('team_number');
 			$sth = database->prepare("delete from teams where team_number = ? and team_number < 0");
 			$sth->execute($number);
-			push(@{$return{successes}}, "Deleted team '".param('team_name')."'");	
+			push(@{$return{successes}}, "Deleted team -".param('team_number')."");	
 		}else{
-			my $team_name = param('team_name');
-			$team_name =~ s/[^\w\s\.\,\?\!\"\']//;
-			unless($team_name eq param('team_name')){
-				push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$team_name'");
-			}	
-			if($existing_teams{ lc($team_name) }){
-				push(@{$return{errors}}, "There is already a scratch team called '$team_name'; names need to be unique (this check doesn't consider capital letters)");
-				error("Duplicate scratch team: '$team_name'");
+			my $scratch_team_name = param('team_name');
+
+			my $scratch_team_number = param('team_number');
+			if(param('add')){
+				$scratch_team_name =~ s/[^\w\s\.\,\?\!\"\']//;
+				unless($scratch_team_name eq param('team_name')){
+					push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$scratch_team_name'");
+				}	
+				if($scratch_team_names{ lc($scratch_team_name) }){
+					push(@{$return{errors}}, "There is already a scratch team called '$scratch_team_name'; names need to be unique (this check doesn't consider capital letters)");
+					error("Duplicate scratch team: '$scratch_team_name'");
+				}
+				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
+				$sth_team->execute($scratch_team_name);
+				$scratch_team_number = database->{mysql_insertid};
+				push(@{$return{successes}}, "Created scratch team $scratch_team_name");
 			}
 
+			# Sanitise each entrant's code
 			$sth = database->prepare("select code, team from entrants");
 			$sth->execute();
 			my $all_entrants = $sth->fetchall_hashref('code');	
+
 			my @entrants;
 			foreach my $entrant (split(m/\s+/, param('entrants'))){
 				next if $entrant eq '';
 				if($entrant =~ m/(\d+[a-zA-Z])/){
 					$entrant = uc($entrant);
-					if($existing_entrants{ $entrant }){
-						push(@{$return{errors}}, "Entrant '$entrant' is already in scratch team -$existing_entrants{ $entrant }; perhaps remove them from that first?");
-						error("Entrant $entrant already in $existing_entrants{$entrant}");
+					my $errors = 0;
+					if($existing_scratch_entrants{ $entrant } and $existing_scratch_entrants{ $entrant } != $scratch_team_number){
+						push(@{$return{errors}}, "Entrant '$entrant' is already in scratch team -$existing_scratch_entrants{ $entrant }; perhaps remove them from that first?");
+						$errors++;
+						error("Entrant $entrant already in $existing_scratch_entrants{$entrant}");
 					}
 					unless($all_entrants->{$entrant}){
 						push(@{$return{errors}}, "There is no entrant with code '$entrant'");
+						$errors++;
 						error("Tried to add non-existent entrant $entrant");
 					}
-					push(@entrants, uc($1));
-				}else{ 
-					push(@entrants, $entrant);
+					push(@entrants, uc($1)) unless $errors > 0;
+				}else{
 					push(@{$return{errors}}, "'$entrant' is not a valid entrant");
 				}
 			}
-			if($return{errors}){
-				$return{new_team} = { team_name => $team_name, entrants => join(' ', @entrants) };
-			}elsif(@entrants){
-				if(param('add')){
+			# Now we have a valid new scratch team name $scratch_team_name and series of entrants @entrants
 
-					my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
-					my $sth_entrant = database->prepare("insert into scratch_team_entrants (team_number, previous_team_number, entrant_code) values (?,?,?)");
+			# REMEMBER team_number is positive here!
 
-					$sth_team->execute($team_name);
-					my $team_number = database->{mysql_insertid};
-					foreach my $entrant_code (@entrants){
-						$sth_entrant->execute($team_number, $all_entrants->{$entrant_code}->{team}, $entrant_code);
-						info(" $team_number, $all_entrants->{$entrant_code}->{team}, $entrant_code")
-					}
-					push(@{$return{successes}}, "Created scratch team '$team_name' with entrants ".join(' ', @entrants));
-					info("Created scratch team $team_number as $team_name with entrants ".join(' ', @entrants));
-
-				}elsif(param('update')){
-					my $team_number = param('team_number');
-					$team_number =~ s/[^\d]//;
-
-					my $team_name = $scratch_team_names->{$team_number}->{team_name};
-
-					my $sth_team = database->prepare("update scratch_teams set team_name = ? where team_number = ?");
-					my $sth_entrant = database->prepare("replace into scratch_team_entrants (team_number, entrant_code) values (?,?)");
-
-					$sth_team->execute($team_name, $team_number);
-					foreach my $entrant_code (@entrants){
-						$sth_entrant->execute($team_number, $entrant_code);
-					}
-					push(@{$return{successes}}, "Updated scratch team '$team_name' with entrants ".join(' ', @entrants));
-					info("Updated scratch team $team_number as '$team_name' with entrants ".join(' ', @entrants));
+			# First, if any of the entrants in the database are not in the list from the browser, they are to be deleted
+			$sth = database->prepare("select entrant_code from scratch_team_entrants where team_number = ?");
+			$sth->execute( $scratch_team_number );
+			my @existing_entrants;
+			while(my $row = $sth->fetchrow_hashref()){
+				my $entrant = $row->{entrant_code};
+				push(@existing_entrants, $entrant);
+				unless(grep(/^$entrant$/, @entrants)){
+					# Entrant is in team in db, but not in list from user. Delete entrant from team.
+					$entrant =~ m/(\d+)/;
+					my $old_team = $1;
+					info("Removing $entrant from scratch team $scratch_team_number, putting back into team $old_team");
+					my $sth = database->prepare("update entrants set team = ? where code = ?");
+					$sth->execute($old_team, $entrant);
+					$sth = database->prepare("delete from scratch_team_entrants where entrant_code = ?");
+					$sth->execute($entrant);
+					push(@{$return{successes}}, "Removed entrant '$entrant' from scratch team $scratch_team_name, back into $old_team");
 				}
 			}
-			# Now update the scratch_teams hash to show the new ones
-			# And update all the other tables:
+
+			# Next, if any of the entrants in the list are not in the database, they are to be added
+			foreach my $entrant (@entrants){
+				unless(grep/^$entrant$/, @existing_entrants){
+					info("Adding $entrant to scratch team $scratch_team_number");
+					$entrant =~ m/^(\d+)/;
+					my $original_team = $1;
+					my $sth = database->prepare("replace into scratch_team_entrants (team_number, entrant_code, previous_team_number) values (?, ?, ?)");
+					$sth->execute($scratch_team_number, $entrant, $original_team);
+					push(@{$return{successes}}, "Added entrant $entrant to team -$scratch_team_name");
+				}
+			}
+
+			# Finally, if there are now no entrants in the database, we need to delete the team
+			$sth = database->prepare("select count(*) from scratch_team_entrants where team_number = ?");
+			$sth->execute($scratch_team_number);
+			if ( ($sth->fetchrow_arrayref())[0] < 1){
+				$sth = database->prepare("delete from scratch_teams where team_number = ?");
+				$sth->execute->($scratch_team_number);
+				push(@{$return{successes}}, "Removed team -$scratch_team_name");
+			}
+
 			info("Triggering cron");
 			run_cronjobs();
 		}
@@ -591,13 +620,13 @@ sub get_team{
 	}
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
-	$sth = database->prepare("select team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
+	$sth = database->prepare('select team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
 	                         current_leg, current_leg_index,
-	                         date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time_hhmm,
+	                         date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_time_hhmm,
 	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
 	                         from teams
-	                         where team_number = ?");
+	                         where team_number = ?');
 
 	$sth->execute($team_number);
 	my %team;
@@ -623,7 +652,7 @@ sub get_team{
 		$team{entrants}->{ $row->{code} } = $row;
 	}
 
-	$sth = database->prepare("select team_name as scratch_team_name,
+	$sth = database->prepare('select team_name as scratch_team_name,
 	                         entrants.entrant_name,
 	                         scratch_teams.team_number as scratch_team_number,
 	                         entrant_code as code,
@@ -632,11 +661,27 @@ sub get_team{
                                  join scratch_teams on
                                    scratch_teams.team_number = scratch_team_entrants.team_number
 	                         join entrants on entrants.code = scratch_team_entrants.entrant_code
+	                         where scratch_team_entrants.previous_team_number = ?');
 
-	                         where scratch_team_entrants.previous_team_number = ?");
 	$sth->execute($team_number);
 	while(my $row = $sth->fetchrow_hashref()){
 		$team{entrants}->{ $row->{code} } = $row;
+	}
+
+	if($team_number < 0){
+		my $sth = database->prepare('select scratch_team_entrants.entrant_code, teams.team_number, teams.team_name
+		                             from teams
+		                             join scratch_team_entrants
+		                               on scratch_team_entrants.previous_team_number = teams.team_number
+		                               join scratch_teams
+		                                 on scratch_teams.team_number = scratch_team_entrants.team_number
+		                             where scratch_team_entrants.team_number = ?');
+		my $scratch_team_number = 0 - $team_number;
+		$sth->execute($scratch_team_number);
+		while (my $row = $sth->fetchrow_hashref()){
+			$team{entrants}->{ $row->{entrant_code} }->{previous_team_name} = $row->{team_name};
+			$team{entrants}->{ $row->{entrant_code} }->{previous_team_number} = $row->{team_number};
+		}
 	}
 
 	my %legs_seconds;
@@ -654,11 +699,11 @@ sub get_team{
 any ['get','post'] => '/admin' => sub {
 	my $sth = database->prepare("select name, value, notes from config");
 	my %return;
-	if(param('do') and param('do') eq 'Update from FellTrack'){
+	if(param('do') and param('do') eq 'crons'){
 		my $output = run_cronjobs();
 		$return{'done'} = 'Updated from felltrack: '.$output;
 	}
-	if(param('do') and param('do') eq 'Clear database'){
+	if(param('do') and param('do') eq 'clear-database'){
 		clear_cache();
 		$return{'done'} = 'Cleared database tables';
 	}
@@ -706,8 +751,8 @@ sub clear_cache(){
 	}
 	my $sth = database->prepare("replace into logs (`message`, `name`) values ('Cleared all tables', 'clear_cache')");
 	$sth->execute();
-
-	$sth->execute('alter table scratch_teams auto_increment = 1');
+	$sth=database->prepare('alter table scratch_teams auto_increment = 1');
+	$sth->execute();
 }
 
 get '/cron' => sub {
@@ -898,7 +943,7 @@ sub get_percentile{
 		@numbers = reverse(@in);
 	}
 
-	# Having potentially shrunk the sample above, check it's still big enough for a percentile. 
+	# Having potentially shrunk the sample above, check it's still big enough for a percentile.
 	if (vars->{percentile_min_sample} and scalar(@numbers) < vars->{percentile_min_sample} ){
 		info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of ".vars->{percentile_min_sample}."), using mean");
 		my $sum = 0;

@@ -17,7 +17,7 @@
 		<option value='40' <% if threshold == '40'  %>selected<% end %> > 40 minutes</option>
 		<option value='60' <% if threshold == '60'  %>selected<% end %> > 1 hour</option>
 	</select>
-	<input type='submit' name='go' value='go'>
+	<button class='btn btn-primary' type='submit' name='go' value='go'>Go</button>
 </form>
 
 <table class="table table-hover table-sm table-responsive">

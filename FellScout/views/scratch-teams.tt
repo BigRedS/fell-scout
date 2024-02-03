@@ -40,9 +40,11 @@
 			<label for="entrants">Entrants list</label>
 			<input class="form-control" type='text'   name='entrants' value='<% new_team.entrants %>  '> 
 		</div>
-		<input type='submit' name='add' value='add'>
+		<button class='btn btn-primary' type='submit' name='add' value='add'>Add</button>
 	</form>
 </div>
+
+<hr>
 
 <h3>Edit existing Scratch Teams</h3>
 <div style='width:40%;'>
@@ -61,7 +63,7 @@
 					<td> <a href='/team/-<% teams.$team.team_number %>'>-<% teams.$team.team_number %></a> </td>
 					<td> <% teams.$team.team_name %></td>
 					<td> <input type='text'   name='entrants'    value='<% teams.$team.entrants  %>'> </td>
-					<td ><input type='submit' name='update'      value='update'> </td>
+					<td ><button class='btn btn-primary' type='submit' name='update' value='update'>Update</button> </td>
 					<input type='hidden' name='team_number' value='<% team %>'>
 					<input type='hidden' name='team_name' value='<% team_name %>'>
 				</form>
