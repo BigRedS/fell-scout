@@ -1,8 +1,5 @@
 create database if not exists fellscout;
-
 use fellscout;
-
-
 -- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -78,6 +75,8 @@ DROP TABLE IF EXISTS `entrants`;
 CREATE TABLE `entrants` (
   `team` smallint(6) DEFAULT NULL,
   `entrant_name` text DEFAULT NULL,
+  `district` text DEFAULT NULL,
+  `unit` text DEFAULT NULL,
   `completed` tinyint(1) DEFAULT NULL,
   `retired` tinyint(1) DEFAULT NULL,
   `code` char(4) NOT NULL,
@@ -175,7 +174,7 @@ CREATE TABLE `scratch_teams` (
   `team_name` text DEFAULT NULL,
   PRIMARY KEY (`team_number`),
   UNIQUE KEY `team_name` (`team_name`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +210,7 @@ CREATE TABLE `teams` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-02  9:36:49
+-- Dump completed on 2024-02-03 10:00:45
 -- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -252,20 +251,20 @@ CREATE TABLE `config` (
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
 INSERT INTO `config` VALUES
-('route_50mile','1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19','space-separated list of checkpoints on 50 mile route'),
-('route_50km','3 4 5 6 7 8 13 14 15 16 17 18 19','space-separated list of checkpoints on 50km route'),
-('route_30km','3 4 5 14 15 16 17 18 19','space-separated list of checkpoints on 30km route'),
-('percentile','80','percentile used to calculate average time to complete legs'),
-('felltrack_owner','chiltern2',NULL),
-('felltrack_username','someguy',NULL),
-('felltrack_password','supersecret',NULL),
-('ignore_teams','','space-separated list of teams to ignore'),
+('route_50mile','','space-separated list of checkpoints on 50 mile route'),
+('route_50km','','space-separated list of checkpoints on 50km route'),
+('route_30km','','space-separated list of checkpoints on 30km route'),
+('percentile','90','When calculating expected times for legs, we use this percentile. Normally 90'),
+('felltrack_owner','',NULL),
+('felltrack_username','',NULL),
+('felltrack_password','',NULL),
+('ignore_teams','','A space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
 ('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
-('lateness_percent_amber','30','Percent over time at which to highlight a team as late, in yellow'),
-('lateness_percent_red','80','Percent over time at which to highlight a team as late, in red'),
-('percentile_sample_size','80','The most-recent proportion of all entrants to use to calculate the percentiles for legs'),
-('percentile_min_sample','8','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a mean will be taken instead');
+('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
+('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
+('percentile_sample_size','60','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
+('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -278,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-02  9:36:49
+-- Dump completed on 2024-02-03 10:00:45
