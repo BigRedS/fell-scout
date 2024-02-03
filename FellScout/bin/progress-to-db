@@ -117,6 +117,8 @@ foreach my $row (@{$data}){
 	}else{
 		error("[row $rownum] Entrant $entrant has no team number?");
 	}
+	my $unit = $row->{'Extra field 2'};
+	my $district = $row->{'Extra field 1'};
 
 	$row->{'CP99'} = $row->{'The finish'} if $row->{'The finish'};
 	$row->{'CP0'} = $row->{'Main start'} if $row->{'Main start'};
@@ -183,8 +185,9 @@ foreach my $row (@{$data}){
 	}else{
 		$entrants{$team_number}->{$entrant}->{completed} = 0;
 	}
-	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, completed, retired, code) values (?, ?, ?, ?, ?)");
-	$sth->execute($team_number, $row->{Name}, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
+	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code) values (?, ?, ?, ?, ?, ?, ?)");
+
+	$sth->execute($team_number, $row->{Name}, $unit, $district, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
 	debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
 	$rownum++;
 	$num_entrants_added++;
@@ -228,6 +231,10 @@ foreach my $team_number (sort(keys(%entrants))){
 			error(Dumper(\%next_cps));
 		}
 		$current_leg = $most_forward_cp . '-' . $next_checkpoint;
+	}
+	if($team_number < 0){
+		$teams{$team_number}->{unit} = 'scratch';
+		$teams{$team_number}->{district} = 'scratch';
 	}
 	$num_teams_added++;
 	$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
