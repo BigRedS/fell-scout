@@ -1,4 +1,9 @@
 <h1>Teams</h1>
+
+<p> All teams, including scratch teams and those that have completed the event</p>
+
+<p>Use the search box to search the table, and click on a table heading to sort the table by that column, or team name or id to view more details about the team.</p>
+
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
@@ -8,24 +13,24 @@
 			<th>Last Checkin</th>
 			<th>Last CP</th>
 			<th>Next CP</th>
-			<th>Next CP expected at</th>
-			<th>Next CP expected in</th>
-			<th>Expected at finish</th>
+			<th style='text-align:center;' >Next CP<br>expected</th>
+			<th style='text-align:center;' >Next CP<br>expected</th>
+			<th style='text-align:center;' >Finish<br>expected</th>
 			<th>District, Unit</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN teams.keys.sort %>
 		<tr>
-			<td><a href='/team/<% id %>'> <% id %> </a> </td>
+			<td style='text-align:center;' ><a href='/team/<% id %>'> <% id %> </a> </td>
 			<td><a href='/team/<% id %>'> <% teams.$id.team_name %> </a> </td>
-			<td><% teams.$id.route %></td>
-			<td><% teams.$id.last_checkpoint_hhmm %></td>
-			<td><% teams.$id.last_checkpoint %></td>
-			<td><% teams.$id.next_checkpoint %></td>
-			<td><% teams.$id.next_checkpoint_expected_hhmm %></td>
-			<td><% teams.$id.next_checkpoint_expected_in %></td>
-			<td><% teams.$id.finish_expected_hhmm %></td>
-			<td><% teams.$id.district %>, <% teams.$id.unit %></td>
+			<td style='text-align:center;' ><% teams.$id.route %></td>
+			<td style='text-align:center;' ><% teams.$id.last_checkpoint_hhmm %></td>
+			<td style='text-align:center;' ><% teams.$id.last_checkpoint %></td>
+			<td style='text-align:center;' ><% teams.$id.next_checkpoint %></td>
+			<td style='text-align:center;' ><% teams.$id.next_checkpoint_expected_hhmm %></td>
+			<td style='text-align:center;' ><% teams.$id.next_checkpoint_expected_in %></td>
+			<td style='text-align:center;' ><% teams.$id.finish_expected_hhmm %></td>
+			<td><% teams.$id.district %><br><% teams.$id.unit %></td>
 		</tr>
 	<% END %>
 </table>

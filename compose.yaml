@@ -27,7 +27,7 @@ services:
       context: build/
       dockerfile: ./cron.dockerfile
     environment:
-      - CRON_INTERVAL_SECONDS=60
+      - CRON_INTERVAL_SECONDS=120
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=supersecret
       - MYSQL_HOST=db

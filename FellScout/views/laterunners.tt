@@ -1,10 +1,12 @@
 <h1>Late Teams</h1>
 
-<p>These are the teams that are running later-than-expected</p>
+<p>These are the teams that are running later-than-expected.</p>
 
 <p>For each 'leg' between two checkpoints we calculate the average time for all teams so far. </p>
 
-<p>This table is those teams currently running later than that</p>
+<p>This table is those teams currently running later than that.</p>
+
+<p>Use the search box to search the table, and click on a table heading to sort the table by that column, or team name or id to view more details about the team.</p>
 
 <form method='get'>
 	<label for='threshold'>How late a team has to be in order to be in the list:</label>
@@ -20,17 +22,17 @@
 	<button class='btn btn-primary' type='submit' name='go' value='go'>Go</button>
 </form>
 
-<table class="table table-hover table-sm table-responsive">
+<table class="table table-hover table-responsive">
 	<thead>
 		<tr>
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
 			<th>Route</th>
-			<th>Leg</th>
-			<th data-sortas="numeric" >Next CP<br>Expected</th>
-			<th data-sortas="numeric" >Next CP<br>Lateness</th>
-			<th data-sortas="numeric">Next CP<br>% Lateness</th>
+			<th style='text-align:center;' >Leg</th>
+			<th style='text-align:center;' data-sortas="numeric" >Next CP<br>Expected</th>
+			<th style='text-align:center;' data-sortas="numeric" >Next CP<br>Lateness</th>
+			<th style='text-align:center;' data-sortas="numeric">Next CP<br>% Lateness</th>
 		</tr>
 	</thead>
 	<% FOREACH team IN laterunners %>
@@ -45,10 +47,10 @@
 			<td><% team.unit %></ td>
 			<td><% team.district %></ td>
 			<td><% team.route %></ td>
-			<td><% team.current_leg %> (<% team.current_leg_duration %>)</ td>
-			<td><% team.next_checkpoint_expected_hhmm %></ td>
-			<td><% team.next_checkpoint_expected_in %></ td>
-			<td><% team.percent_late %>%</ td>
+			<td style='text-align:center;' > <% team.current_leg %><br /> (<% team.current_leg_duration %>)</ td>
+			<td style='text-align:center;' > <% team.next_checkpoint_expected_hhmm %></ td>
+			<td style='text-align:center;'  > <% team.next_checkpoint_expected_in %></ td>
+			<td style='text-align:center;' > <% team.percent_late %>%</ td>
 		</tr>
 	<% END %>
 </table>

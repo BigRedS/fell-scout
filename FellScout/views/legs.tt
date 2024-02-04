@@ -5,7 +5,7 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 
 <p>This page shows each leg, along with the average times taken to complete them, and which teams are on them</p>
 
-<table class='table table-hover table-sm'>
+<table class='table table-hover'>
 	<thead>
 		<tr>
 			<th>Leg</th>
@@ -20,10 +20,10 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 			<td><% id %></td>
 			<td><a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
 			<td><a href='/checkpoint/<% legs.$id.to	 %>' ><% legs.$id.to	 %></td>
-			<td><% legs.$id.time %></td>
+			<td data-sortvalue='<% legs.$id.seconds %>' ><% legs.$id.time %></td>
 			<td>
 				<% FOREACH team IN legs.$id.teams %>
-					<a href='/team/<% team %>'><% team %></a>,
+					<a href='/team/<% team %>'><% team %></a>
 				<% END %>
 			</td>
 		</tr>

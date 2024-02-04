@@ -1,10 +1,17 @@
 <h1>Summary</h1>
-<table class="table table-hover table-responsive">
+
+<p>A quick summary of the routes. For a better idea of which teams have got to which checkpoints, see the <a href='/checkpoints'>checkpoints page.</a>
+
+<p>Here, the 'Highest CP' and 'Lowest CP' columns refer to the CPs teams are heading to - the highest-numbered checkpoint that needs to be open already, and the lowest-numbered checkpoint that's still expecting any teams to check in.<p>
+
+<p>The earliest- and latest-finish teams are based on the expected finish time, calculated using the times it's taken previous entrants to finish. This won't work until at least one team has finished, and will always be an estimate.
+
+<table class="table table-responsive table-striped">
 	<thead>
 		<tr>
 			<th>Route</th>
-			<th>Hightest CP</th>
 			<th>Lowest CP</th>
+			<th>Highest CP</th>
 			<th>Earliest-finishing team</th>
 			<th>Latest-finishing team</th>
 			<th>Teams still out</th>

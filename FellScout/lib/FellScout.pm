@@ -177,17 +177,17 @@ sub get_laterunners(){
 	$sth->execute;
 	$legs = $sth->fetchall_hashref('leg_name');
 
-	$sth = database->prepare("select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, current_leg,
-	                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
+	$sth = database->prepare('select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, current_leg,
+	                          date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_time,
 	                          unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch,
-	                          date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
-	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
+	                          date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as next_checkpoint_expected_hhmm,
+	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as next_checkpoint_expected_in
 	                          from teams
 	                          join checkpoints_teams_predictions on
 	                            checkpoints_teams_predictions.team_number = teams.team_number
 	                            and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 	                          where checkpoints_teams_predictions.expected_time < NOW()
-	                          order by checkpoints_teams_predictions.expected_time desc;");
+	                          order by checkpoints_teams_predictions.expected_time desc;');
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $expected_duration = $legs->{ $row->{current_leg} }->{seconds};
@@ -383,13 +383,15 @@ get '/entrants' => sub {
 		entrants => get_entrants(),
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{table_sort_column} = 1;
+	$return->{page}->{table_sort_order} = 'asc';
 	return template 'entrants.tt', $return;
 };
 
 sub get_entrants(){
-#my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
-	my $sth = database->prepare("select code, entrant_name, teams.team_numb, team_name, entrants.unit, entrants.district, teams.last_checkpoint
-	                             from entrants join teams on entrants.team = teams.team_number left join scratch_team_entrants on entrants.code = scratch_team_entrants.entrant_code");
+	#my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
+	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district, teams.last_checkpoint
+				     from entrants join teams on entrants.team = teams.team_number left join scratch_team_entrants on entrants.code = scratch_team_entrants.entrant_code");
 	$sth->execute();
 	return $sth->fetchall_hashref('code');
 }
@@ -403,8 +405,8 @@ any ['get','post'] => '/scratch-teams' => sub {
 		my %scratch_team_names;
 		my %existing_scratch_entrants;
 		my $sth = database->prepare("select * from scratch_teams
-		                             join scratch_team_entrants
-		                             on scratch_team_entrants.team_number = scratch_teams.team_number");
+					     join scratch_team_entrants
+					     on scratch_team_entrants.team_number = scratch_teams.team_number");
 		$sth->execute();
 		while(my $row = $sth->fetchrow_hashref()){
 			$scratch_team_names{$row->{team_number}} = $row->{team_name};
@@ -552,16 +554,18 @@ get '/teams' => sub {
 		page => vars->{page},
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{table_sort_column} = 1;
+	$return->{page}->{table_sort_order} = 'asc';
 	return template 'teams.tt', $return;
 };
 
 sub get_teams{
 	# First, checkpoint times
 	my %times;
-	my $sth = database->prepare("select team_number, checkpoint,
-	                             date_format(expected_time, \"%H:%i\") as expected_hhmm,
-	                             date_format( timediff( expected_time, now() ), \"%kh%im\") as expected_in
-	                             from checkpoints_teams_predictions");
+	my $sth = database->prepare('select team_number, checkpoint,
+				     date_format(expected_time, "%H:%i") as expected_hhmm,
+				     date_format( timediff( expected_time, now() ), "%kh%im") as expected_in
+				     from checkpoints_teams_predictions');
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		$times{ $row->{team_number} }->{ $row->{checkpoint} } = $row;
@@ -569,10 +573,10 @@ sub get_teams{
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
 	$sth = database->prepare('select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
-	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
-	                         date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_hhmm,
-	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
-	                         from teams');
+				 timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
+				 date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_hhmm,
+				 unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
+				 from teams');
 	$sth->execute();
 	my $teams;
 	while (my $row = $sth->fetchrow_hashref()){
@@ -609,11 +613,11 @@ sub get_team{
 	info("Team number: $team_number");
 
 	my %cp_times;
-	my $sth = database->prepare("select checkpoint,
-	                             date_format(expected_time, \"%H:%i\") as expected_hhmm,
-	                             date_format( timediff( expected_time, now() ), \"%kh%im\") as expected_in
+	my $sth = database->prepare('select checkpoint,
+	                             date_format(expected_time, "%H:%i") as expected_hhmm,
+	                             date_format( timediff( expected_time, now() ), "%kh%im") as expected_in
 	                             from checkpoints_teams_predictions
-	                             where team_number = ?");
+	                             where team_number = ?');
 	$sth->execute($team_number);
 	while (my $row = $sth->fetchrow_hashref){
 		$cp_times{ $row->{checkpoint} } = $row;
@@ -771,23 +775,21 @@ sub run_cronjobs(){
 	if (vars->{fetch_from_felltrack} and vars->{fetch_from_felltrack} eq 'off'){
 		$ENV{SKIP_FETCH_FROM_FELLTRACK} = 1;
 	}
-
-	info("Cron: Getting data: $cmd");
 	my $output = '';
-	foreach my $line (qx/$cmd/){
-		chomp($line);
-		info(">  $line");
-		$output .= $line;
-	}
-	$sth_log->execute($output, 'get-data');
-	info("Exited: $?");
+		info("Cron: Getting data: $cmd");
+		foreach my $line (qx/$cmd/){
+			chomp($line);
+			info(">  $line");
+			$output .= $line."\n";
+		}
+		$sth_log->execute($output, 'get-data');
+		info("Exited: $?");
 
 	$cmd = cwd().'/bin/progress-to-db';
 	info("Cron: Updating DB from CSV : $cmd");
-	$output = '';
 	foreach my $line (qx/$cmd/){
 		chomp($line);
-		$output .= $line;
+		$output .= $line."\n";
 		info(">  $line");
 	}
 	$sth_log->execute($output, 'progress-to-db');
@@ -915,7 +917,7 @@ sub to_hhmm{
 sub to_hh_mm{
 	my $epoch_time = shift;
 	my ($h,$m) = (localtime($epoch_time))[2,1];
-	return(sprintf("%01sh %02sm", $h, $m));
+	return(sprintf("%01sh%02sm", $h, $m));
 }
 
 sub get_percentile{

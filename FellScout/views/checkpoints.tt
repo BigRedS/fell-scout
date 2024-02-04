@@ -1,8 +1,13 @@
 <h1>Checkpoints</h1>
+
+<p>All checkpoints, the teams for whom that is their next checkpoint, and the teams for whom it is their previous checkpoint.
+
+<p>Use the search box to search the table, and click on a table heading to sort the table by that column, or team name or id to view more details about the team.</p>
+
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
-			<th>Checkpoint</th>
+			<th data-sortas='numeric'>Checkpoint</th>
 			<th>Arrivals</th>
 			<th>Recent Departures</th>
 		</tr>
