@@ -79,7 +79,11 @@
 		<div style='width:90%;margin:auto;'>
 			<% content %>
 		</div>
+		<br />
 		<div id="footer">
+			This is <a href='https://github.com/BigRedS/fell-scout/blob/master/README.md'>FellScout</a>, a tool for <a href='https://felltrack.com/'>FellTrack</a>
+			<br />
+			To ask for changes/features/additions, either find Avi in Central Control or <a href='https://github.com/BigRedS/fell-scout/issues'>Open a bug</a>.
 		</div>
 	</body>
 </html>
