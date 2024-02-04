@@ -10,6 +10,7 @@
 		<% change %>
 	</div>
 <% end %>
+<p>For some more explanation of these options, see the <a href='https://github.com/BigRedS/fell-scout?tab=readme-ov-file#configuration-options'>documentation here</a></p>
 <div style='width:60%;'>
 	<form method='post'>
 		<table class='table table-responsive'>

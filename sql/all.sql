@@ -259,7 +259,7 @@ INSERT INTO `config` VALUES
 ('felltrack_username','',NULL),
 ('felltrack_password','',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
-('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
+('ignore_future_events','off','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
 ('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
 ('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
 ('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
