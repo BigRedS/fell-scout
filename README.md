@@ -59,8 +59,75 @@ That update is run automatically by the `cron` container in the docker-compose s
 
 Sometimes. a change on FellTrack itself may cause some confusion; nothing is ever _removed_ from FellScout by the update process, so a team or entrant being renamed will lead to duplicates, for example. In these instances the normal approach is to clear the database; aside from Scratch Teams, everything will be reinstated on the next update from FellTrack.
 
+During this update, the CSV file is processed and every entrant is read from it. They are sorted into 'teams' based on their entrant code, and the details of the entrant with the most-recent and furthest-forward check in is used as the details of the team. Each entrant's times at each checkpoint is examined, and these records are used to calculate an average time to go between checkpoints, which is how all the predictions are calculated. The CSV file only give the hour and minute of any event, so midnight is detected by the point during an entrant's event where the time goes backwards. Currently events with two midnights in are not supported.
+
+# Configuration Options
+
+Most of the configuration is done on the page at /admin, these are all simply the `config` mysql table. Some of those options explained:
+
+None of these have a default in the sense that some other value is used when they are unset; `default` here refers to the number they are set to on initial setup.
+
+## `felltrack_username`, `felltrack_password`, `felltrack_owner`
+
+No default.
+
+The credentials for logging in to FellTrack. For the owner, you can view the source of the https://felltrack.com.
+
+## `ignore_future_events`
+
+Defaults to `off`
+
+On update from FellTrack, every record in the progress.csv file is processed and put into the database if this is set to 'off', when set to 'on' it will stop if it meets a checkin that has a time in the future.
+This _should_ only be of use when testing with the test progress.csv file, but could conceivably be useful if something goes odd in Felltrack.
+
+## `ignore_teams`
+
+No default.
+
+Sometimes a manual update to a team ends up with some strange data in the CSV file, especially where they have improperly retired. These teams can be listed here (a space-separated list of the team numbers) which causes their rows to be skipped in the processing of the CSV; it is as if the team doesn't exist.
+
+## `lateness_percent_amber` and `lateness_percent_red`
+
+Defaults to `30` and `80` respectively
+
+On the /laterunners page, teams that are later than lateness_percent_red percent are highlighted in red. Those that are not that late, but later than lateness_percent_amber are highlighted in amber.
+
+## `percentile`
+
+Defaults to `90`
+
+We calculate the expected time for teams to traverse legs by taking an average of the times entrants have already taken; the average we take is the fastest nth percentile, and this is where we set the n. 
+
+## `percentile_min_sample`
+
+Defaults to `10`
+
+If the number of entrants who have already traversed a leg is too low, we can't calculate a meaningful percentile. If there are fewer than this, we just take a normal mean.
+
+## `percentile_sample_size`
+
+Defaults to `60`
+
+In general, the further into the event we are, the slower the remaining teams are. When calculating the averages, then, we should favour the more-recent teams. Before taking the fastest mth percentile of the set of all entrants on a leg, we take the most-recent nth percentile, and this is where we set that n.
+
+This only applies if the sample after taking the most-recent mth percentile would still be bigger than `percentile_min_sample`.
+
+## `route_30km` `route_50km` `route_50mile`
+
+Defines the routes of the event. The logic in the app is that any config named `route_*` defines a route, named for whatever's after that first underscore; you can add more routes by manually inserting that into the db.
+
+Each route is defined as a space-separated ordered list of checkpoint numbers. 
+
+## `skip_fetch_from_felltrack`
+
+Default: `on`
+
+This controls whether any requests are actually sent to felltrack. It is set to `on` by default to prevent hammering FellTrack before the event is ready and configured.
+
+Set to `off` once you've got the username, password and owner set properly.
 
 # Installing/Running
+
 
 ## Docker Compose
 
