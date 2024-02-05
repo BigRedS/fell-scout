@@ -13,6 +13,8 @@
 	<!-- FancyTable -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery.fancytable/dist/fancyTable.min.js"></script>
 
+	<script src="/javascripts/page_timer.js"></script>
+
 	<% IF page.table_is_searchable %>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -32,8 +34,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 	<title>Fell Scout</title>
 
-<!-- Grab jQuery from a CDN, fall back to local if necessary -->
-
+	<% if page.auto_refresh %>
+		 <meta http-equiv="refresh" content="10">
+	<% end %>
 
 </head>
 	<body>
@@ -70,9 +73,28 @@
         <a class="nav-link disabled" href="/admin">Admin</a>
       </li>
     </ul>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-	Last FellTrack sync: <% page.last_update_time %> (<% page.last_update_minutes_ago %> mins ago)
+    <div class="disabled collapse navbar-collapse justify-content-end" id="navbarNav">
+    <% if page.auto_refresh and page.auto_refresh > 0 %>
+        <form method='post'>
+            <input type='hidden' name='auto_refresh' value='-1' />
+            <input type='submit' class='btn btn-primary' value='AutoRefresh On'>
+        </form>
+    <% else %>
+        <form method='post'>
+            <input type='hidden' name='auto_refresh' value='1' />
+            <input type='submit' class='btn btn-outline-secondary' value='AutoRefresh Off'>
+        </form>
+    <% end %>
+	<% if page.seconds_since_last_felltrack_update > 600 %>
+		<button type='button' class='btn btn-danger'>
+	<% else %>
+		<button type='button' class='btn btn-outline-success'>
+	<% end %>
+		Last felltrack sync<br> <% page.time_since_last_felltrack_update %> 
+	</button>
+    	<button type='button' class='btn btn-outline-secondary'>Page age<br> <a class=page_timer id='page_timer'></a></button>
     </div>
+</div>
   </div>
 </nav>
 
