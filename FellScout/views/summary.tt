@@ -1,10 +1,16 @@
 <h1>Summary</h1>
+
+<p>This is a summary of the whole event; for an idea of which teams are where, see the <a href='/checkpoints'>checkpoints</a> page, or the specific checkpoint arrivals boards which you can find there. </p>
+
+<p>The 'Highest CP' is the furthest-forward checkpoint that is any team's next one, and the 'Lowest CP' is the furthest back one that is any team's next one.</p>
+
+
 <table class="table table-hover table-responsive">
 	<thead>
 		<tr>
 			<th>Route</th>
-			<th>Hightest CP</th>
 			<th>Lowest CP</th>
+			<th>Highest CP</th>
 			<th>Earliest-finishing team</th>
 			<th>Latest-finishing team</th>
 			<th>Teams still out</th>

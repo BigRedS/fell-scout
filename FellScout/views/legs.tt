@@ -5,6 +5,8 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 
 <p>This page shows each leg, along with the average times taken to complete them, and which teams are on them</p>
 
+<p>Checkpoint 99 is the finish</p>
+
 <table class='table table-hover table-sm'>
 	<thead>
 		<tr>
