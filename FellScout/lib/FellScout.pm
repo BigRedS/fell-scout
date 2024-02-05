@@ -729,6 +729,9 @@ any ['get','post'] => '/admin' => sub {
 	if(param('do') and param('do') eq 'crons'){
 		my $output = run_cronjobs();
 		$return{'done'} = 'Updated from felltrack: '.$output;
+		$return{page}->{time_since_last_felltrack_update} = '0h0m';
+		$return{page}->{seconds_since_last_felltrack_update} = '1';
+
 	}
 	if(param('do') and param('do') eq 'clear-database'){
 		clear_cache();
