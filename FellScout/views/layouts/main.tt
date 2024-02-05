@@ -32,7 +32,11 @@
 
 	<meta charset="<% settings.charset %>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-	<title>Fell Scout</title>
+	<% if page.title %>
+		<title><% page.title %> | FellScout </title>
+	<% else %>
+		<title>Fell Scout</title>
+	<% end %>
 
 	<% if page.auto_refresh %>
 		 <meta http-equiv="refresh" content="10">
