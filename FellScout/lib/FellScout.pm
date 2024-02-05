@@ -305,6 +305,16 @@ sub get_checkpoints(){
 	return \%cps;
 }
 
+any ['get', 'post'] => '/checkpoint' => sub {
+	my $checkpoint = param('checkpoint');
+	if($checkpoint =~ m/^\d+$/){
+		redirect "/checkpoint/$checkpoint";
+	}else{
+		redirect "/checkpoints";
+	}
+	redirect "/checkpoint/$checkpoint";
+};
+
 any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
 	my $return = {
 		checkpoint => get_checkpoint(param('checkpoint')),
@@ -586,6 +596,15 @@ sub get_teams{
 	}
 	return $teams;
 }
+
+any ['get', 'post'] => '/team' => sub {
+	my $team = param('team');
+	if($team =~ m/^-?\d+$/){
+		redirect "/team/$team";
+	}else{
+		redirect "/teams";
+	}
+};
 
 any ['get', 'post'] => '/api/team/:team' => sub {
 	my $return = {

@@ -1,4 +1,23 @@
 <h1>Checkpoints</h1>
+
+<p>
+This is a list of every checkpoint, each team for whom the checkpoint is the next they will reach, and each team for whom it is the last they left.
+</p>
+<p>
+"Checkpoint 99" is the finish.
+<p>
+You can also view a specific checkpoint's arrivals board here:
+<form method='get' action='/checkpoint'>
+	<select name='checkpoint'>
+		<option value='' selected>-</option>
+		<% foreach id IN checkpoints.keys.nsort %>
+			<option value='<% id %>' ><% id %></option>
+		<% end %>
+	</select>
+	<button type='submit' class='btn btn-primary btn-sm' name='go' value='go'>Go</button>
+</form>
+</p>
+
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
