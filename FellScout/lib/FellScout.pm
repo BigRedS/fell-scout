@@ -25,18 +25,19 @@ hook 'before' => sub {
 	}
 
 	$sth = database->prepare("select
-	                          timestampdiff(MINUTE, time, CURTIME()) as minutes_since,
-	                          date_format( time , \"%H:%i\") as time
+	                          date_format( timediff(now(), time ), \"%kh%im\") as time_since_last_felltrack_update,
+	                          timestampdiff(SECOND, time, CURTIME()) as seconds_since_last_felltrack_update
 	                          from logs
 	                          where
 	                          name = 'periodic-jobs'");
 	$sth->execute();
-	my $row = $sth->fetchrow_hashref();
-	var page => { last_update_time => $row->{time}, last_update_minutes_ago => $row->{minutes_since} };
+	my $page = $sth->fetchrow_hashref();
+	$page->{auto_refresh} = param('auto_refresh') if param('auto_refresh') and param('auto_refresh') > 0;
+	var page => $page;
 };
 
 # # # # # SUMMARY
-get '/' => sub{
+any ['get', 'post'] => '/' => sub{
 	my $return = {
 		summary => get_summary(),
 		page => vars->{page},
@@ -44,7 +45,7 @@ get '/' => sub{
 	return template 'summary.tt', $return;
 };
 
-get '/api/summary' => sub{
+any ['get', 'post'] => '/api/summary' => sub{
 	encode_json(get_summary());
 };
 
@@ -148,7 +149,7 @@ sub get_summary {
 	return \%summary;
 }
 # # # # # laterunners
-get '/laterunners' => sub {
+any ['get', 'post'] => '/laterunners' => sub {
 	my $return = {
 		laterunners => get_laterunners(param('threshold')),
 		threshold => param('threshold'),
@@ -164,7 +165,7 @@ get '/laterunners' => sub {
 	$return->{page}->{table_sort_order} = 'desc';
 	return template 'laterunners.tt', $return;
 };
-get '/api/laterunners/' => sub{
+any ['get', 'post'] => '/api/laterunners/' => sub{
 	return encode_json(laterunners => get_laterunners( param('threshold') ) )
 };
 
@@ -212,7 +213,7 @@ sub get_laterunners(){
 	return \@laterunners;
 }
 # # # # # LEGS + CHECKPOINTS
-get '/legs' => sub {
+any ['get', 'post'] => '/legs' => sub {
 	my $return = {
 		legs => get_legs(),
 		page => vars->{page},
@@ -220,7 +221,7 @@ get '/legs' => sub {
 	return template 'legs.tt', $return;
 };
 
-get '/api/legs' => sub{
+any ['get', 'post'] => '/api/legs' => sub{
 	return encode_json( get_legs() );
 };
 
@@ -247,7 +248,7 @@ sub get_legs(){
 }
 
 
-get '/checkpoints' => sub {
+any ['get', 'post'] => '/checkpoints' => sub {
 	my $return = {
 		checkpoints => get_checkpoints(),
 		page => vars->{page},
@@ -256,7 +257,7 @@ get '/checkpoints' => sub {
 	return template 'checkpoints.tt', $return;
 };
 
-get '/api/checkpoints' => sub{
+any ['get', 'post'] => '/api/checkpoints' => sub{
 	return encode_json( get_checkpoints() );
 };
 
@@ -304,7 +305,7 @@ sub get_checkpoints(){
 	return \%cps;
 }
 
-get '/checkpoint/:checkpoint' => sub {
+any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
 	my $return = {
 		checkpoint => get_checkpoint(param('checkpoint')),
 		page => vars->{page},
@@ -312,7 +313,7 @@ get '/checkpoint/:checkpoint' => sub {
 	return template 'checkpoint.tt', $return;
 };
 
-get '/api/checkpoint/:checkpoint' => sub{
+any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
 	return encode_json( get_checkpoint(param('checkpoint')));
 };
 
@@ -373,11 +374,11 @@ sub get_checkpoint(){
 
 # # # # # ENTRANTS
 
-get '/api/entrants' => sub {
+any ['get', 'post'] => '/api/entrants' => sub {
 	return encode_json(get_entrants());
 };
 
-get '/entrants' => sub {
+any ['get', 'post'] => '/entrants' => sub {
 	my $return = {
 		page => vars->{page},
 		entrants => get_entrants(),
@@ -542,11 +543,11 @@ any ['get','post'] => '/scratch-teams' => sub {
 	return template 'scratch-teams.tt', \%return;
 };
 
-get '/api/teams' => sub {
+any ['get', 'post'] => '/api/teams' => sub {
 	return encode_json(get_teams());
 };
 
-get '/teams' => sub {
+any ['get', 'post'] => '/teams' => sub {
 	my $return = {
 		teams => get_teams(),
 		page => vars->{page},
@@ -586,7 +587,7 @@ sub get_teams{
 	return $teams;
 }
 
-get '/api/team/:team' => sub {
+any ['get', 'post'] => '/api/team/:team' => sub {
 	my $return = {
 		page => vars->{page},
 		team => get_team( param('team') ),
@@ -595,7 +596,7 @@ get '/api/team/:team' => sub {
 	return encode_json(get_team( param('team')));
 };
 
-get '/team/:team' => sub {
+any ['get', 'post'] => '/team/:team' => sub {
 	my $return = {
 		page => vars->{page},
 		team => get_team( param('team') ),
@@ -735,7 +736,7 @@ any ['get','post'] => '/admin' => sub {
 	return template 'admin.tt', \%return;
 };
 
-get '/clear-cache' => sub {
+any ['get', 'post'] => '/clear-cache' => sub {
 	clear_cache();
 	return "Cleanup done, you can now click 'back' to get back to where you were";
 };
@@ -755,7 +756,7 @@ sub clear_cache(){
 	$sth->execute();
 }
 
-get '/cron' => sub {
+any ['get', 'post'] => '/cron' => sub {
 	run_cronjobs();
 	return "Cronjobs done, you can now click 'back' to get back to where you were";
 };
