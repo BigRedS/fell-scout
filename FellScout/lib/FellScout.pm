@@ -256,7 +256,6 @@ any ['get', 'post'] => '/checkpoints' => sub {
 		checkpoints => get_checkpoints(),
 		page => vars->{page},
 	};
-	$return->{page}->{table_is_searchable} = 1;
 	$return->{page}->{title} = 'Checkpoints';
 	return template 'checkpoints.tt', $return;
 };
