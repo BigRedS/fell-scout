@@ -42,6 +42,7 @@ any ['get', 'post'] => '/' => sub{
 		summary => get_summary(),
 		page => vars->{page},
 	};
+	$return->{page}->{title} = 'Event Summary';
 	return template 'summary.tt', $return;
 };
 
@@ -163,6 +164,7 @@ any ['get', 'post'] => '/laterunners' => sub {
 	$return->{page}->{table_is_searchable} = 1;
 	$return->{page}->{table_sort_column} = 7;
 	$return->{page}->{table_sort_order} = 'desc';
+	$return->{page}->{title} = 'Late Runners';
 	return template 'laterunners.tt', $return;
 };
 any ['get', 'post'] => '/api/laterunners/' => sub{
@@ -218,6 +220,7 @@ any ['get', 'post'] => '/legs' => sub {
 		legs => get_legs(),
 		page => vars->{page},
 	};
+	$return->{page}->{title} = 'Legs';
 	return template 'legs.tt', $return;
 };
 
@@ -254,6 +257,7 @@ any ['get', 'post'] => '/checkpoints' => sub {
 		page => vars->{page},
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{title} = 'Checkpoints';
 	return template 'checkpoints.tt', $return;
 };
 
@@ -320,6 +324,7 @@ any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
 		checkpoint => get_checkpoint(param('checkpoint')),
 		page => vars->{page},
 	};
+	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
 	return template 'checkpoint.tt', $return;
 };
 
@@ -394,6 +399,7 @@ any ['get', 'post'] => '/entrants' => sub {
 		entrants => get_entrants(),
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{title} = 'entrants';
 	return template 'entrants.tt', $return;
 };
 
@@ -554,6 +560,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 	}
 
 	$return{page} = vars->{page},
+	$return{page}->{title} = 'Scratch Teams';
 	return template 'scratch-teams.tt', \%return;
 };
 
@@ -567,6 +574,7 @@ any ['get', 'post'] => '/teams' => sub {
 		page => vars->{page},
 	};
 	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{title} = 'Teams';
 	return template 'teams.tt', $return;
 };
 
@@ -611,11 +619,6 @@ any ['get', 'post'] => '/team' => sub {
 };
 
 any ['get', 'post'] => '/api/team/:team' => sub {
-	my $return = {
-		page => vars->{page},
-		team => get_team( param('team') ),
-	};
-	return encode_json($return);
 	return encode_json(get_team( param('team')));
 };
 
@@ -624,6 +627,7 @@ any ['get', 'post'] => '/team/:team' => sub {
 		page => vars->{page},
 		team => get_team( param('team') ),
 	};
+	$return->{page}->{title} = 'Team ' . $return->{team}->{team_name};
 	return template 'team.tt', $return;
 };
 
@@ -756,6 +760,7 @@ any ['get','post'] => '/admin' => sub {
 	}
 
 	$return{page} = vars->{page};
+	$return{page}->{title} = 'Admin';
 	return template 'admin.tt', \%return;
 };
 
