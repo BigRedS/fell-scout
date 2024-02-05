@@ -1,4 +1,26 @@
 <h1>Teams</h1>
+
+<p>Every team in the event; scratch teams have a negative number for an ID and may be edited on the <a href='/scratch-teams'>Scratch Teams</a> page.</p>
+
+<p>Checkpoint 99 is the finish, so any teams with a 'Last CP' of 99 have already finished</p>
+
+<p>'Expected at finish' will be empty until enough teams on a given route have finished for a reasonable estimate to be calculated.
+Similarly, teams towards the front will have no estimate for their next checkpoint if not many other teams have already got there.</p>
+
+<p>Use the search box to search by any field of the table, and click the column headers to sort the table by that field.</p>
+
+View a specific team:
+<form method='get' action='/team'>
+	<select name='team'>
+		<option value='' selected>-</option>
+		<% foreach id IN teams.keys.nsort %>
+			<option value='<% id %>' ><% id %></option>
+		<% end %>
+	</select>
+	<button type='submit' class='btn btn-primary btn-sm' name='go' value='go'>Go</button>
+</form>
+
+
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>

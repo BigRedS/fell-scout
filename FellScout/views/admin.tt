@@ -34,13 +34,17 @@
 	</tr>
 	<% END %>
 </table>
-
+<hr>
 <h2>Tools</h2>
-<ul>
-	<form method='post'>
-		<ul>
-			<li> <input type='submit' name='do' value='Update from FellTrack' /> </li>
-			<li> <input type='submit' name='do' value='Clear database' /> This will also delete scratch teams, which will need to be manually reimplemented</li>
-		</ul>
-	</form>
-</ul>
+<form method='post'>
+	<table class='table'>
+		<tr>
+			<td><button class='btn' type='submit' name='do' value='crons' />Felltrack update</button></td>
+			<td>Manually kick off the periodic update from FellTrack</td>
+		</tr>
+		<tr>
+			<td><button class='btn' type='submit' name='do' value='clear-database' />Clear database</button></td>
+			<td>Clear the local cache of FellTrack, useful when something has changed on FellTrack but isn't showing up as changed in FellScout. This will clear Scratch Teams, which will need manual recreation</td>
+		</tr>
+	</table>
+</form>
