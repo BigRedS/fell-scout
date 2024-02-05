@@ -399,8 +399,12 @@ any ['get', 'post'] => '/entrants' => sub {
 
 sub get_entrants(){
 #my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
-	my $sth = database->prepare("select code, entrant_name, teams.team_numb, team_name, entrants.unit, entrants.district, teams.last_checkpoint
-	                             from entrants join teams on entrants.team = teams.team_number left join scratch_team_entrants on entrants.code = scratch_team_entrants.entrant_code");
+	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district, teams.last_checkpoint
+	                             from entrants
+	                             join teams
+	                             on entrants.team = teams.team_number
+	                             left join scratch_team_entrants
+	                             on entrants.code = scratch_team_entrants.entrant_code");
 	$sth->execute();
 	return $sth->fetchall_hashref('code');
 }
@@ -441,7 +445,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 			my $number = 0 - param('team_number');
 			$sth = database->prepare("delete from teams where team_number = ? and team_number < 0");
 			$sth->execute($number);
-			push(@{$return{successes}}, "Deleted team -".param('team_number')."");	
+			push(@{$return{successes}}, "Deleted team -".param('team_number')."");
 		}else{
 			my $scratch_team_name = param('team_name');
 
@@ -450,7 +454,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 				$scratch_team_name =~ s/[^\w\s\.\,\?\!\"\']//;
 				unless($scratch_team_name eq param('team_name')){
 					push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$scratch_team_name'");
-				}	
+				}
 				if($scratch_team_names{ lc($scratch_team_name) }){
 					push(@{$return{errors}}, "There is already a scratch team called '$scratch_team_name'; names need to be unique (this check doesn't consider capital letters)");
 					error("Duplicate scratch team: '$scratch_team_name'");
@@ -464,7 +468,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 			# Sanitise each entrant's code
 			$sth = database->prepare("select code, team from entrants");
 			$sth->execute();
-			my $all_entrants = $sth->fetchall_hashref('code');	
+			my $all_entrants = $sth->fetchall_hashref('code');
 
 			my @entrants;
 			foreach my $entrant (split(m/\s+/, param('entrants'))){
