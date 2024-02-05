@@ -20,7 +20,7 @@ services:
       MARIADB_ROOT_PASSWORD: supersecret
     volumes:
       - fellscout_db:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d
+      - ./build/sql:/docker-entrypoint-initdb.d
 
   cron:
     build:
