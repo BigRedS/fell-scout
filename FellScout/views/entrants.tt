@@ -7,19 +7,19 @@
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
-			<th>ID</th>
+			<th data-sortas='numeric'>ID</th>
 			<th>Name</th>
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
-			<th>Last checkpoint</th>
+			<th data-sortas='numeric'>Last checkpoint</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN entrants.keys.sort %>
 		<tr>
 			<td><% entrants.$id.code %> </td>
 			<td><% entrants.$id.entrant_name %></td>
-			<td><a href='/team/<% entrants.$id.team_number %>'><% entrants.$id.team_number %> - <% entrants.$id.team_name %></a></td>
+			<td><a href='/team/<% entrants.$id.team_number %>'><% entrants.$id.team_name %></a></td>
 			<td><% entrants.$id.unit %></td>
 			<td><% entrants.$id.district %></td>
 			<td><% entrants.$id.last_checkpoint %></td>

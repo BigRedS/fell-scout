@@ -27,10 +27,10 @@
 			<th>Unit</th>
 			<th>District</th>
 			<th>Route</th>
-			<th>Leg</th>
+			<th data-sortas='numeric' >Leg</th>
 			<th data-sortas="numeric" >Next CP<br>Expected</th>
 			<th data-sortas="numeric" >Next CP<br>Lateness</th>
-			<th data-sortas="numeric">Next CP<br>% Lateness</th>
+			<th data-sortas="numeric" >Next CP<br>% Lateness</th>
 		</tr>
 	</thead>
 	<% FOREACH team IN laterunners %>

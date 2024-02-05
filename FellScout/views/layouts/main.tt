@@ -81,12 +81,12 @@
     <% if page.auto_refresh and page.auto_refresh > 0 %>
         <form method='post'>
             <input type='hidden' name='auto_refresh' value='-1' />
-            <input type='submit' class='btn btn-primary' value='AutoRefresh On'>
+            <button type='submit' class='btn btn-primary'>Auto Refresh<br />On</button>
         </form>
     <% else %>
         <form method='post'>
             <input type='hidden' name='auto_refresh' value='1' />
-            <input type='submit' class='btn btn-outline-secondary' value='AutoRefresh Off'>
+            <button type='submit' class='btn btn-outline-secondary'>Auto Refresh<br />Off</button>
         </form>
     <% end %>
 	<% if page.seconds_since_last_felltrack_update > 600 %>
@@ -96,7 +96,7 @@
 	<% end %>
 		Last felltrack sync<br> <% page.time_since_last_felltrack_update %> 
 	</button>
-    	<button type='button' class='btn btn-outline-secondary'>Page age<br> <a class=page_timer id='page_timer'></a></button>
+    	<button type='button' class='btn btn-outline-secondary'>Page age<br> <a class=page_timer id='page_timer'>0s</a></button>
     </div>
 </div>
   </div>
