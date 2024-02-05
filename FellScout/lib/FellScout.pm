@@ -633,7 +633,6 @@ any ['get', 'post'] => '/team/:team' => sub {
 sub get_team{
 	my $team_number = shift;
 	$team_number =~ s/[^-\d]+//;
-	info("Team number: $team_number");
 
 	my %cp_times;
 	my $sth = database->prepare("select checkpoint,
@@ -825,7 +824,7 @@ sub run_cronjobs(){
 	info("Exited: $?");
 
 
-	info("Cron: Updating legs");
+	#info("Cron: Updating legs");
 
 	# First, get every possible leg given the routes definition into the legs table
 	my $sth = database->prepare("select name, value from config where name like 'route%'");
@@ -865,7 +864,7 @@ sub run_cronjobs(){
 		$sth->execute($leg, $from, $to, $expected_seconds);
 	}
 
-	info("Cron: Adding expected times to teams");
+	#info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
 	$sth_log->execute('completed', 'periodic-jobs');
 	return $output;
@@ -976,7 +975,7 @@ sub get_percentile{
 
 	# Having potentially shrunk the sample above, check it's still big enough for a percentile.
 	if (vars->{percentile_min_sample} and scalar(@numbers) < vars->{percentile_min_sample} ){
-		info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of ".vars->{percentile_min_sample}."), using mean");
+		#info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of ".vars->{percentile_min_sample}."), using mean");
 		my $sum = 0;
 		map { $sum += $_ } @in;
 		return $sum / scalar(@in);
