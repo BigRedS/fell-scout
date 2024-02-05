@@ -1,4 +1,10 @@
 <h1>Fell Scout Admin</h1>
+
+<p>This is the admin/config page for FellScout. Here, you can modify the way FellScout displays the information it gets from FellTrack</p>
+
+<p>Most of these will only take effect the next time the data is ingested from FellTrack, there's a button at the bottom of the page for that.</p>
+
+
 <h2>Config</h2>
 <% foreach thing in done %>
 	<div class="alert alert-success" role="alert">
@@ -18,9 +24,10 @@
 				<tr><td><% name %></td><td><input type = 'text' name='<% name %>' value='<% config.$name.value %>'></td><td><% config.$name.notes %></td></tr>
 			<% END %>
 		</table>
-		<input type='submit' value='update' name='update'>
+		<button type='submit' class='btn btn-primary' value='update' name='update'>Update Config</button>
 	</form>
 </div>
+<hr>
 <h2>Logs</h2>
 <table class='table'>
 	<tr><thead>

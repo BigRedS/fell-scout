@@ -1,6 +1,11 @@
-<h1>Checkpoint <% checkpoint.cp %></h1>
+<h1>Checkpoint <% checkpoint.cp %> Arrivals Board</h1>
 
-<h2>Teams yet-to-reach checkpoint <% checkpoint.cp %></h2>
+<p>This page shows every team that has yet to reach this checkpoint, and when they're expected here</p>
+
+<p>'Expected at finish' will only populate when enough teams have finished the event to make for reasonable estimates for the teams behind them</p>
+
+<p>You can see all teams and all checkpoints on the general <a href='/checkpoints'>checkpoints page</a>.</p>
+
 <table class='table'>
 	<thead>
 		<tr>

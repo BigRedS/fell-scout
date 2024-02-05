@@ -24,9 +24,11 @@
 <p>This page is for creating or modifying them. To do this use the form below. There are two fields:</p>
 
 <ul>
-	<li><b>Team Name</b> Anything you like, doesn't need to be unique or even set at all. You can change this later (here)</li>
+	<li><b>Team Name</b>Doesn't need to be anything in particular, but the firstnames of the entrants is common. Can only be made of letters and a few symbols</li>
 	<li><b>Entrants</b> A space-separated list of entrant IDs, which you can read off the <a href=/entrants>entrants page</a></li>
 </ul>
+
+<p>You can easily change the entrants in a team below, if you want to delete a team simply remove all the entrants. To rename a team, delete it and recreate it with a new name.</p>
 
 <h3> Add a new Scratch Team </h3>
 
@@ -40,7 +42,7 @@
 			<label for="entrants">Entrants list</label>
 			<input class="form-control" type='text'   name='entrants' value='<% new_team.entrants %>  '> 
 		</div>
-		<input type='submit' name='add' value='add'>
+		<button type='submit' class='btn btn-primary btn-sm' name='add' value='add'>Add Scratch Team</button>
 	</form>
 </div>
 
@@ -60,8 +62,8 @@
 				<form method='post'>
 					<td> <a href='/team/-<% teams.$team.team_number %>'>-<% teams.$team.team_number %></a> </td>
 					<td> <% teams.$team.team_name %></td>
-					<td> <input type='text'   name='entrants'    value='<% teams.$team.entrants  %>'> </td>
-					<td ><input type='submit' name='update'      value='update'> </td>
+					<td> <input type='text' name='entrants' value='<% teams.$team.entrants  %>'> </td>
+					<td ><button type='submit' class='btn btn-primary btn-sm' name='update' value='update'>Update Team</button></td>
 					<input type='hidden' name='team_number' value='<% team %>'>
 					<input type='hidden' name='team_name' value='<% team_name %>'>
 				</form>
