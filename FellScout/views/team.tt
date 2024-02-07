@@ -18,7 +18,7 @@
 	<tr><td>Remaining Checkpoints</td>
 		<td>
 			<ul>
-				<% FOREACH cp IN team.remaining_checkpoints.keys.sort %>
+				<% FOREACH cp IN team.remaining_checkpoints.keys.nsort %>
 					<li><% cp %> (expected at <% team.rememaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
 				<% END %>
 			</ul>
@@ -26,7 +26,7 @@
 	</tr>
 
 	<tr><td>Entrants</td><td>
-		<% FOREACH entrant IN team.entrants.keys.sort %>
+		<% FOREACH entrant IN team.entrants.keys.nsort %>
 			<% entrant %>: <% team.entrants.$entrant.entrant_name %>
 			<% IF team.entrants.$entrant.retired %>
 				( retired at checkpoint <% team.entrants.$entrant.retired %> )
