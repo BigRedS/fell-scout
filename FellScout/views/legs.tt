@@ -17,7 +17,7 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 			<th>Teams on leg</th>
 		</tr>
 	</thead>
-	<% FOREACH id IN legs.keys.sort %>
+	<% FOREACH id IN legs.keys.nsort %>
 		<tr>
 			<td><% id %></td>
 			<td><a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
@@ -25,7 +25,7 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 			<td><% legs.$id.time %></td>
 			<td>
 				<% FOREACH team IN legs.$id.teams %>
-					<a href='/team/<% team %>'><% team %></a>,
+					<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 				<% END %>
 			</td>
 		</tr>
