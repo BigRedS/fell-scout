@@ -10,19 +10,19 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 <table class='table table-hover table-sm'>
 	<thead>
 		<tr>
-			<th>Leg</th>
-			<th>From</th>
-			<th>To</th>
-			<th>Average Time To Complete</th>
-			<th>Teams on leg</th>
+			<th style='min-width:6em;' class='text-center' data-sortas='numeric'>Leg</th>
+			<th class='text-center' data-sortas='numeric'>From</th>
+			<th class='text-center' data-sortas='numeric'>To</th>
+			<th class='text-center'> Average Time To Complete</th>
+			<th class='text-center'> Teams on leg</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN legs.keys.nsort %>
 		<tr>
-			<td><% id %></td>
-			<td><a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
-			<td><a href='/checkpoint/<% legs.$id.to	 %>' ><% legs.$id.to	 %></td>
-			<td><% legs.$id.time %></td>
+			<td class='text-center'> <% id %></td>
+			<td class='text-center'> <a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
+			<td class='text-center'> <a href='/checkpoint/<% legs.$id.to	 %>' ><% legs.$id.to	 %></td>
+			<td class='text-center'> <% legs.$id.time %></td>
 			<td>
 				<% FOREACH team IN legs.$id.teams %>
 					<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
