@@ -24,19 +24,19 @@ View a specific team:
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
-			<th>ID</th>
+			<th data-sortas='numeric'>ID</th>
 			<th>Name</th>
 			<th>Route</th>
-			<th>Last Checkin</th>
-			<th>Last CP</th>
-			<th>Next CP</th>
-			<th>Next CP expected at</th>
-			<th>Next CP expected in</th>
-			<th>Expected at finish</th>
+			<th data-sortas='numeric'>Last Checkin</th>
+			<th data-sortas='numeric'>Last CP</th>
+			<th data-sortas='numeric'>Next CP</th>
+			<th data-sortas='numeric'>Next CP<br> expected at</th>
+			<th data-sortas='numeric'>Next CP<br> expected in</th>
+			<th data-sortas='numeric'>Finish<br>expected</th>
 			<th>District, Unit</th>
 		</tr>
 	</thead>
-	<% FOREACH id IN teams.keys.sort %>
+	<% FOREACH id IN teams.keys.nsort %>
 		<tr>
 			<td><a href='/team/<% id %>'> <% id %> </a> </td>
 			<td><a href='/team/<% id %>'> <% teams.$id.team_name %> </a> </td>
