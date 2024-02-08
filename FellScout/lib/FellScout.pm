@@ -612,6 +612,14 @@ sub get_teams{
 		$row->{next_checkpoint_expected_in} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_in};
 
 		$teams->{ $row->{team_number} } = $row;
+		if(!$row->{next_checkpoint_expected_hhmm} or $row->{next_checkpoint_expected_hhmm} !~ m/\d+/){
+			$row->{next_checkpoint_expected_hhmm} = '--';
+			$row->{next_checkpoint_expected_in} = '--';
+		}
+		if(!$row->{finish_expected_hhmm} or $row->{finish_expected_hhmm} !~ m/\d+/){
+			$row->{finish_expected_hhmm} = '--';
+			$row->{finish_expected_in} = '--';
+		}
 	}
 	return $teams;
 }
