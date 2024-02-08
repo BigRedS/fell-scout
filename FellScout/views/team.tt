@@ -42,4 +42,14 @@
 	</td></tr>
 
 	<tr><td>Unit, District</td><td><% team.unit %>, <% team.district %></td></tr>
+
+	<tr><td>Previous Checkpoints</td>
+		<td>
+			<ul>
+				<% FOREACH cp IN team.previous_checkpoints.keys.nsort %>
+					<li><% cp %> at <% team.previous_checkpoints.$cp.hhmm %></li>
+				<% END %>
+			</ul>
+		</td>
+	</tr>
 </table>
