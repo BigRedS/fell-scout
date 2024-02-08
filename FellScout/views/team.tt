@@ -9,7 +9,7 @@
 
 	<tr><td>Next Checkpoint</td><td><% team.next_checkpoint %></td></tr>
 
-	<tr><td>Next Checkpoint expected time</td><td><% team.next_checkpoint_expected_hhmm %> ( in <% next_checkpoint_expected_in %>)</td></tr>
+	<tr><td>Next Checkpoint expected time</td><td><% team.next_checkpoint_expected_hhmm %> ( in <% team.next_checkpoint_expected_in %>)</td></tr>
 
 	<tr><td>Last Checkpoint</td><td><% team.last_checkpoint %> at <% team.last_checkpoint_time_hhmm %></td></tr>
 
@@ -19,14 +19,14 @@
 		<td>
 			<ul>
 				<% FOREACH cp IN team.remaining_checkpoints.keys.nsort %>
-					<li><% cp %> (expected at <% team.rememaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
+					<li><% cp %> (expected at <% team.remaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
 				<% END %>
 			</ul>
 		</td>
 	</tr>
 
 	<tr><td>Entrants</td><td>
-		<% FOREACH entrant IN team.entrants.keys.nsort %>
+		<% FOREACH entrant IN team.entrants.keys.sort %>
 			<% entrant %>: <% team.entrants.$entrant.entrant_name %>
 			<% IF team.entrants.$entrant.retired %>
 				( retired at checkpoint <% team.entrants.$entrant.retired %> )
