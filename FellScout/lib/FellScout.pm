@@ -641,26 +641,14 @@ any ['get', 'post'] => '/team/:team' => sub {
 sub get_team{
 	my $team_number = shift;
 	$team_number =~ s/[^-\d]+//;
-
-	my %cp_times;
-	my $sth = database->prepare("select checkpoint,
-	                             date_format(expected_time, \"%H:%i\") as expected_hhmm,
-	                             date_format( timediff( expected_time, now() ), \"%kh%im\") as expected_in
-	                             from checkpoints_teams_predictions
-	                             where team_number = ?");
-	$sth->execute($team_number);
-	while (my $row = $sth->fetchrow_hashref){
-		$cp_times{ $row->{checkpoint} } = $row;
-	}
-
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
-	$sth = database->prepare('select team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
-	                         current_leg, current_leg_index,
-	                         date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_time_hhmm,
-	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
-	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
-	                         from teams
-	                         where team_number = ?');
+	my $sth = database->prepare('select team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint,
+	                            current_leg, current_leg_index,
+	                            date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_time_hhmm,
+	                            timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
+	                            unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
+	                            from teams
+	                            where team_number = ?');
 
 	$sth->execute($team_number);
 	my %team;
@@ -672,13 +660,46 @@ sub get_team{
 		return %team;
 	}
 
-	$team{next_checkpoint_expected_in}   = $cp_times{ $team{next_checkpoint} }->{expected_in};
-	$team{next_checkpoint_expected_hhmm} = $cp_times{ $team{next_checkpoint} }->{expected_hhmm};
+	unless($team{last_checkpoint} == 99){
+		$sth = database->prepare('select checkpoint,
+					 date_format(expected_time, "%H:%i") as expected_hhmm,
+					 date_format( timediff( expected_time, now() ), "%kh%im") as expected_in
+					 from checkpoints_teams_predictions
+					 where team_number = ?');
+		$sth->execute($team_number);
+		my $cp_expected_times = $sth->fetchall_hashref('checkpoint');
 
-	$team{finish_expected_in}   = $cp_times{99}->{expected_in};
-	$team{finish_expected_hhmm} = $cp_times{99}->{expected_hhmm};
+		$sth = database->prepare('select `to` from legs
+					 join routes
+					 on routes.leg_name = legs.leg_name
+					 where routes.route_name =
+					   (select route from teams where team_number = ?)
+					 and `to` >=
+					   (select next_checkpoint from teams where team_number = ?)');
+		$sth->execute($team_number, $team_number);
+		my %cp_times;
+		while(my $row = $sth->fetchrow_hashref){
+			if($cp_expected_times->{ $row->{to} }->{expected_hhmm}){
+				$cp_times{ $row->{to} } = $cp_expected_times->{ $row->{to} };
+			}else{
+				$cp_times{ $row->{to} } = {expected_hhmm => '-', expected_in => '-'};
+			}
+		}
 
-	$team{remaining_checkpoints} = \%cp_times;
+		$team{next_checkpoint_expected_in}   = $cp_times{ $team{next_checkpoint} }->{expected_in};
+		$team{next_checkpoint_expected_hhmm} = $cp_times{ $team{next_checkpoint} }->{expected_hhmm};
+
+		$team{finish_expected_in}   = $cp_times{99}->{expected_in};
+		$team{finish_expected_hhmm} = $cp_times{99}->{expected_hhmm};
+
+		$team{remaining_checkpoints} = \%cp_times;
+	}
+
+	$sth = database->prepare('select checkpoint, date_format(time, "%H:%i") as hhmm
+	                         from checkpoints_teams where team_number = ?
+	                         order by checkpoint asc;');
+	$sth->execute($team_number);
+	$team{previous_checkpoints} = $sth->fetchall_hashref('checkpoint');
 
 	$sth = database->prepare("select code, entrant_name, retired from entrants where team = ?");
 	$sth->execute($team_number);
