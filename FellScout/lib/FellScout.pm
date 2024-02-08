@@ -150,7 +150,15 @@ sub get_summary {
 	return \%summary;
 }
 # # # # # laterunners
+
 any ['get', 'post'] => '/laterunners' => sub {
+	if(param('threshold') and param('threshold') =~ m/^\d+(m|pc)$/){
+		redirect "/laterunners/".param('threshold');
+	}else{
+		redirect "/laterunners/0";
+	}
+};
+any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 	my $return = {
 		laterunners => get_laterunners(param('threshold')),
 		threshold => param('threshold'),
@@ -167,7 +175,7 @@ any ['get', 'post'] => '/laterunners' => sub {
 	$return->{page}->{title} = 'Late Runners';
 	return template 'laterunners.tt', $return;
 };
-any ['get', 'post'] => '/api/laterunners/' => sub{
+any ['get', 'post'] => '/api/laterunners/' => sub {
 	return encode_json(laterunners => get_laterunners( param('threshold') ) )
 };
 
@@ -202,7 +210,7 @@ sub get_laterunners(){
 
 		my $is_late = 1;
 		if($threshold){
-			if($threshold =~ m/(\d+)%$/){
+			if($threshold =~ m/(\d+)pc$/){
 				my $threshold = $1;
 				$is_late = 0 unless $row->{percent_late} > $threshold;
 			}elsif($threshold =~ m/^(\d+)m$/){
