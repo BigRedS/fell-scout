@@ -8,11 +8,11 @@
 <table class="table table-striped table-hover table-responsive">
 	<thead>
 		<tr>
-			<th>Route</th>
-			<th>Lowest CP</th>
-			<th>Highest CP</th>
-			<th>Earliest-finishing team</th>
-			<th>Latest-finishing team</th>
+			<th class='text-center'>Route</th>
+			<th class='text-center'>Lowest CP</th>
+			<th class='text-center'>Highest CP</th>
+			<th class='text-center'>Earliest-finishing team</th>
+			<th class='text-center'>Latest-finishing team</th>
 			<th>Teams still out</th>
 		</tr>
 	</thead>

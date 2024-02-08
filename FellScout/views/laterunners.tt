@@ -6,16 +6,16 @@
 
 <p>This table is those teams currently running later than that</p>
 
-<form>
+<form method='get' action='/laterunners'>
 	<label for='threshold'>How late a team has to be in order to be in the list:</label>
 	<select name='threshold' id='threshold'>
-		<option value='0'  <% if threshold == '0'   %>selected<% end %> > 0%  </option>
-		<option value='5'  <% if threshold == '5%'  %>selected<% end %> > 5%  </option>
-		<option value='10' <% if threshold == '10%' %>selected<% end %> > 10% </option>
-		<option value='20' <% if threshold == '20%' %>selected<% end %> > 20% </option>
-		<option value='20' <% if threshold == '20'  %>selected<% end %> > 20 minutes</option>
-		<option value='40' <% if threshold == '40'  %>selected<% end %> > 40 minutes</option>
-		<option value='60' <% if threshold == '60'  %>selected<% end %> > 1 hour</option>
+		<option value='0'    <% if threshold == '0'    %> selected <% end %> > 0%  </option>
+		<option value='5pc'  <% if threshold == '5pc'  %> selected <% end %> > 5%  </option>
+		<option value='10pc' <% if threshold == '10pc' %> selected <% end %> > 10% </option>
+		<option value='20pc' <% if threshold == '20pc' %> selected <% end %> > 20% </option>
+		<option value='20m'  <% if threshold == '20m'  %> selected <% end %> > 20 minutes </option>
+		<option value='40m'  <% if threshold == '40m'  %> selected <% end %> > 40 minutes </option>
+		<option value='60m'  <% if threshold == '60m'  %> selected <% end %> > 1 hour </option>
 	</select>
 	<button type='submit' name='go' value='go' class='btn btn-primary btn-sm'>go</button>
 </form>
@@ -26,11 +26,11 @@
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
-			<th>Route</th>
-			<th data-sortas='numeric' >Leg</th>
-			<th data-sortas="numeric" >Next CP<br>Expected</th>
-			<th data-sortas="numeric" >Next CP<br>Lateness</th>
-			<th data-sortas="numeric" >Next CP<br>% Lateness</th>
+			<th class='text-center'>Route</th>
+			<th data-sortas='numeric' class='text-center' style='min-width:7em'>Leg</th>
+			<th data-sortas="numeric" class='text-center' >Next CP<br>Expected</th>
+			<th data-sortas="numeric" class='text-center' >Next CP<br>Lateness</th>
+			<th data-sortas="numeric" class='text-center' >Next CP<br>% Lateness</th>
 		</tr>
 	</thead>
 	<% FOREACH team IN laterunners %>
@@ -45,10 +45,10 @@
 			<td><% team.unit %></ td>
 			<td><% team.district %></ td>
 			<td><% team.route %></ td>
-			<td><% team.current_leg %> (<% team.current_leg_duration %>)</ td>
-			<td><% team.next_checkpoint_expected_hhmm %></ td>
-			<td><% team.next_checkpoint_expected_in %></ td>
-			<td><% team.percent_late %>%</ td>
+			<td class='text-center'><% team.current_leg %><br>(<% team.current_leg_duration %>)</ td>
+			<td class='text-center'><% team.next_checkpoint_expected_hhmm %></ td>
+			<td class='text-center'><% team.next_checkpoint_expected_in %></ td>
+			<td class='text-center'><% team.percent_late %>%</ td>
 		</tr>
 	<% END %>
 </table>

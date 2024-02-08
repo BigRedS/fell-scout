@@ -86,7 +86,7 @@
             <button type='submit' class='btn btn-primary'>Auto Refresh<br />On</button>
         </form>
     <% else %>
-        <form method='post'>
+        <form method='get'>
             <input type='hidden' name='auto_refresh' value='1' />
             <button type='submit' class='btn btn-outline-secondary'>Auto Refresh<br />Off</button>
         </form>
