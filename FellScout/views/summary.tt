@@ -42,7 +42,7 @@
 		<% summary.general.num_not_completed %>
 		<br />
 		<% FOREACH team IN summary.general.teams_out.nsort %>
-			<a href='/team/<% team %>'><% team %></a>
+			<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 		<% END %>
 	</td>
 	<% FOREACH route IN summary.routes.keys.sort %>
@@ -72,7 +72,7 @@
 				<% summary.routes.$route.num_not_completed %>
 				<br />
 				<% FOREACH team IN summary.routes.$route.teams_out.nsort %>
-					<a href='/team/<% team %>'><% team %></a>
+				<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 				<% END %>
 			</td>
 		</tr>
