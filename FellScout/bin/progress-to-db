@@ -106,7 +106,8 @@ foreach my $row (@{$data}){
 		debug("Ignoring team $team_number; skipping entrant $entrant");
 		next;
 	}
-	
+
+	$row->{'Route'} = $1 if $row->{'Route'} =~ m/(\d+\w+)/;
 	if($team_number){
 		$teams{$team_number} = {
 			team_name => $row->{'Team'},
@@ -231,7 +232,7 @@ foreach my $team_number (sort(keys(%entrants))){
 	}else{
 		$next_checkpoint = $next_cps{ $teams{$team_number}->{route} }->{ $most_forward_cp };
 		unless($next_checkpoint){
-			error("No next_checkpoint found for team $team_number on route $teams{$team_number}->{route} with most_forward_cp $most_forward_cp");
+			error("No next_checkpoint found for team '$team_number' on route '$teams{$team_number}->{route}' with most_forward_cp '$most_forward_cp'");
 			error(Dumper(\%next_cps));
 		}
 		$current_leg = $most_forward_cp . '-' . $next_checkpoint;
