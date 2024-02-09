@@ -251,13 +251,13 @@ CREATE TABLE `config` (
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
 INSERT INTO `config` VALUES
-('route_50mile','1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19','space-separated list of checkpoints on 50 mile route'),
-('route_50km','3 4 5 6 7 8 13 14 15 16 17 18 19','space-separated list of checkpoints on 50km route'),
-('route_30km','3 4 5 14 15 16 17 18 19','space-separated list of checkpoints on 30km route'),
+('route_50mile','','space-separated list of checkpoints on 50 mile route'),
+('route_50km','','space-separated list of checkpoints on 50km route'),
+('route_30km','','space-separated list of checkpoints on 30km route'),
 ('percentile','95','When calculating expected times for legs, we use this percentile. Normally 90'),
-('felltrack_owner','southern50-2024',NULL),
-('felltrack_username','hq9',NULL),
-('felltrack_password','wD48DbKP',NULL),
+('felltrack_owner','',NULL),
+('felltrack_username','',NULL),
+('felltrack_password','',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
 ('skip_fetch_from_felltrack','off','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
