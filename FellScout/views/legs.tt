@@ -17,14 +17,14 @@ skip checkpoints that are found on other routes, not all checkpoints are visited
 			<th class='text-center'> Teams on leg</th>
 		</tr>
 	</thead>
-	<% FOREACH id IN legs.keys.nsort %>
+	<% FOREACH key IN legs.keys.nsort %>
 		<tr>
-			<td class='text-center'> <% id %></td>
-			<td class='text-center'> <a href='/checkpoint/<% legs.$id.from %>' ><% legs.$id.from %></a></td>
-			<td class='text-center'> <a href='/checkpoint/<% legs.$id.to	 %>' ><% legs.$id.to	 %></td>
-			<td class='text-center'> <% legs.$id.time %></td>
+			<td class='text-center'> <% legs.$key.leg_name %></td>
+			<td class='text-center'> <a href='/checkpoint/<% legs.$key.from %>' ><% legs.$key.from %></a></td>
+			<td class='text-center'> <a href='/checkpoint/<% legs.$key.to	 %>' ><% legs.$key.to	 %></td>
+			<td class='text-center'> <% legs.$key.time %></td>
 			<td>
-				<% FOREACH team IN legs.$id.teams %>
+				<% FOREACH team IN legs.$key.teams %>
 					<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 				<% END %>
 			</td>
