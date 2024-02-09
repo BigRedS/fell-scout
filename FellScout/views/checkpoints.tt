@@ -33,7 +33,7 @@ You can also view a specific checkpoint's arrivals board here:
 				<ul>
 					<% FOREACH team in checkpoints.$checkpoint.arrivals	%>
 						<li>    <% team.next_checkpoint_expected_hhmm %> (in <% team.next_checkpoint_expected_in %>):
-							<a href='/team/<% team.team_number %>/'>
+							<a href='/team/<% team.team_number %>'>
 								<% team.team_number %> <% team.team_name %>
 							</a>
 							expected from
