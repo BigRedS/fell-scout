@@ -33,6 +33,9 @@ hook 'before' => sub {
 	$sth->execute();
 	my $page = $sth->fetchrow_hashref();
 	$page->{auto_refresh} = param('auto_refresh') if param('auto_refresh') and param('auto_refresh') > 0;
+
+	$page->{google_maps_url} = vars->{'google_maps_url'} if vars->{'google_maps_url'};
+
 	var page => $page;
 };
 
