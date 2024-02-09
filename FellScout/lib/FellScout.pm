@@ -847,8 +847,10 @@ sub run_cronjobs(){
 	if (vars->{ignore_future_events} and vars->{ignore_future_events} eq 'on'){
 		$ENV{IGNORE_FUTURE_EVENTS} = 1;
 	}
-	if (vars->{fetch_from_felltrack} and vars->{fetch_from_felltrack} eq 'off'){
+	if (vars->{skip_fetch_from_felltrack} and vars->{skip_fetch_from_felltrack} eq 'on'){
 		$ENV{SKIP_FETCH_FROM_FELLTRACK} = 1;
+	}else{
+		$ENV{SKIP_FETCH_FROM_FELLTRACK} = undef;
 	}
 
 	info("Cron: Getting data: $cmd");

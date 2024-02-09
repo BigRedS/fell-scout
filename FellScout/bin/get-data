@@ -31,10 +31,23 @@ csv=$(curl -X POST  -k https://felltrack.com/cgi-bin/felltrack.cgi \
 -d 'SCW=2400&HIDDENNAV=correcthiker&NAV=Entrant+progress+CSV' \
 2>/dev/null);
 
+if [ $? != 0 ]; then
+	echo "fail; exited [$?]";
+	exit $?;
+fi
+
+if [[ "$csv" =~ "FellTrack - Error" ]]; then
+	echo "fail; Felltrack reported an error";
+	echo $csv | awk -F'/title' '{print $2}'
+	exit 1;
+fi
+
 if [ -z "$csv" ]; then
-	echo "$(date) fail"
+	echo "fail"
+	exit 1;
 else
-	echo "$(date) success"
+	size=$(echo $csv | wc -c)
+	echo "success ($size characters)"
 	echo "$csv" > ../progress.csv
 	if [ -d ./progresses ]; then
 		cp ./progress.csv ../progresses/progress.csv-$(date +%F-%T)
