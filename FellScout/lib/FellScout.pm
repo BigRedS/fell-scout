@@ -607,10 +607,18 @@ sub get_teams{
 	$sth->execute();
 	my $teams;
 	while (my $row = $sth->fetchrow_hashref()){
-		$row->{finish_expected_hhmm} = $times{ $row->{team_number} }->{99}->{expected_hhmm};
-		$row->{finish_expected_in} = $times{ $row->{team_number} }->{99}->{expected_in};
-		$row->{next_checkpoint_expected_hhmm} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_hhmm};
-		$row->{next_checkpoint_expected_in} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_in};
+		if($times{ $row->{team_number} }->{99}->{expected_hhmm}){
+			$row->{finish_expected_hhmm} = $times{ $row->{team_number} }->{99}->{expected_hhmm};
+			$row->{finish_expected_in} = $times{ $row->{team_number} }->{99}->{expected_in};
+		}else{
+			$row->{finish_expected_hhmm} = $row->{finish_expected_in} = '-';
+		}
+		if($times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_hhmm}){
+			$row->{next_checkpoint_expected_hhmm} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_hhmm};
+			$row->{next_checkpoint_expected_in} = $times{ $row->{team_number} }->{ $row->{next_checkpoint} }->{expected_in};
+		}else{
+			$row->{next_checkpoint_expected_hhmm} = $row->{next_checkpoint_expected_in} = '-';
+		}
 
 		$teams->{ $row->{team_number} } = $row;
 		if(!$row->{next_checkpoint_expected_hhmm} or $row->{next_checkpoint_expected_hhmm} !~ m/\d+/){

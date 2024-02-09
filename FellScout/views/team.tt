@@ -19,7 +19,11 @@
 		<td>
 			<ul>
 				<% FOREACH cp IN team.remaining_checkpoints.keys.nsort %>
-					<li><% cp %> (expected at <% team.remaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
+					<% if team.remaining_checkpoints.$cp.expected_hhmm == '-' %>
+						<li><% cp %></li>
+					<% else %>
+						<li><% cp %> (expected at <% team.remaining_checkpoints.$cp.expected_hhmm %>, in <% team.remaining_checkpoints.$cp.expected_in %>)</li>
+					<% end %>
 				<% END %>
 			</ul>
 		</td>
@@ -32,10 +36,10 @@
 				( retired at checkpoint <% team.entrants.$entrant.retired %> )
 			<% END %>
 			<% IF team.team_number < 0 %>
-				( originally of team <% team.entrants.$entrant.previous_team_name %>
+				( originally of team <a href='/team/<% team.entrants.$entrant.previous_team_number %>'><% team.entrants.$entrant.previous_team_name %></a> )
 			<% END %>
 			<% IF team.entrants.$entrant.scratch_team_number %>
-				( in scratch team <a href='/team/-<% team.entrants.$entrant.scratch_team_number %>'> -<% team.entrants.$entrant.scratch_team_number %>: <% team.entrants.$entrant.scratch_team_name %></a>)
+				( in scratch team <a href='/team/-<% team.entrants.$entrant.scratch_team_number %>'> -<% team.entrants.$entrant.scratch_team_number %>: <% team.entrants.$entrant.scratch_team_name %></a> )
 			<% END %>
 			<br />
 		<% END %>
