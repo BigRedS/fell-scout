@@ -92,7 +92,10 @@
         </form>
     <% end %>
 	<% if page.seconds_since_last_felltrack_update > 600 %>
-		<button type='button' class='btn btn-danger'>
+		<form action='/cron' method='post'>
+			<input type='hidden' name='redirect-back' value='1' />
+			<button type='submit' class='btn btn-danger'>
+		</form>
 	<% else %>
 		<button type='button' class='btn btn-outline-success'>
 	<% end %>
