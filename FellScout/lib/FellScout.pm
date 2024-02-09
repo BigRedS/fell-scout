@@ -967,7 +967,7 @@ sub add_expected_times_to_teams {
 				next;
 			}
 			if($legs{$leg_name}->{seconds}){
-				$expected_time += $legs{$leg_name}->{seconds};
+				$expected_time += $legs{$leg_name}->{seconds} * vars->{leg_estimate_multiplier};
 				$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
 			}else{
 				#info("No prediction data for leg $leg_name for team $team_number; skipping the rest of the legs");
