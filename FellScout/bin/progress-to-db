@@ -177,13 +177,17 @@ foreach my $row (@{$data}){
 		$previous_cp_time_epoch = $this_cp_time_epoch;
 	}
 	$entrants{$team_number}->{$entrant}->{cps} = \@checkpoints;
-	$entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
-	$entrants{$team_number}->{$entrant}->{last_cp} = $checkpoints[-1]->{'cp'};
-	if($checkpoints[-1]->{'cp'} == 99){
-		debug("[row $rownum $entrant] has finished (at $checkpoints[-1]->{'cp'})");
-		$entrants{$team_number}->{$entrant}->{completed} = 1;
+	if($checkpoints[0]){
+		$entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
+		$entrants{$team_number}->{$entrant}->{last_cp} = $checkpoints[-1]->{'cp'};
+		if($checkpoints[-1]->{'cp'} == 99){
+			debug("[row $rownum $entrant] has finished (at $checkpoints[-1]->{'cp'})");
+			$entrants{$team_number}->{$entrant}->{completed} = 1;
+		}else{
+			$entrants{$team_number}->{$entrant}->{completed} = 0;
+		}
 	}else{
-		$entrants{$team_number}->{$entrant}->{completed} = 0;
+		debug("[row $rownum $entrant] no checkpoints, entrant probably hasn't hit cp 1 yet");
 	}
 	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code) values (?, ?, ?, ?, ?, ?, ?)");
 
