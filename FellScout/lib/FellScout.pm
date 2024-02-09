@@ -833,6 +833,9 @@ sub clear_cache(){
 
 any ['get', 'post'] => '/cron' => sub {
 	run_cronjobs();
+	if(request_header('referer')){
+		redirect request_header('referer');
+	}
 	return "Cronjobs done, you can now click 'back' to get back to where you were";
 };
 
