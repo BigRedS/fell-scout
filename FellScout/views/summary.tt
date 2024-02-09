@@ -45,7 +45,7 @@
 			<a href='/team/<% team %>'><% team %></a>
 		<% END %>
 	</td>
-	<% FOREACH route IN summary.routes.keys.nsort %>
+	<% FOREACH route IN summary.routes.keys.sort %>
 		<tr>
 			<td><% route %></td>
 			<td><% summary.routes.$route.min_cp %></td>

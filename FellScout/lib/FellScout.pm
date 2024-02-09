@@ -248,11 +248,12 @@ sub get_legs(){
 	$sth = database->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
-		$legs->{ $row->{leg_name} } = $row;
+		my $key = sprintf("%02d%02d", $row->{from}, $row->{to});
+		$legs->{ $key } = $row;
 		my $sth = database->prepare("select team_number from teams where current_leg = ?");
 		$sth->execute($row->{leg_name});
 		while(my $r = $sth->fetchrow_hashref()){
-			push(@{ $legs->{ $row->{leg_name} }->{teams} }, $r->{team_number});
+			push(@{ $legs->{ $key }->{teams} }, $r->{team_number});
 		}
 	}
 	return $legs;
