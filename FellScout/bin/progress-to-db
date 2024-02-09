@@ -189,9 +189,9 @@ foreach my $row (@{$data}){
 	}else{
 		debug("[row $rownum $entrant] no checkpoints, entrant probably hasn't hit cp 1 yet");
 	}
-	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code) values (?, ?, ?, ?, ?, ?, ?)");
+	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code, last_checkpoint, last_checkpoint_time) values (?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?))");
 
-	$sth->execute($team_number, $row->{Name}, $unit, $district, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number});
+	$sth->execute($team_number, $row->{Name}, $unit, $district, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number}, $entrants{$team_number}->{$entrant}->{last_cp}, $entrants{$team_number}->{$entrant}->{last_cp_time});
 	debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
 	$rownum++;
 	$num_entrants_added++;
