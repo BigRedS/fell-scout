@@ -3,6 +3,11 @@
 <p>
 This is a list of every checkpoint, each team for whom the checkpoint is the next they will reach, and each team for whom it is the last they left.
 </p>
+
+<% if page.google_maps_url %>
+<p>There is a <a href='<%page.google_maps_url%>'>Google Maps view of all the checkpoints</a>
+<% end %>
+
 <p>
 "Checkpoint 99" is the finish.
 <p>

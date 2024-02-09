@@ -58,7 +58,7 @@ DROP TABLE IF EXISTS `config`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `config` (
   `name` varchar(100) DEFAULT NULL,
-  `value` varchar(100) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   UNIQUE KEY `name_2` (`name`),
   KEY `name` (`name`)
@@ -237,7 +237,7 @@ DROP TABLE IF EXISTS `config`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `config` (
   `name` varchar(100) DEFAULT NULL,
-  `value` varchar(100) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   UNIQUE KEY `name_2` (`name`),
   KEY `name` (`name`)
@@ -254,18 +254,19 @@ INSERT INTO `config` VALUES
 ('route_50mile','1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19','space-separated list of checkpoints on 50 mile route'),
 ('route_50km','3 4 5 6 7 8 13 14 15 16 17 18 19','space-separated list of checkpoints on 50km route'),
 ('route_30km','3 4 5 14 15 16 17 18 19','space-separated list of checkpoints on 30km route'),
-('percentile','80','When calculating expected times for legs, we use this percentile. Normally 90'),
-('felltrack_owner','chiltern2',NULL),
-('felltrack_username','someguy',NULL),
-('felltrack_password','supersecret',NULL),
+('percentile','95','When calculating expected times for legs, we use this percentile. Normally 90'),
+('felltrack_owner','southern50-2024',NULL),
+('felltrack_username','hq9',NULL),
+('felltrack_password','wD48DbKP',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
-('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
+('skip_fetch_from_felltrack','off','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
 ('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
 ('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
-('percentile_sample_size','60','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
+('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
 ('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
-('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones');
+('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
+('google_maps_url','','address of the route on Google Maps route');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
