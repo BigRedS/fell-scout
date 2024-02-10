@@ -24,6 +24,7 @@
 	<thead>
 		<tr>
 			<th>Team</th>
+			<th>Team Name</th>
 			<th>Unit</th>
 			<th>District</th>
 			<th class='text-center'>Route</th>
@@ -41,6 +42,7 @@
 		<% else %>
 			<tr>
 		<% end %>
+			<td><a href='/team/<%team.team_number%>'><% team.team_number %></a></ td>
 			<td><a href='/team/<%team.team_number%>'><% team.team_name %></a></ td>
 			<td><% team.unit %></ td>
 			<td><% team.district %></ td>
