@@ -19,12 +19,12 @@
 	</thead>
 	<% FOREACH team IN checkpoint.teams %>
 		<tr>
-			<td><% team.this_cp_expected_hhmm %></td>
+			<td data-sortas='numeric' data-sortvalue='<% team.this_cp_expected_epoch %>'><% team.this_cp_expected_hhmm %></td>
 			<td> <a href='/team/<% team.team_number %>' > <% team.team_number %> </a></td>
 			<td> <a href='/team/<% team.team_number %>' > <% team.team_name %> </a></td>
 			<td><% team.unit %> (<% team.district %>)</td>
 			<td> <a href='/checkpoint/<% team.next_checkpoint %>' > <% team.next_checkpoint %> </a> (<% team.next_checkpoint_expected_hhmm %>)</td>
-			<td><% team.finish_expected_hhmm %></td>
+			<td data-sortas='numeric' data-sortvalue='<% team.finish_expected_epoch %>'><% team.finish_expected_hhmm %></td>
 		</tr>
 	<% END %>
 </table>
