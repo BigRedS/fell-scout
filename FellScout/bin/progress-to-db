@@ -177,6 +177,7 @@ foreach my $row (@{$data}){
 		$previous_cp_time_hhmm = $this_cp_time_hhmm;
 		$previous_cp_time_epoch = $this_cp_time_epoch;
 	}
+	$entrants{$team_number}->{$entrant}->{retired} = $retired;
 	$entrants{$team_number}->{$entrant}->{cps} = \@checkpoints;
 	if($checkpoints[0]){
 		$entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
@@ -225,6 +226,7 @@ foreach my $team_number (sort(keys(%entrants))){
 		$cp_team_sth->execute($cp->{cp}, $team_number, $cp->{time}, $cp->{previous_checkpoint}, $cp->{seconds_since_last_checkpoint});
 	}
 	my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed};
+	$completed++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
 	my ($next_checkpoint, $current_leg);
 	if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
 		$next_checkpoint = 0;
