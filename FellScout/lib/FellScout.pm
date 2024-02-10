@@ -148,8 +148,6 @@ sub get_summary {
 
 	}
 
-	$summary{laterunners} = get_laterunners();
-
 	return \%summary;
 }
 # # # # # laterunners
