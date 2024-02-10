@@ -199,7 +199,7 @@ sub get_laterunners(){
 	                            checkpoints_teams_predictions.team_number = teams.team_number
 	                            and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 	                          where checkpoints_teams_predictions.expected_time < NOW()
-	                          and teams.completed < 0
+	                          and teams.completed < 1
 	                          order by checkpoints_teams_predictions.expected_time desc');
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
