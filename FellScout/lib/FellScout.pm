@@ -755,8 +755,10 @@ sub get_team{
 
 	$sth = database->prepare("select code, entrant_name, retired from entrants where team = ?");
 	$sth->execute($team_number);
+
 	while(my $row = $sth->fetchrow_hashref()){
 		$team{entrants}->{ $row->{code} } = $row;
+		$team{active_entrants} = $row->{code} unless $row->{retired} > 0;
 	}
 
 	$sth = database->prepare('select team_name as scratch_team_name,

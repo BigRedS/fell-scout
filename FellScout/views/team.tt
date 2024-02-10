@@ -3,6 +3,17 @@
 <% ELSE %>
   <h1>Team <% team.team_number %>: <% team.team_name %> </h1>
 <% END %>
+
+<% unless team.active_entrants %>
+	<div class="alert alert-warning" role="alert">
+		<p>
+		This team has no active entrants; see 'Entrants' below to see which have retired or joined Scratch Teams.
+		</p><p>
+		Teams must have at least three members; if too many people retire from a team we join them with others to
+		create a 'Scratch Team', and these entrants are to be tracked in that team.
+		</p>
+	</div>
+<% end %>
 <table class='table table-responsive'>
 
 	<tr><td>Route</td><td><% team.route %></td></tr>
