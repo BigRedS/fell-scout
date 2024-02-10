@@ -12,7 +12,8 @@
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
-			<th data-sortas='numeric'>Last checkpoint</th>
+			<th data-sortas='numeric'>Team<br />Last Checkpoint</th>
+			<th data-sortas='numeric'>Entrant<br />Last checkpoint</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN entrants.keys.sort %>
@@ -22,7 +23,8 @@
 			<td><a href='/team/<% entrants.$id.team_number %>'><% entrants.$id.team_name %></a></td>
 			<td><% entrants.$id.unit %></td>
 			<td><% entrants.$id.district %></td>
-			<td><% entrants.$id.last_checkpoint %></td>
+			<td><% entrants.$id.team_last_checkpoint %></td>
+			<td><% entrants.$id.entrant_last_checkpoint %></td>
 		</tr>
 	<% END %>
 </table>

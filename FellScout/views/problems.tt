@@ -1,0 +1,26 @@
+<h1>Problems</h1>
+
+<p>This is a list of likely problems. It doesn't attempt to solve them, but hopefully tell you about them</p>
+
+<table class='table table-hover table-sm table-responsive'>
+	<thead>
+		<tr>
+			<th>Problem Type</th>
+			<th>Prolems</th>
+		</tr>
+	</thead>
+	<% FOREACH id IN problems.keys.sort %>
+		<tr>
+			<td>
+				<% id %>
+			</td>
+			<td>
+				<ul>
+					<% foreach problem in problems.$id %>
+						<li><%  problem %></li>
+					<% end %>
+				</ul>
+			</td>
+		</tr>
+	<% END %>
+</table>
