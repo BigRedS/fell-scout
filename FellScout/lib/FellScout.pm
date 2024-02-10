@@ -426,8 +426,9 @@ any ['get', 'post'] => '/entrants' => sub {
 };
 
 sub get_entrants(){
-#my $sth = database->prepare("select * from entrants join teams on entrants.team = teams.team_number");
-	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district, teams.last_checkpoint
+	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district, 
+	                             teams.last_checkpoint as team_last_checkpoint,
+	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
 	                             join teams
 	                             on entrants.team = teams.team_number
@@ -753,7 +754,7 @@ sub get_team{
 	$sth->execute($team_number);
 	$team{previous_checkpoints} = $sth->fetchall_hashref('checkpoint');
 
-	$sth = database->prepare("select code, entrant_name, retired from entrants where team = ?");
+	$sth = database->prepare("select code, entrant_name, retired, completed from entrants where team = ?");
 	$sth->execute($team_number);
 
 	while(my $row = $sth->fetchrow_hashref()){
@@ -803,6 +804,46 @@ sub get_team{
 
 	return \%team;
 };
+
+any ['get', 'post'] => '/api/problems' => sub{
+	return encode_json( get_problems() );
+};
+
+any ['get', 'post'] => '/problems' => sub {
+	my $return = {
+		page => vars->{page},
+		problems => get_problems(),
+	};
+	$return->{page}->{title} = 'problems';
+	return template 'problems.tt', $return;
+};
+
+sub get_problems{
+	my $sth = database->prepare('select * from entrants where completed < 1 and retired < 1');
+	$sth->execute();
+	my %problems;
+	my %teams;
+	while(my $row = $sth->fetchrow_hashref){
+		$teams{ $row->{team} }->{ $row->{code} } = $row;
+	}
+	foreach my $team_number (sort(keys(%teams))){
+		my $team = $teams{$team_number};
+
+		if (scalar(keys(%{$team})) < 3){
+			push(@{$problems{'small team'}}, "Team $team_number only has ".scalar(keys(%{$team}))." entrants (".join(' ', (sort(keys(%{$team})))).")");
+		}
+		my(%cps);
+		foreach my $entrant_code (sort(keys(%{$teams{$team_number}}))){
+			my $entrant = $team->{$entrant_code};
+			$cps{$entrant->{last_checkpoint}}++;
+		}
+
+		if( scalar(keys(%cps)) > 1){
+			push(@{$problems{'split team'}}, "Team $team_number split between checkpoints ".join(', ', sort(keys(%cps))));
+		};
+	}
+	return \%problems;	
+}
 
 # # # # # UTILITIES
 any ['get','post'] => '/admin' => sub {
@@ -957,7 +998,6 @@ sub run_cronjobs(){
 	$sth_log->execute('completed', 'periodic-jobs');
 	return $output;
 }
-
 
 sub add_expected_times_to_teams {
 	# First, a couple of look-up hashes which we'll use to estimate time-to-finish. We need to find out where in the ordered list

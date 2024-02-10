@@ -45,6 +45,8 @@
 			<% entrant %>: <% team.entrants.$entrant.entrant_name %>
 			<% IF team.entrants.$entrant.retired %>
 				( retired at checkpoint <% team.entrants.$entrant.retired %> )
+			<% ELSIF team.entrants.$entrant.completed %>
+				( finished )
 			<% END %>
 			<% IF team.team_number < 0 %>
 				( originally of team <a href='/team/<% team.entrants.$entrant.previous_team_number %>'><% team.entrants.$entrant.previous_team_name %></a> )
