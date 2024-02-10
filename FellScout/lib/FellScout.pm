@@ -335,6 +335,9 @@ any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
+	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{table_sort_column} = 1;
+	$return->{page}->{table_sort_order} = 'desc';
 	return template 'checkpoint.tt', $return;
 };
 
@@ -348,16 +351,21 @@ sub get_checkpoint(){
 	$cp{cp} = $checkpoint;
 
 	# First, everyone's finish times
-	my $sth = database->prepare("select team_number, date_format(expected_time, \"%H:%i\") as finish_expected_hhmm from checkpoints_teams_predictions where checkpoint = 99");
+	my $sth = database->prepare('select team_number,
+	                            date_format(expected_time, "%H:%i") as finish_expected_hhmm,
+	                            unix_timestamp(expected_time) as finish_expected_epoch
+	                            from checkpoints_teams_predictions
+	                            where checkpoint = 99');
 	$sth->execute();
 	my $finish_times = $sth->fetchall_hashref('team_number');
 
 	# And when we expect everyone to get here
-	$sth = database->prepare("select team_number,
-	                          date_format(expected_time, \"%H:%i\") as this_checkpoint_expected_hhmm,
-	                          date_format( timediff( expected_time, now() ), \"%kh %im\")
+	$sth = database->prepare('select team_number,
+	                          date_format(expected_time, "%H:%i") as this_checkpoint_expected_hhmm,
+	                          date_format( timediff( expected_time, now() ), "%kh %im") as this_checkpoint_expected_in,
+	                          unix_timestamp(expected_time) as this_checkpoint_expected_epoch
 	                          from checkpoints_teams_predictions
-	                          where checkpoint = ?");
+	                          where checkpoint = ?');
 	$sth->execute($checkpoint);
 	my $checkpoint_times = $sth->fetchall_hashref('team_number');
 
@@ -367,12 +375,13 @@ sub get_checkpoint(){
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $route = $row->{'route_name'};
-		my $sth = database->prepare("select teams.team_number as team_number, team_name, next_checkpoint, route, unit, district,
-		                            date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
+		my $sth = database->prepare('select teams.team_number as team_number, team_name, next_checkpoint, route, unit, district,
+		                            date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as next_checkpoint_expected_hhmm,
 		                            unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch,
-		                            date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time_hhmm,
-		                            date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
-		                            date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in,
+		                            date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_time_hhmm,
+		                            date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as next_checkpoint_expected_hhmm,
+		                            unix_timestamp(checkpoints_teams_predictions.expected_time) as next_checkpoint_expected_epoch,
+		                            date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as next_checkpoint_expected_in,
 		                            timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
 		                            `index`
 		                            from teams
@@ -384,12 +393,15 @@ sub get_checkpoint(){
 		                              and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 		                            where teams.completed < 1 and current_leg in
 		                              (select leg_name from routes where route_name = ? and `index` <=
-		                                (select `index` from routes where route_name=? and leg_name like '%-$checkpoint'))");
-		$sth->execute($route, $route);
+		                                (select `index` from routes where route_name=? and leg_name like ?))');
+		$sth->execute($route, $route, "%-$checkpoint");
 		while(my $team = $sth->fetchrow_hashref()){
 			$team->{finish_expected_hhmm} = $finish_times->{$team->{team_number}}->{finish_expected_hhmm};
 			$team->{finish_expected_in} = $finish_times->{$team->{team_number}}->{finish_expected_in};
+			$team->{finish_expected_epoch} = $finish_times->{$team->{team_number}}->{finish_expected_epoch};
 			$team->{this_cp_expected_hhmm} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_hhmm};
+			$team->{this_cp_expected_epoch} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_epoch};
+			$team->{this_cp_expected_in_seconds} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_epoch} - time();
 			$team->{this_cp_in} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_in};
 			push(@{$cp{teams}}, $team);
 		}
