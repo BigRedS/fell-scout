@@ -173,7 +173,7 @@ any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 		$return->{page}->{ $row->{name} } = $row->{value};
 	}
 	$return->{page}->{table_is_searchable} = 1;
-	$return->{page}->{table_sort_column} = 7;
+	$return->{page}->{table_sort_column} = 8;
 	$return->{page}->{table_sort_order} = 'desc';
 	$return->{page}->{title} = 'Late Runners';
 	return template 'laterunners.tt', $return;
