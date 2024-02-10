@@ -252,7 +252,7 @@ sub get_legs(){
 	while(my $row = $sth->fetchrow_hashref()){
 		my $key = sprintf("%02d%02d", $row->{from}, $row->{to});
 		$legs->{ $key } = $row;
-		my $sth = database->prepare("select team_number from teams where current_leg = ?");
+		my $sth = database->prepare("select team_number from teams where current_leg = ? and completed = 0");
 		$sth->execute($row->{leg_name});
 		while(my $r = $sth->fetchrow_hashref()){
 			push(@{ $legs->{ $key }->{teams} }, $r->{team_number});
