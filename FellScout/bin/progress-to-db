@@ -98,6 +98,7 @@ foreach my $row (@{$data}){
 	
 	if($scratch_entrants->{$entrant}){
 		debug("[row $rownum] Entrant $entrant is in scratch team $scratch_entrants->{$entrant}->{team_number}\n");
+		$teams{$team_number}->{removed_entrants}->{$entrant}++;
 		$team_number = 0 - $scratch_entrants->{$entrant}->{team_number};
 		$row->{Team} = $scratch_entrants->{$entrant}->{team_name};
 	}
@@ -245,6 +246,16 @@ foreach my $team_number (sort(keys(%entrants))){
 	}
 	$num_teams_added++;
 	$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
+}
+
+foreach my $team_number (sort(keys(%teams))){
+	my $num_entrants = scalar(keys(%{$entrants{$team_number}}));
+	my $num_removed_entrants = scalar(keys(%{$teams{$team_number}->{removed_entrants}}));
+	if($num_entrants == 0){
+		my $sth = $dbh->prepare('update teams set completed = 1 where team_number = ?');
+		$sth->execute($team_number);
+		debug("Team '$team_number' has no entrants left, marking as complete");
+	}
 }
 
 print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
