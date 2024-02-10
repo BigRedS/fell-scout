@@ -7,7 +7,7 @@ RUN apt-get update && \
       libdbd-mariadb-perl \
       libdbd-mysql-perl \
       libjson-perl \
-      cron
+      curl
 
 WORKDIR /app
 COPY FellScout /app
