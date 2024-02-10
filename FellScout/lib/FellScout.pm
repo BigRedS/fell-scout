@@ -191,17 +191,18 @@ sub get_laterunners(){
 	$sth->execute;
 	$legs = $sth->fetchall_hashref('leg_name');
 
-	$sth = database->prepare("select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, current_leg,
-	                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
+	$sth = database->prepare('select teams.team_number, team_name, unit, district, route, next_checkpoint, last_checkpoint, current_leg,
+	                          date_format(last_checkpoint_time, '%H:%i') as last_checkpoint_time,
 	                          unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch,
-	                          date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
-	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
+	                          date_format(checkpoints_teams_predictions.expected_time, '%H:%i') as next_checkpoint_expected_hhmm,
+	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), '%kh%im') as next_checkpoint_expected_in
 	                          from teams
 	                          join checkpoints_teams_predictions on
 	                            checkpoints_teams_predictions.team_number = teams.team_number
 	                            and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 	                          where checkpoints_teams_predictions.expected_time < NOW()
-	                          order by checkpoints_teams_predictions.expected_time desc;");
+	                          and teams.completed < 0
+	                          order by checkpoints_teams_predictions.expected_time desc');
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $expected_duration = $legs->{ $row->{current_leg} }->{seconds};
