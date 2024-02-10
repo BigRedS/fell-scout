@@ -24,7 +24,7 @@
 <p>This page is for creating or modifying them. To do this use the form below. There are two fields:</p>
 
 <ul>
-	<li><b>Team Name</b>Doesn't need to be anything in particular, but the firstnames of the entrants is common. Can only be made of letters and a few symbols</li>
+	<li><b>Team Name</b> Leave empty to get an automatic name, put something in if there's a better meaningful name</li>
 	<li><b>Entrants</b> A space-separated list of entrant IDs, which you can read off the <a href=/entrants>entrants page</a></li>
 </ul>
 
@@ -35,12 +35,12 @@
 <div style='width:40%'>
 	<form method='post'>
 		<div class="form-group">
-			<label for="team_name">Scratch Team Name</label>
+			<label for="team_name">Scratch Team Name (optional)</label>
 			<input class="form-control" type='text'   name='team_name' value='<% new_team.team_name %>'> </td>
 		</div>
 		<div class="form-group">
 			<label for="entrants">Entrants list</label>
-			<input class="form-control" type='text'   name='entrants' value='<% new_team.entrants %>  '> 
+			<input class="form-control" type='text'   name='entrants' value='<% new_team.entrants %>  '>
 		</div>
 		<button type='submit' class='btn btn-primary btn-sm' name='add' value='add'>Add Scratch Team</button>
 	</form>

@@ -432,12 +432,14 @@ any ['get','post'] => '/scratch-teams' => sub {
 
 	if(param('update') or param('add')){
 		my %scratch_team_names;
+		my %scratch_team_numbers;
 		my %existing_scratch_entrants;
 		my $sth = database->prepare("select * from scratch_teams
 		                             join scratch_team_entrants
 		                             on scratch_team_entrants.team_number = scratch_teams.team_number");
 		$sth->execute();
 		while(my $row = $sth->fetchrow_hashref()){
+			$scratch_team_numbers{ lc($row->{team_name}) } = $row->{team_number};
 			$scratch_team_names{$row->{team_number}} = $row->{team_name};
 			$existing_scratch_entrants{ $row->{entrant_code} } = $row->{team_number};
 		}
@@ -463,24 +465,7 @@ any ['get','post'] => '/scratch-teams' => sub {
 			$sth->execute($number);
 			push(@{$return{successes}}, "Deleted team -".param('team_number')."");
 		}else{
-			my $scratch_team_name = param('team_name');
-
 			my $scratch_team_number = param('team_number');
-			if(param('add')){
-				$scratch_team_name =~ s/[^\w\s\.\,\?\!\"\']//;
-				unless($scratch_team_name eq param('team_name')){
-					push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$scratch_team_name'");
-				}
-				if($scratch_team_names{ lc($scratch_team_name) }){
-					push(@{$return{errors}}, "There is already a scratch team called '$scratch_team_name'; names need to be unique (this check doesn't consider capital letters)");
-					error("Duplicate scratch team: '$scratch_team_name'");
-				}
-				my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
-				$sth_team->execute($scratch_team_name);
-				$scratch_team_number = database->{mysql_insertid};
-				push(@{$return{successes}}, "Created scratch team $scratch_team_name");
-			}
-
 			# Sanitise each entrant's code
 			$sth = database->prepare("select code, team from entrants");
 			$sth->execute();
@@ -507,6 +492,37 @@ any ['get','post'] => '/scratch-teams' => sub {
 					push(@{$return{errors}}, "'$entrant' is not a valid entrant");
 				}
 			}
+			my $scratch_team_name = param('team_name');
+
+			if(param('add')){
+				$scratch_team_name =~ s/[^\w\s\.\,\?\!\"\']//;
+				unless($scratch_team_name eq param('team_name')){
+					push(@{$return{'warnings'}}, "Sanitised team name '".param('team_name')."' to '$scratch_team_name'");
+				}
+
+				if(!$scratch_team_name or $scratch_team_name =~ m/^\s*$/){
+					my %teams;
+					foreach my $entrant (@entrants){
+						$entrant =~ m/^(\d+)\w$/;
+						$teams{$1}++;
+					}
+					$scratch_team_name = join(', ', (sort(keys(%teams))) );
+					$scratch_team_name =~ s/, (\d+)$/ and $1/;
+				}
+				if($scratch_team_numbers{ lc($scratch_team_name) }){
+					push(@{$return{errors}}, "There is already a scratch team called '$scratch_team_name'; names need to be unique (this check doesn't consider capital letters)");
+					$return{new_team}->{team_name} = $scratch_team_name;
+					$return{new_team}->{entrants} = join(' ', sort(@entrants));
+					error("Duplicate scratch team: '$scratch_team_name'");
+				}
+				unless($return{errors}->[0]){
+					my $sth_team = database->prepare("insert into scratch_teams (team_name) values (?)");
+					$sth_team->execute($scratch_team_name);
+					$scratch_team_number = database->{mysql_insertid};
+					push(@{$return{successes}}, "Created scratch team $scratch_team_name");
+				}
+			}
+
 			# Now we have a valid new scratch team name $scratch_team_name and series of entrants @entrants
 
 			# REMEMBER team_number is positive here!
@@ -532,14 +548,16 @@ any ['get','post'] => '/scratch-teams' => sub {
 			}
 
 			# Next, if any of the entrants in the list are not in the database, they are to be added
-			foreach my $entrant (@entrants){
-				unless(grep/^$entrant$/, @existing_entrants){
-					info("Adding $entrant to scratch team $scratch_team_number");
-					$entrant =~ m/^(\d+)/;
-					my $original_team = $1;
-					my $sth = database->prepare("replace into scratch_team_entrants (team_number, entrant_code, previous_team_number) values (?, ?, ?)");
-					$sth->execute($scratch_team_number, $entrant, $original_team);
-					push(@{$return{successes}}, "Added entrant $entrant to team -$scratch_team_name");
+			unless($return{errors}->[0]){
+				foreach my $entrant (@entrants){
+					unless(grep/^$entrant$/, @existing_entrants){
+						info("Adding $entrant to scratch team $scratch_team_number");
+						$entrant =~ m/^(\d+)/;
+						my $original_team = $1;
+						my $sth = database->prepare("replace into scratch_team_entrants (team_number, entrant_code, previous_team_number) values (?, ?, ?)");
+						$sth->execute($scratch_team_number, $entrant, $original_team);
+						push(@{$return{successes}}, "Added entrant $entrant to team '$scratch_team_name'");
+					}
 				}
 			}
 
@@ -552,6 +570,10 @@ any ['get','post'] => '/scratch-teams' => sub {
 				push(@{$return{successes}}, "Removed team -$scratch_team_name");
 			}
 
+			if($return{errors}->[0]){
+				$return{new_team}->{team_name} = $scratch_team_name;
+				$return{new_team}->{entrants} = join(' ', sort(@entrants));
+			}
 			info("Triggering cron");
 			run_cronjobs();
 		}
@@ -568,7 +590,6 @@ any ['get','post'] => '/scratch-teams' => sub {
 		$return{teams}->{ $team->{team_number} } = $team;
 		$return{teams}->{ $team->{team_number} }->{entrants} = join(' ', @entrants);
 	}
-
 	$return{page} = vars->{page},
 	$return{page}->{title} = 'Scratch Teams';
 	return template 'scratch-teams.tt', \%return;
