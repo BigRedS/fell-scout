@@ -403,7 +403,7 @@ sub get_checkpoint(){
 			$team->{this_cp_expected_epoch} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_epoch};
 			$team->{this_cp_expected_in_seconds} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_epoch} - time();
 			$team->{this_cp_in} = $checkpoint_times->{$team->{team_number}}->{this_checkpoint_expected_in};
-			push(@{$cp{teams}}, $team);
+			$cp{teams}->{$team->{team_number}} = $team;
 		}
 	}
 	return \%cp
