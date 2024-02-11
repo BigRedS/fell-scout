@@ -50,8 +50,10 @@ my $config = $sth_config->fetchall_hashref('name');
 my $start;
 if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
 	my($y,$m,$d) = ($1,$2,$3);
+	$m = $m - 1;
+	$d = $d -1;
 	debug("Start at $y-$m-$d");
-	$start = timelocal(10, 10, 10, $d, $m, $y);
+	$start = timelocal(1, 0, 0, $d, $m, $y);
 }else{
 	print "E: event_start_date unset; using today";
 	debug("Event_start_date unset");
