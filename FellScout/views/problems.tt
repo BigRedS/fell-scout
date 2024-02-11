@@ -6,7 +6,7 @@
 	<thead>
 		<tr>
 			<th>Problem Type</th>
-			<th>Prolems</th>
+			<th>Problems</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN problems.keys.sort %>
@@ -17,7 +17,7 @@
 			<td>
 				<ul>
 					<% foreach problem in problems.$id %>
-						<li><%  problem %></li>
+						<li><a href='/teams/<% problems.team %>'>Team <% problem.team %></a> <% problem.message %></li>
 					<% end %>
 				</ul>
 			</td>

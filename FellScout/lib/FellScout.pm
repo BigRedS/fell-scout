@@ -830,7 +830,7 @@ sub get_problems{
 		my $team = $teams{$team_number};
 
 		if (scalar(keys(%{$team})) < 3){
-			push(@{$problems{'small team'}}, "Team $team_number only has ".scalar(keys(%{$team}))." entrants (".join(' ', (sort(keys(%{$team})))).")");
+			push(@{$problems{'small team'}}, {team => $team_number, message => "only has ".scalar(keys(%{$team}))." entrants (".join(' ', (sort(keys(%{$team})))).")"});
 		}
 		my(%cps);
 		foreach my $entrant_code (sort(keys(%{$teams{$team_number}}))){
@@ -839,7 +839,7 @@ sub get_problems{
 		}
 
 		if( scalar(keys(%cps)) > 1){
-			push(@{$problems{'split team'}}, "Team $team_number split between checkpoints ".join(', ', sort(keys(%cps))));
+			push(@{$problems{'split team'}}, {team => $team_number, message => "is split between checkpoints ".join(', ', sort(keys(%cps)))});
 		};
 	}
 	return \%problems;	
