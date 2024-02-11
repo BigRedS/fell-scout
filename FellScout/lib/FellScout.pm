@@ -923,7 +923,7 @@ sub run_cronjobs(){
 	my $sth_log = database->prepare("replace into logs (`message`, `name`) values (?, ?)");
 
 	if (vars->{ignore_future_events} and vars->{ignore_future_events} eq 'on'){
-		$ENV{IGNORE_FUTURE_EVENTS} = 1;
+		$ENV{IGNORE_FUTURE_EVENTS} = 'on';
 	}
 	if (vars->{skip_fetch_from_felltrack} and vars->{skip_fetch_from_felltrack} eq 'on'){
 		$ENV{SKIP_FETCH_FROM_FELLTRACK} = 1;
