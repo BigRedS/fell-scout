@@ -22,7 +22,7 @@ if($ARGV[0]){
 		exit 1;
 	}
 }
-		
+
 unless (-f "$in_file"){
 	print "File $in_file does not exist, aborting\n";
 	print "(PWD is ".cwd().")\n";
@@ -34,12 +34,29 @@ unless (-f "$in_file"){
 # To do that, we'll remember that the event starts at 6am, now_hour will be used later in this
 # maths
 
-# TODO: Make the db creds based on env vars
 my $dbh = DBI->connect("dbi:MariaDB:database=$ENV{MYSQL_DATABASE};host=$ENV{MYSQL_HOST};port=$ENV{MYSQL_PORT}", "$ENV{MYSQL_USERNAME}", "$ENV{MYSQL_PASSWORD}") or die ("Failed to connect to db: $DBI::errstr");
+
 
 my $sth_config = $dbh->prepare("select name, value from config");
 $sth_config->execute();
 my $config = $sth_config->fetchall_hashref('name');
+
+# This event begins on Saturday morning and ends at some point on Sunday. Generally, we assume
+# that CP1 was hit 'today' and calculate a datetime string for that, and then carry on until
+# time goes backwards.
+# At this point, we realise that it's become Sunday, so want to remove a day from every previous
+# datetime.
+# Rather than do that, here we just read what the first day is from the db
+my $start;
+if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
+	my($y,$m,$d) = ($1,$2,$3);
+	debug("Start at $y-$m-$d");
+	$start = timelocal(10, 10, 10, $d, $m, $y);
+}else{
+	print "E: event_start_date unset; using today";
+	debug("Event_start_date unset");
+	$start = time();
+}
 
 my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
 debug("Ignoring teams: ".join(',', @ignore_teams));
@@ -163,7 +180,7 @@ foreach my $row (@{$data}){
 		}
 		my $this_cp_time_epoch = mmhh_to_epoch($this_cp_time_hhmm, $add_a_day);
 
-		if($ENV{IGNORE_FUTURE_EVENTS} and ($this_cp_time_epoch > time()) ){
+		if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
 			debug("[row $rownum $entrant] IGNORE_FUTURE_EVENTS is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
 			last;
 		}
@@ -263,11 +280,11 @@ print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 sub mmhh_to_epoch{
 	my $time = shift;
 	my $added_days = shift || 0;
-
+	
 	abort("Invalid time: '$time'") unless $time =~ m/^(\d\d?)(\d\d?)/;
 	my ($h,$m) = ($1,$2);
 
-	my $now = time();
+	my $now = $start;
 	$now += (60 * 60 * 24) if $added_days > 0;
 
 	my $timestamp = timelocal(0, $m, $h, (localtime($now))[3,4,5]);

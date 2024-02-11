@@ -266,7 +266,8 @@ INSERT INTO `config` VALUES
 ('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
 ('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
-('google_maps_url','','address of the route on Google Maps route');
+('google_maps_url','','address of the route on Google Maps route'),
+('event_start_date','2024-02-11','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
