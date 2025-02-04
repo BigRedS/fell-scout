@@ -96,6 +96,16 @@ sub get_summary {
 	}
 	$summary{general}->{num_not_completed} = $num_out;
 
+	$sth = database->prepare("select count(*) from teams where retired > 0");
+	$sth->execute();
+	my $result = $sth->fetchrow_array;
+	$summary{general}->{num_retired} = $result;
+
+	$sth = database->prepare("select count(*) from teams where last_checkpoint = 99");
+	$sth->execute();
+	my $result = $sth->fetchrow_array;
+	$summary{general}->{num_finished} = $result;
+
 	my $routes_sth = database->prepare("select distinct route_name from routes order by route_name");
 	my @routes;
 	$routes_sth->execute();
@@ -145,6 +155,16 @@ sub get_summary {
 		                          order by expected_time asc");
 		$sth->execute($route);
 		$summary{routes}->{$route}->{latest_finish} = $sth->fetchrow_hashref();
+
+		$sth = database->prepare("select count(*) from teams where retired > 0 and route = ?");
+		$sth->execute($route);
+		my $result = $sth->fetchrow_array;
+		$summary{routes}->{$route}->{num_retired} = $result;
+
+		$sth = database->prepare("select count(*) from teams where last_checkpoint = 99 and route = ?");
+		$sth->execute($route);
+		my $result = $sth->fetchrow_array;
+		$summary{routes}->{$route}->{num_finished} = $result;
 
 	}
 
@@ -426,7 +446,7 @@ any ['get', 'post'] => '/entrants' => sub {
 };
 
 sub get_entrants(){
-	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district, 
+	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
 	                             teams.last_checkpoint as team_last_checkpoint,
 	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
@@ -842,7 +862,7 @@ sub get_problems{
 			push(@{$problems{'split team'}}, {team => $team_number, message => "is split between checkpoints ".join(', ', sort(keys(%cps)))});
 		};
 	}
-	return \%problems;	
+	return \%problems;
 }
 
 # # # # # UTILITIES

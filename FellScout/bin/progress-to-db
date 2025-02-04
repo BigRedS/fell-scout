@@ -114,7 +114,7 @@ foreach my $row (@{$data}){
 	debug("[row $rownum $entrant] name: $row->{Name}");
 	$entrant =~ m/^(\d+)\w/;
 	my $team_number = $1;
-	
+
 	if($scratch_entrants->{$entrant}){
 		debug("[row $rownum] Entrant $entrant is in scratch team $scratch_entrants->{$entrant}->{team_number}\n");
 		$teams{$team_number}->{removed_entrants}->{$entrant}++;
@@ -225,7 +225,7 @@ foreach my $row (@{$data}){
 # So now, we go through these and, for each team pick the person who is furthest forward (as in, has reached
 # the highest checkpoint at the latest time) and use that person to represent the team:
 
-my $team_sth = $dbh->prepare("replace into teams (team_number, team_name, unit, district, completed, route, representative_entrant, last_checkpoint, last_checkpoint_time, next_checkpoint, current_leg) values (?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?), ?, ?)");
+my $team_sth = $dbh->prepare("replace into teams (team_number, team_name, unit, district, completed, retired, route, representative_entrant, last_checkpoint, last_checkpoint_time, next_checkpoint, current_leg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?), ?, ?)");
 my $cp_team_sth = $dbh->prepare("replace into checkpoints_teams (checkpoint, team_number, time, previous_checkpoint, seconds_since_previous_checkpoint) values (?, ?, from_unixtime(?), ?, ?)");
 foreach my $team_number (sort(keys(%entrants))){
 	my $most_forward_entrant = '';
@@ -245,8 +245,14 @@ foreach my $team_number (sort(keys(%entrants))){
 	foreach my $cp (@{$entrants{$team_number}->{$most_forward_entrant}->{cps}}){
 		$cp_team_sth->execute($cp->{cp}, $team_number, $cp->{time}, $cp->{previous_checkpoint}, $cp->{seconds_since_last_checkpoint});
 	}
-	my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed};
+
+	# TODO: 'retired' is but one way of completing. This might want a rethink.
+	my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed} + 0;
 	$completed++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
+
+	my $retired = 0;
+	$retired++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
+
 	my ($next_checkpoint, $current_leg);
 	if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
 		$next_checkpoint = 0;
@@ -264,7 +270,7 @@ foreach my $team_number (sort(keys(%entrants))){
 		$teams{$team_number}->{district} = 'scratch';
 	}
 	$num_teams_added++;
-	$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
+	$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $retired, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
 }
 
 foreach my $team_number (sort(keys(%teams))){
@@ -282,7 +288,7 @@ print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 sub mmhh_to_epoch{
 	my $time = shift;
 	my $added_days = shift || 0;
-	
+
 	abort("Invalid time: '$time'") unless $time =~ m/^(\d\d?)(\d\d?)/;
 	my ($h,$m) = ($1,$2);
 

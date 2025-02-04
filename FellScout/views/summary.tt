@@ -19,6 +19,7 @@
 			<th class='text-center'>Earliest-finishing team</th>
 			<th class='text-center'>Latest-finishing team</th>
 			<th>Teams still out</th>
+			<th>Teams not still out</th>
 		</tr>
 	</thead>
 <tr>
@@ -50,6 +51,11 @@
 			<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 		<% END %>
 	</td>
+	<td>
+		<% summary.general.num_finished %> Finished
+		<br>
+		<% summary.general.num_retired %> Retired
+	</td>
 	<% FOREACH route IN summary.routes.keys.sort %>
 		<tr>
 			<td><% route %></td>
@@ -79,6 +85,11 @@
 				<% FOREACH team IN summary.routes.$route.teams_out.nsort %>
 				<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
 				<% END %>
+			</td>
+			<td>
+				<% summary.routes.$route.num_finished %> Finished
+				<br>
+				<% summary.routes.$route.num_retired %> Retired
 			</td>
 		</tr>
 	<% end %>
