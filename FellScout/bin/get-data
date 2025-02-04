@@ -3,6 +3,11 @@ FELLTRACK_OWNER=$1
 FELLTRACK_USER=$2
 FELLTRACK_PASS=$3
 
+if [ $SKIP_FETCH_FROM_FELLTRACK ]; then
+	echo "SKIP_FETCH_FROM_FELLTRACK set; exiting before curling"
+	exit;
+fi
+
 if [ -z "$FELLTRACK_PASS" ] || [ -z "$FELLTRACK_USER" ] || [ -z "$FELLTRACK_OWNER" ]; then
 	echo "ERROR: You must pass a Felltrack username, password and owner to this script, as"
 	echo "ERROR: the first, second and third arguments."
@@ -10,10 +15,6 @@ if [ -z "$FELLTRACK_PASS" ] || [ -z "$FELLTRACK_USER" ] || [ -z "$FELLTRACK_OWNE
 	exit 2;
 fi
 
-if [ $SKIP_FETCH_FROM_FELLTRACK ]; then
-	echo "SKIP_FETCH_FROM_FELLTRACK set; exiting before curling"
-	exit;
-fi
 
 csv=$(curl -X POST  -k https://felltrack.com/cgi-bin/felltrack.cgi \
 -H "Host: felltrack.com" \
