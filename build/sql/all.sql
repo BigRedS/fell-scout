@@ -197,6 +197,7 @@ CREATE TABLE `teams` (
   `current_leg` tinytext DEFAULT NULL,
   `current_leg_index` smallint(6) DEFAULT NULL,
   `completed` tinyint(4) DEFAULT NULL,
+  `retired` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`team_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
