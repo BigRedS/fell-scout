@@ -4,6 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::Database;
 use Data::Dumper;
 use POSIX qw(strftime);
+use Text::CSV qw/csv/;
 use Cwd;
 
 setting('plugins')->{'Database'}->{'host'}=$ENV{'MYSQL_HOST'};
@@ -907,6 +908,53 @@ any ['get','post'] => '/admin' => sub {
 	$return{page} = vars->{page};
 	$return{page}->{title} = 'Admin';
 	return template 'admin.tt', \%return;
+};
+
+any ['get', 'post'] => '/admin/checkpoints' => sub {
+	my $upload;
+	if($upload = request->upload('csv')){
+		# TODO: Think about where to put this file, when and how to delete it
+		unlink('/tmp/checkpoints.csv');
+		if($upload->link_to('/tmp/checkpoints.csv')){
+			info("wrote /tmp/checkpoints.csv");
+		}else{
+			info("Failed to write /tmp/checkpoints.csv: $!");
+		}
+		my $checkpoints = csv( in => '/tmp/checkpoints.csv', encoding => 'UTF-8', detect_bom => 1);
+		my $query = "replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)";
+
+		my $cp_route_query='insert into routes_checkpoints (route_name, checkpoint_number) values (?, ?)';
+		my $route_sth = database->prepare($cp_route_query);
+		$query.=" values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		my $sth = database->prepare($query);
+
+		#TODO: Uniqueness-constraint on routes_checkpoints table
+		my $del_sth = database->prepare('delete from routes_checkpoints');
+		$del_sth->execute();
+
+		foreach my $row (@{$checkpoints}){
+			my $cp = $row->{'cp'};
+			$cp =~ s/CP//;
+			$cp = 0 if $cp =~ m/Start/i;
+			$cp = 99 if $cp =~ m/Finish/i;
+			$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{'latitude'}, $row->{longitude}, $row->{what3words});
+
+			print "\n\n";
+			foreach my $field (sort(keys(%{$row}))){
+				if ($field =~ /Leg Distance/i){
+					my $route_name = $field;
+					$route_name =~ s/\(.+\)//;
+					$route_name =~ s/\s*leg distance//;
+					$route_name =~ s/\s+//g;
+					if($row->{$field} =~ m/\d+/){
+						$route_sth->execute( $route_name, $cp );
+					}
+				}
+			}
+		}
+		return encode_json($checkpoints);
+	}
+	return template 'admin_checkpoints.tt';
 };
 
 any ['get', 'post'] => '/clear-cache' => sub {
