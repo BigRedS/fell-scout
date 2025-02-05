@@ -1,30 +1,13 @@
-<h1>Checkpoint <% checkpoint.cp %> Arrivals Board</h1>
-
-<p>This page shows every team that has yet to reach this checkpoint, and when they're expected here</p>
-
-<p>'Expected at finish' will only populate when enough teams have finished the event to make for reasonable estimates for the teams behind them</p>
-
-<p>You can see all teams and all checkpoints on the general <a href='/checkpoints'>checkpoints page</a>.</p>
+<h1>Checkpoint <% checkpoint.checkpoint_number %> Details</h1>
 
 <table class='table'>
-	<thead>
-		<tr>
-			<th>Expected here</th>
-			<th>Number</th>
-			<th>Team Name</th>
-			<th>Unit, District</th>
-			<th>Next Expected Checkpoint</th>
-			<th>Expected at finish</th>
-		</tr>
-	</thead>
-	<% FOREACH team IN checkpoint.teams.keys %>
-		<tr>
-			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.this_cp_expected_epoch %>'><% checkpoint.teams.$team.this_cp_expected_hhmm %></td>
-			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_number %> </a></td>
-			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_name %> </a></td>
-			<td><% checkpoint.teams.$team.unit %> (<% checkpoint.teams.$team.district %>)</td>
-			<td> <a href='/checkpoint/<% checkpoint.teams.$team.next_checkpoint %>' > <% checkpoint.teams.$team.next_checkpoint %> </a> (<% checkpoint.teams.$team.next_checkpoint_expected_hhmm %>)</td>
-			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.finish_expected_epoch %>'><% checkpoint.teams.$team.finish_expected_hhmm %></td>
-		</tr>
-	<% END %>
+  <tr>
+    <td>Description</td>
+    <td><% checkpoint.description %> (<% checkpoint.type %>)</td>
+  </tr>
+  <tr>
+    <td>Manager</td>
+    <td> <% checkpoint.manager %> : <a href="tel:<% checkpoint.mobile %>"> <% checkpoint.mobile %> </a> </td>
+  </tr>
+
 </table>

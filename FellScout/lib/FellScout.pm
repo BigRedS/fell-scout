@@ -350,27 +350,41 @@ any ['get', 'post'] => '/checkpoint' => sub {
 	redirect "/checkpoint/$checkpoint";
 };
 
-any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
+any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
 	my $return = {
-		checkpoint => get_checkpoint(param('checkpoint')),
+		checkpoint => get_checkpoint_arrivals(param('checkpoint')),
+		page => vars->{page},
+	};
+	$return->{page}->{title} = 'Arrivals for checkpoint '.param('checkpoint');
+	$return->{page}->{table_is_searchable} = 0;
+	return template 'arrivals.tt', $return;
+};
+
+any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
+	my $checkpoint = param('checkpoint');
+
+	my $return = {
+		checkpoint => get_checkpoint_arrivals(param('checkpoint')),
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
 	$return->{page}->{table_is_searchable} = 1;
 	$return->{page}->{table_sort_column} = 1;
 	$return->{page}->{table_sort_order} = 'desc';
+	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
+	$sth->execute($checkpoint);
+	$return->{checkpoint} = $sth->fetchrow_hashref();
 	return template 'checkpoint.tt', $return;
 };
 
-any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
-	return encode_json( get_checkpoint(param('checkpoint')));
+any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
+	return encode_json( get_checkpoint_arrivals(param('checkpoint')));
 };
 
-sub get_checkpoint(){
+sub get_checkpoint_arrivals(){
 	my $checkpoint = shift;
 	my %cp;
 	$cp{cp} = $checkpoint;
-
 	# First, everyone's finish times
 	my $sth = database->prepare('select team_number,
 	                            date_format(expected_time, "%H:%i") as finish_expected_hhmm,
@@ -923,15 +937,14 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 		my $checkpoints = csv( in => '/tmp/checkpoints.csv', encoding => 'UTF-8', detect_bom => 1);
 		my $query = "replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)";
 
-		my $cp_route_query='insert into routes_checkpoints (route_name, checkpoint_number) values (?, ?)';
-		my $route_sth = database->prepare($cp_route_query);
 		$query.=" values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		my $sth = database->prepare($query);
 
-		#TODO: Uniqueness-constraint on routes_checkpoints table
-		my $del_sth = database->prepare('delete from routes_checkpoints');
+		#TODO: Uniqueness-constraint on routes table
+		my $del_sth = database->prepare('delete from routes');
 		$del_sth->execute();
 
+		my %routes;
 		foreach my $row (@{$checkpoints}){
 			my $cp = $row->{'cp'};
 			$cp =~ s/CP//;
@@ -947,14 +960,53 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 					$route_name =~ s/\s*leg distance//;
 					$route_name =~ s/\s+//g;
 					if($row->{$field} =~ m/\d+/){
-						$route_sth->execute( $route_name, $cp );
+						push(@{$routes{$route_name}}, $cp);
 					}
 				}
 			}
 		}
-		return encode_json($checkpoints);
+		my $routes_query = 'insert into routes(`route_name`, `leg_name`, `leg_from`, `leg_to`, `index`) values (?, ?, ?, ?, ?)';
+		my $routes_sth = database->prepare($routes_query);
+		foreach my $route (keys(%routes)){
+			my @cps = @{$routes{$route}};
+
+			for my $idx (0 .. $#cps){
+				my $leg_to;
+				if($cps[$idx + 1]){
+					$leg_to = $cps[$idx + 1];
+				}else{
+					$leg_to = '99';
+				}
+				my $leg_name = $cps[$idx] . '-' . $leg_to;
+				next if $leg_name eq '99-99';
+				info("$route $leg_name $idx");
+				$routes_sth->execute($route, $leg_name, $cps[$idx], $leg_to, $idx);
+			}
+		}
+
 	}
-	return template 'admin_checkpoints.tt';
+
+	my $routes_sth = database->prepare('select distinct route_name from routes');
+	$routes_sth->execute();
+
+	my $cps_sth = database->prepare('select leg_name from routes where route_name = ? order by `index` asc');
+
+	my %routes_cps;
+	while( my $row =  $routes_sth->fetchrow_arrayref() ){
+		my $route = $row->[0];
+		$cps_sth->execute($route);
+		while( my $r = $cps_sth->fetchrow_arrayref() ){
+			my $cp = $r->[0];
+			$cp =~ s/^\d+-//;
+			push(@{$routes_cps{$route}}, $cp);
+		}
+	}
+
+	my $return;
+	$return->{routes_cps} = \%routes_cps;
+
+	$return->{page}->{title} = 'Checkpoint Admin';
+	return template 'admin_checkpoints.tt', $return;
 };
 
 any ['get', 'post'] => '/clear-cache' => sub {
@@ -1021,7 +1073,7 @@ sub run_cronjobs(){
 	info("Exited: $?");
 
 
-	#info("Cron: Updating legs");
+	info("Cron: Updating legs");
 
 	# First, get every possible leg given the routes definition into the legs table
 	my $sth = database->prepare("select name, value from config where name like 'route%'");
@@ -1064,6 +1116,7 @@ sub run_cronjobs(){
 	#info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
 	$sth_log->execute('completed', 'periodic-jobs');
+	info("Finished crons");
 	return $output;
 }
 
@@ -1088,7 +1141,8 @@ sub add_expected_times_to_teams {
 	                         join routes on routes.route_name = teams.route
 	                           and routes.leg_name = teams.current_leg
 	                         where completed < 1");
-	my $sth_update = database->prepare("replace into checkpoints_teams_predictions set checkpoint = ?, team_number = ?, expected_time = from_unixtime(?)");
+	my $sth_update = database->prepare("replace into checkpoints_teams_predictions set checkpoint = ?,
+	team_number = ?, expected_time = from_unixtime(?)");
 	$sth->execute();
 	my $teams = $sth->fetchall_hashref('team_number');
 	foreach my $team_number (keys(%{$teams})){
@@ -1114,6 +1168,7 @@ sub add_expected_times_to_teams {
 			if($legs{$leg_name}->{seconds}){
 				$expected_time += $legs{$leg_name}->{seconds} * vars->{leg_estimate_multiplier};
 				$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
+
 			}else{
 				#info("No prediction data for leg $leg_name for team $team_number; skipping the rest of the legs");
 				last;
