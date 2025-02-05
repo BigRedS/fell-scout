@@ -252,9 +252,6 @@ CREATE TABLE `config` (
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
 INSERT INTO `config` VALUES
-('route_50mile','','space-separated list of checkpoints on 50 mile route'),
-('route_50km','','space-separated list of checkpoints on 50km route'),
-('route_30km','','space-separated list of checkpoints on 30km route'),
 ('percentile','95','When calculating expected times for legs, we use this percentile. Normally 90'),
 ('felltrack_owner','',NULL),
 ('felltrack_username','',NULL),

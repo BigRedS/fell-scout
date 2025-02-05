@@ -6,7 +6,7 @@ use Text::CSV qw/csv/;
 use Time::Local;
 use Cwd;
 use DBI;
-
+use 5.036;
 use lib '../local/lib/perl5';
 
 my $in_file = '../progress.csv';
@@ -55,7 +55,7 @@ if($config->{event_start_date}->{value} and $config->{event_start_date}->{value}
 	debug("Start at $y-$m-$d");
 	$start = timelocal(1, 0, 0, $d, $m, $y);
 }else{
-	print "E: event_start_date unset; using today";
+	print "E: event_start_date unset; using today\n";
 	debug("Event_start_date unset");
 	$start = time();
 }
@@ -84,26 +84,32 @@ my $rownum = 2;
 # and a route; $next_checkpoint = $next_cps{$route}->{$current_checkpoint}
 my %next_cps;
 
-my $sth_routes = $dbh->prepare("replace into routes (`route_name`, `index`, `leg_name`) values (?, ?, ?)");
 
-$sth = $dbh->prepare("select name, value from config where name like 'route_%'");
+$sth = $dbh->prepare("select distinct route_name from routes");
 $sth->execute();
-while(my $row = $sth->fetchrow_hashref()){
-	my $route = $row->{name};
-	$route =~ s/^route_//;
-	my @cps = split(m/ /, $row->{value});
-	my $index = 0;
+my @routes;
+while (my $row  = $sth->fetchrow_arrayref()){
+	push(@routes, $row->[0]);
+}
+$sth = $dbh->prepare("select leg_from from routes where route_name = ? order by `index` asc");
+
+foreach my $route (@routes){
+	my @cps;
+	$sth->execute($route);
+	while(my $row = $sth->fetchrow_arrayref()){
+		push(@cps, $row->[0]);
+	}
+	say "Route $route: ".join(', ', @cps);
 	for my $i (0 .. $#cps){
 		$next_cps{$route}->{0} = $cps[0];
 		if($cps[$i+1]){
 			$next_cps{$route}->{ $cps[$i] } = $cps[$i+1];
-			$sth_routes->execute($route, $i, $cps[$i] . '-' . $cps[$i+1]);
 		}else{
 			$next_cps{$route}->{ $cps[$i] } = 99;
-			$sth_routes->execute($route, $i, $cps[$i] . '-' . 99);
 		}
 	}
 }
+
 
 my $num_teams_added = 0;
 my $num_entrants_added = 0;
