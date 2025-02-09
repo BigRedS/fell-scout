@@ -383,20 +383,67 @@ any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
 	return template 'arrivals.tt', $return;
 };
 
+
+any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
+	my $checkpoint = param('checkpoint');
+	my $return = {
+		arrivals => get_checkpoint_arrivals($checkpoint),
+		details => get_checkpoint_details($checkpoint),
+	};
+	return encode_json($return);
+};
+
+sub get_checkpoint_details{
+	my $checkpoint = shift;
+	my $d;
+
+	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
+	$sth->execute($checkpoint);
+	$d = $sth->fetchrow_hashref();
+
+	$sth = database->prepare("select distinct route_name from routes where leg_from = ?");
+	$sth->execute($checkpoint);
+	while(my $r = $sth->fetchrow_hashref()){
+		my $route = $r->{route_name};
+		push(@{$d->{routes}}, $route);
+		  # In general, we don't care about retired teams when we're wondering who has not yet been to a checkpoint
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{future}->{$route}}, $t->[0]);
+			}
+
+			$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint > ?");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{past}->{$route}}, $t->[0]);
+			}
+
+			my $sth_route = database->prepare("select leg_from from routes where route_name = ? and leg_to = ?");
+			$sth_route->execute($route, $checkpoint);
+			my $prev = $sth_route->fetchrow_arrayref();
+			$d->{previous}->{$route} = $prev->[0];
+
+			my $sth_route = database->prepare("select leg_to from routes where route_name = ? and leg_from = ?");
+			$sth_route->execute($route, $checkpoint);
+			my $prev = $sth_route->fetchrow_arrayref();
+			$d->{next}->{$route} = $prev->[0];
+		}
+	return $d;
+}
 any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
 	my $checkpoint = param('checkpoint');
 
 	my $return = {
-		checkpoint => get_checkpoint_arrivals(param('checkpoint')),
+		arrivals => get_checkpoint_arrivals($checkpoint),
+		details => get_checkpoint_details($checkpoint),
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
 	$return->{page}->{enable_fancytable} = 0;
 	$return->{page}->{table_sort_column} = 1;
 	$return->{page}->{table_sort_order} = 'asc';
-	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
-	$sth->execute($checkpoint);
-	$return->{checkpoint} = $sth->fetchrow_hashref();
+
 	return template 'checkpoint.tt', $return;
 };
 
