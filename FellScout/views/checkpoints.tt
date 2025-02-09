@@ -27,13 +27,19 @@ You can also view a specific checkpoint's arrivals board here:
 	<thead>
 		<tr>
 			<th>Checkpoint</th>
+			<th></th>
 			<th>Arrivals</th>
 			<th>Recent Departures</th>
 		</tr>
 	</thead>
 	<% FOREACH checkpoint IN checkpoints.keys.nsort %>
 		<tr>
-			<td><a href='/checkpoint/<% checkpoint %>'><% checkpoint %></a></td>
+			<td><% checkpoint %></td>
+			<td>
+				<a href='/arrivals/<% checkpoint %>'>Arrivals</a>
+				<br>
+				<a href='/checkpoint/<% checkpoint %>'>Info</a>
+			</td>
 			<td>
 				<ul>
 					<% FOREACH team in checkpoints.$checkpoint.arrivals	%>

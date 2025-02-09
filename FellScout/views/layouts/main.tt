@@ -101,7 +101,7 @@
 	<% else %>
 		<button type='button' class='btn btn-outline-success'>
 	<% end %>
-		Last felltrack sync<br> <% page.time_since_last_felltrack_update %> 
+		Last felltrack sync<br> <% page.time_since_last_felltrack_update %>
 	</button>
     	<button type='button' class='btn btn-outline-secondary'>Page age<br> <a class=page_timer id='page_timer'>0s</a></button>
     </div>
