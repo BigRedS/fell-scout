@@ -17,14 +17,15 @@
 
 	<script src="/javascripts/page_timer.js"></script>
 
-	<% IF page.table_is_searchable %>
+	<% IF page.enable_fancytable %>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$(".table").fancyTable({
 					sortColumn:<% if page.table_sort_column %> <% page.table_sort_column %> <% else %> 0 <% end %>,
 					pagination: false,
 					globalSearch:true,
-					searchable:true,
+					searchable:<% if page.table_is_searchable %><% page.table_is_searchable %> <% else %> true <% end %>,
+					sortable:<% if page.table_is_sortable %><% page.table_is_sortable %> <% else %> true <% end %>,
 					sortable:true,
 					sortOrder:<% if page.table_sort_order %>'<% page.table_sort_order %>' <% else %> 'ascending' <% end %>,
 				});

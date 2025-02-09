@@ -191,7 +191,7 @@ any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 	while(my $row = $sth->fetchrow_hashref()){
 		$return->{page}->{ $row->{name} } = $row->{value};
 	}
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{table_sort_column} = 8;
 	$return->{page}->{table_sort_order} = 'desc';
 	$return->{page}->{title} = 'Late Runners';
@@ -356,7 +356,8 @@ any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Arrivals for checkpoint '.param('checkpoint');
-	$return->{page}->{table_is_searchable} = 0;
+	$return->{page}->{enable_fancytable} = 1;
+	$return->{page}->{table_is_searchable} = 'false';
 	return template 'arrivals.tt', $return;
 };
 
@@ -368,9 +369,9 @@ any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
-	$return->{page}->{table_is_searchable} = 0;
-	$return->{page}->{table_sort_column} = undef;
-	$return->{page}->{table_sort_order} = undef;
+	$return->{page}->{enable_fancytable} = 0;
+	$return->{page}->{table_sort_column} = 1;
+	$return->{page}->{table_sort_order} = 'asc';
 	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
 	$sth->execute($checkpoint);
 	$return->{checkpoint} = $sth->fetchrow_hashref();
@@ -455,7 +456,7 @@ any ['get', 'post'] => '/entrants' => sub {
 		page => vars->{page},
 		entrants => get_entrants(),
 	};
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{title} = 'entrants';
 	return template 'entrants.tt', $return;
 };
@@ -658,7 +659,7 @@ any ['get', 'post'] => '/teams' => sub {
 		teams => get_teams(),
 		page => vars->{page},
 	};
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{title} = 'Teams';
 	return template 'teams.tt', $return;
 };
