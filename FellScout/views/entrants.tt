@@ -14,6 +14,8 @@
 			<th>District</th>
 			<th data-sortas='numeric'>Team<br />Last Checkpoint</th>
 			<th data-sortas='numeric'>Entrant<br />Last checkpoint</th>
+			<th data-sortas='numeric'>Next CP<br>Expected in</th>
+			<th data-sortas='numeric'>Next CP<br>Expected at</th>
 		</tr>
 	</thead>
 	<% FOREACH id IN entrants.keys.sort %>
@@ -25,6 +27,8 @@
 			<td><% entrants.$id.district %></td>
 			<td><% entrants.$id.team_last_checkpoint %></td>
 			<td><% entrants.$id.entrant_last_checkpoint %></td>
+			<td><% entrants.$id.expected_in %></td>
+			<td><% entrants.$id.expected_hhmm %></td>
 		</tr>
 	<% END %>
 </table>
