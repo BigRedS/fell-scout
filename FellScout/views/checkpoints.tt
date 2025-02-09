@@ -26,19 +26,37 @@ You can also view a specific checkpoint's arrivals board here:
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
-			<th>Checkpoint</th>
-			<th></th>
+			<th class="text-center">Checkpoint</th>
+			<th class="text-center">Links</th>
+			<th class="text-center">Routes</th>
+			<th class="text-center">Teams</br /> passed</th>
+			<th class="text-center">Teams<br /> not passed</th>
 			<th>Arrivals</th>
 			<th>Recent Departures</th>
 		</tr>
 	</thead>
 	<% FOREACH checkpoint IN checkpoints.keys.nsort %>
 		<tr>
-			<td><% checkpoint %></td>
-			<td>
+			<td class="text-center"><% checkpoint %></td>
+			<td class="text-center">
 				<a href='/arrivals/<% checkpoint %>'>Arrivals</a>
 				<br>
 				<a href='/checkpoint/<% checkpoint %>'>Info</a>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+					<% route %><br />
+				<% END %>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+					<% checkpoints.$checkpoint.past.$route.size %><br />
+				<% END %>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+					<% checkpoints.$checkpoint.future.$route.size %><br />
+				<% END %>
 			</td>
 			<td>
 				<ul>
