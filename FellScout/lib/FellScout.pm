@@ -461,14 +461,20 @@ any ['get', 'post'] => '/entrants' => sub {
 };
 
 sub get_entrants(){
-	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
-	                             teams.last_checkpoint as team_last_checkpoint,
+	my $sth = database->prepare('select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
+	                             teams.last_checkpoint as team_last_checkpoint, routes.leg_name as leg,
+															 date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as expected_hhmm,
+															 date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as expected_in,
 	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
 	                             join teams
-	                             on entrants.team = teams.team_number
+	                               on entrants.team = teams.team_number
+															 join routes
+															   on teams.last_checkpoint = routes.leg_from
+															 join checkpoints_teams_predictions
+															   on teams.next_checkpoint = checkpoints_teams_predictions.checkpoint
 	                             left join scratch_team_entrants
-	                             on entrants.code = scratch_team_entrants.entrant_code");
+	                               on entrants.code = scratch_team_entrants.entrant_code');
 	$sth->execute();
 	return $sth->fetchall_hashref('code');
 }
