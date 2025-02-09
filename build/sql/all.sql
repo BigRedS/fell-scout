@@ -18,6 +18,27 @@ use fellscout;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `checkpoints`
+--
+
+DROP TABLE IF EXISTS `checkpoints`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `checkpoints` (
+  `checkpoint_number` tinyint(4) NOT NULL,
+  `description` varchar(64) DEFAULT NULL,
+  `manager` varchar(24) DEFAULT NULL,
+  `mobile` varchar(64) DEFAULT NULL,
+  `type` varchar(32) DEFAULT NULL,
+  `os_grid` tinytext DEFAULT NULL,
+  `latitude` tinytext DEFAULT NULL,
+  `longitude` tinytext DEFAULT NULL,
+  `what3words` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`checkpoint_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `checkpoints_teams`
 --
 
@@ -129,7 +150,7 @@ CREATE TABLE `routes` (
   `route_name` varchar(32) NOT NULL,
   `index` tinyint(4) NOT NULL,
   `leg_name` tinytext DEFAULT NULL,
-  `leg_from` tinyint(4) DEFAULT_NULL,
+  `leg_from` tinyint(4) DEFAULT NULL,
   `leg_to` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`index`,`route_name`),
   KEY `route_name` (`route_name`,`index`)
@@ -213,7 +234,7 @@ CREATE TABLE `teams` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-05 22:36:52
+-- Dump completed on 2025-02-09 21:13:55
 -- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -255,19 +276,20 @@ LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
 INSERT INTO `config` VALUES
 ('percentile','95','When calculating expected times for legs, we use this percentile. Normally 90'),
-('felltrack_owner','',NULL),
-('felltrack_username','',NULL),
-('felltrack_password','',NULL),
+('felltrack_owner','southern50-2024',NULL),
+('felltrack_username','hq9',NULL),
+('felltrack_password','wD48DbKP',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
-('skip_fetch_from_felltrack','off','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
+('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
 ('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
 ('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
 ('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
 ('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
-('google_maps_url','','address of the route on Google Maps route'),
-('event_start_date','2024-02-11','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint');
+('google_maps_url','https://www.google.com/maps/d/u/0/viewer?mid=1tXtQ8wc3mkRQTKfUNvkEfk-0j7WDR6U&ll=51.64241143530703%2C-0.913605000000004&z=12','address of the route on Google Maps route'),
+('event_start_date','TODAY','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint'),
+('google_maps_api_key','AIzaSyD3JarOtHOdRE3xynI_sBrC_K9TZFDlCNY',NULL);
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -280,4 +302,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-05 22:36:52
+-- Dump completed on 2025-02-09 21:13:55
