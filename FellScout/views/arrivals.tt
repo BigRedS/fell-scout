@@ -4,13 +4,13 @@
 
 <p>'Expected at finish' will only populate when enough teams have finished the event to make for reasonable estimates for the teams behind them</p>
 
-<p>You can see all teams and all checkpoints on the general <a href='/checkpoints'>checkpoints page</a>.</p>
+<p>You can see all teams and all checkpoints on the general <a href='/checkpoints'>checkpoints page</a>, and details for the checkpoint on its <a href="/checkpoint/<% checkpoint.cp %>">details page</a>. </p>
 
 <table class='table'>
 	<thead>
 		<tr>
 			<th>Expected here</th>
-			<th>Number</th>
+			<th>Team</th>
 			<th>Team Name</th>
 			<th>Unit, District</th>
 			<th>Next Expected Checkpoint</th>
@@ -27,4 +27,5 @@
 			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.finish_expected_epoch %>'><% checkpoint.teams.$team.finish_expected_hhmm %></td>
 		</tr>
 	<% END %>
+
 </table>
