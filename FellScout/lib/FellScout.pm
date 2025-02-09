@@ -336,6 +336,28 @@ sub get_checkpoints(){
 		while(my $row = $sth->fetchrow_hashref()){
 			push(@{$cps{$cp}->{departures}}, $row);
 		}
+
+		$sth = database->prepare("select distinct route_name from routes where leg_from = ?");
+		$sth->execute($cp);
+		while(my $r = $sth->fetchrow_hashref()){
+			my $route = $r->{route_name};
+
+			push(@{$cps{$cp}->{routes}}, $route);
+
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $cp);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$cps{$cp}->{future}->{$route}}, $t->[0]);
+			}
+
+			$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint > ? and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $cp);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$cps{$cp}->{past}->{$route}}, $t->[0]);
+			}
+		}
+
+
 	}
 	return \%cps;
 }
