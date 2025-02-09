@@ -1,24 +1,64 @@
-<h1>Checkpoint <% checkpoint.checkpoint_number %> Details</h1>
+<h1>Checkpoint <% details.checkpoint_number %> Details</h1>
 
-<a href="/arrivals/<% checkpoint.checkpoint_number %>">Arrivals Board</a>
+<a href="/arrivals/<% details.checkpoint_number %>">Arrivals Board</a>
 <table class='table'>
   <tr>
     <td>Description</td>
-    <td><% checkpoint.description %> (<% checkpoint.type %>)</td>
+    <td><% details.description %> (<% details.type %>)</td>
   </tr>
   <tr>
     <td>Manager</td>
-    <td> <% checkpoint.manager %> : <a href="tel:<% checkpoint.mobile %>"> <% checkpoint.mobile %> </a> </td>
+    <td> <% details.manager %> : <a href="tel:<% details.mobile %>"> <% details.mobile %> </a> </td>
   </tr>
   <tr>
     <td>Location</td>
     <td>
-      <tt><% checkpoint.os_grid %></tt>
-      <br ><a href='https://www.google.com/maps/place/<% checkpoint.latitude %>,<% checkpoint.longitude %>'>Google Maps</a>
-      <br /><a href='https://www.bing.com/maps?q=<% checkpoint.latitude %>,<% checkpoint.longitude %>&style=s'>OS Maps (Bing)</a>
-      <br /><a href="https://what3words.com/<% checkpoint.what3words %>">What3Words</a>
+      <tt><% details.os_grid %></tt>
+      <br ><a href='https://www.google.com/maps/place/<% details.latitude %>,<% details.longitude %>'>Google Maps</a>
+      <br /><a href='https://www.bing.com/maps?q=<% details.latitude %>,<% details.longitude %>&style=s'>OS Maps (Bing)</a>
+      <br /><a href="https://what3words.com/<% details.what3words %>">What3Words</a>
     </td>
   </tr>
+  <tr>
+    <td>Routes</td>
+    <td>
+      <% foreach route in details.routes %>
+        <% route %>: <a href='/checkpoint/<% details.previous.$route %>'><% details.previous.$route %></a> -> <% details.checkpoint_number %> -> <a href='<% details.next.$route %>'><% details.next.$route %></a> <br >
+      <% end %>
+     </td>
+  </tr>
+  </table>
+<h2>Teams That Have Been Here</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.past.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.past.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<h2>Teams That Have Not Yet Been Here</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.future.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.future.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <!--
@@ -59,13 +99,13 @@ window.initMap = initMap;
 <!--TODO: Make this actually display a marker on the mapp-->
     </script>
 <gmp-map
-  center="<% checkpoint.latitude %>,<% checkpoint.longitude %>"
+  center="<% details.latitude %>,<% details.longitude %>"
   zoom="18"
   map-id="checkpoint"
   style="height: 600px; width:600px">
   <gmp-advanced-marker
-    position="<% checkpoint.latitude %>,<% checkpoint.longitude %>"
-    title="CP <% checkpoint.checkpoint_number %>"
+    position="<% details.latitude %>,<% details.longitude %>"
+    title="CP <% details.checkpoint_number %>"
   >
 </gmp-map>
 
