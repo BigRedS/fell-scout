@@ -187,3 +187,19 @@ padding-right: 160px;
 font-family: sans-serif;
 font-size: 10px;
 }
+
+
+
+
+#map {
+    height: 100%;
+  }
+
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}

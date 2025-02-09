@@ -368,9 +368,9 @@ any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
-	$return->{page}->{table_is_searchable} = 1;
-	$return->{page}->{table_sort_column} = 1;
-	$return->{page}->{table_sort_order} = 'desc';
+	$return->{page}->{table_is_searchable} = 0;
+	$return->{page}->{table_sort_column} = undef;
+	$return->{page}->{table_sort_order} = undef;
 	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
 	$sth->execute($checkpoint);
 	$return->{checkpoint} = $sth->fetchrow_hashref();
