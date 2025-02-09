@@ -129,6 +129,8 @@ CREATE TABLE `routes` (
   `route_name` varchar(32) NOT NULL,
   `index` tinyint(4) NOT NULL,
   `leg_name` tinytext DEFAULT NULL,
+  `leg_from` tinyint(4) DEFAULT_NULL,
+  `leg_to` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`index`,`route_name`),
   KEY `route_name` (`route_name`,`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
