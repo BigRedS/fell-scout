@@ -12,8 +12,9 @@
 			<th>Team</th>
 			<th>Unit</th>
 			<th>District</th>
-			<th data-sortas='numeric'>Team<br />Last Checkpoint</th>
-			<th data-sortas='numeric'>Entrant<br />Last checkpoint</th>
+			<th data-sortas='numeric'>Route</th>
+			<th data-sortas='numeric'>Last Checkpoint</th>
+			<th data-sortas='numeric'>Next Checkpoint</th>
 			<th data-sortas='numeric'>Next CP<br>Expected in</th>
 			<th data-sortas='numeric'>Next CP<br>Expected at</th>
 		</tr>
@@ -21,14 +22,15 @@
 	<% FOREACH id IN entrants.keys.sort %>
 		<tr>
 			<td><% entrants.$id.code %> </td>
-			<td><% entrants.$id.entrant_name %></td>
+			<td><% entrants.$id.entrant_name %><% if entrants.$id.retired > 0 %> (retired)<% end %></td>
 			<td><a href='/team/<% entrants.$id.team_number %>'><% entrants.$id.team_name %></a></td>
 			<td><% entrants.$id.unit %></td>
 			<td><% entrants.$id.district %></td>
-			<td><% entrants.$id.team_last_checkpoint %></td>
+			<td><% entrants.$id.route %></td>
 			<td><% entrants.$id.entrant_last_checkpoint %></td>
-			<td><% entrants.$id.expected_in %></td>
-			<td><% entrants.$id.expected_hhmm %></td>
+			<td><% if entrants.$id.retired == 0 %> <% entrants.$id.team_next_checkpoint %><% end %></td>
+			<td><% if entrants.$id.retired == 0 %> <% entrants.$id.expected_in %><% end %></td>
+			<td><% if entrants.$id.retired == 0 %> <% entrants.$id.expected_hhmm %><% end %></td>
 		</tr>
 	<% END %>
 </table>

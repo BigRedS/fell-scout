@@ -6,7 +6,7 @@ use Text::CSV qw/csv/;
 use Time::Local;
 use Cwd;
 use DBI;
-use 5.036;
+use 5.032;
 use lib '../local/lib/perl5';
 
 my $in_file = '../progress.csv';
