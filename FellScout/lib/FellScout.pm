@@ -532,7 +532,8 @@ any ['get', 'post'] => '/entrants' => sub {
 
 sub get_entrants(){
 	my $sth = database->prepare('select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
-	                             teams.last_checkpoint as team_last_checkpoint, routes.leg_name as leg,
+	                             teams.last_checkpoint as team_last_checkpoint, teams.next_checkpoint as team_next_checkpoint,
+												       routes.leg_name as leg, teams.route as route, entrants.retired as retired,
 															 date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as expected_hhmm,
 															 date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as expected_in,
 	                             entrants.last_checkpoint as entrant_last_checkpoint
@@ -1024,6 +1025,7 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 		foreach my $row (@{$checkpoints}){
 			my $cp = $row->{'cp'};
 			$cp =~ s/CP//;
+			$cp =~ s/^0//;
 			$cp = 0 if $cp =~ m/Start/i;
 			$cp = 99 if $cp =~ m/Finish/i;
 			$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{'latitude'}, $row->{longitude}, $row->{what3words});
@@ -1235,6 +1237,7 @@ sub add_expected_times_to_teams {
 		my $current_leg = $team{current_leg} or error("Team $team_number has no current_leg");
 
 		my $leg_index = $leg_to_index{ $team{route} }->{ $team{current_leg} };
+		unless($leg_index){ error("Failed to get leg index from current leg: $team{current_leg} on route $team{route} ")}
 		while(my $leg_name = $index_to_leg{ $team{route} }->{$leg_index} ){
 			my $seconds;
 			unless($legs{$leg_name}->{to}){
