@@ -61,55 +61,18 @@
   <% end %>
 </table>
 
-<!--
-<h3>Map</h3>
-
-<div id="map"></div>
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyD3JarOtHOdRE3xynI_sBrC_K9TZFDlCNY", v: "beta"});</script>
+<h2>Map</h2>
+<div id="map" style="height:300px;"></div>
 
 <script>
-  async function initMap() {
-    // Request needed libraries.
-    const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    const map = new Map(document.getElementById("map"), {
-      center: { lat: 37.4239163, lng: -122.0947209 },
-      zoom: 14,
-      mapId: "4504f8b37365c3d0",
-    });
-    const marker = new AdvancedMarkerElement({
-      map,
-      position: { lat: 37.4239163, lng: -122.0947209 },
-    });
-  }
 
-initMap();
+  var map = L.map('map').setView([<% details.latitude %>,<% details.longitude %>], 13);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  var marker = L.marker([<% details.latitude %>,<% details.longitude %>]).addTo(map);
+
 </script>
--->
-<h3>Map</h3>
-
-    <script>
-      async function initMap() {
-  console.log("Maps JavaScript API loaded.");
-}
-
-window.initMap = initMap;
-
-<!--TODO: Make this actually display a marker on the mapp-->
-    </script>
-<gmp-map
-  center="<% details.latitude %>,<% details.longitude %>"
-  zoom="18"
-  map-id="checkpoint"
-  style="height: 600px; width:600px">
-  <gmp-advanced-marker
-    position="<% details.latitude %>,<% details.longitude %>"
-    title="CP <% details.checkpoint_number %>"
-  >
-</gmp-map>
-
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3JarOtHOdRE3xynI_sBrC_K9TZFDlCNY&libraries=maps,marker&v=beta"
-      defer
-    ></script>
