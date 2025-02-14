@@ -298,10 +298,10 @@ any ['get', 'post'] => '/api/checkpoints' => sub{
 
 sub get_checkpoints(){
 	my %cps;
-	my $sth = database->prepare("select distinct `to` from legs order by `to` asc");
+	my $sth = database->prepare("select distinct leg_to from routes order by leg_to asc");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
-		my $cp = $row->{to};
+		my $cp = $row->{leg_to};
 		$cps{$cp}->{cp} = $cp;
 
 		my $sth = database->prepare("select teams.team_number, team_name, route, last_checkpoint,
@@ -309,7 +309,7 @@ sub get_checkpoints(){
 		                             date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
 		                             date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
 		                             from teams
-		                             join checkpoints_teams_predictions on
+		                             left outer join checkpoints_teams_predictions on
 		                               checkpoints_teams_predictions.team_number = teams.team_number
 		                               and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 		                             where completed < 1
@@ -542,7 +542,7 @@ sub get_entrants(){
 	                               on entrants.team = teams.team_number
 															 join routes
 															   on teams.last_checkpoint = routes.leg_from
-															 join checkpoints_teams_predictions
+															 left outer join checkpoints_teams_predictions
 															   on teams.next_checkpoint = checkpoints_teams_predictions.checkpoint
 	                             left join scratch_team_entrants
 	                               on entrants.code = scratch_team_entrants.entrant_code');
