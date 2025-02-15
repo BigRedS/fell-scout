@@ -50,12 +50,20 @@ You can also view a specific checkpoint's arrivals board here:
 			</td>
 			<td class="text-center">
 				<% FOREACH route IN checkpoints.$checkpoint.routes %>
-					<% checkpoints.$checkpoint.past.$route.size %><br />
+				  <% if checkpoints.$checkpoint.past.$route.empty %>
+					 0
+					<% else %>
+						<% checkpoints.$checkpoint.past.$route.size %><br />
+					<% end %>
 				<% END %>
 			</td>
 			<td class="text-center">
 				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+				<% if checkpoints.$checkpoint.future.$route.empty %>
+				 0
+				<% else %>
 					<% checkpoints.$checkpoint.future.$route.size %><br />
+				<% end %>
 				<% END %>
 			</td>
 			<td>
