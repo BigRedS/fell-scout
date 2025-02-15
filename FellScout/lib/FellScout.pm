@@ -65,6 +65,7 @@ sub get_summary {
 	                             join checkpoints_teams_predictions on
 	                               checkpoints_teams_predictions.team_number = teams.team_number
 	                               and checkpoints_teams_predictions.checkpoint = 99
+															 where teams.last_checkpoint < 99
 	                             order by expected_time desc");
 	$sth->execute();
 	$summary{general}->{earliest_finish} = $sth->fetchrow_hashref();
@@ -76,6 +77,7 @@ sub get_summary {
 	                          join checkpoints_teams_predictions on
 	                            checkpoints_teams_predictions.team_number = teams.team_number
 	                            and checkpoints_teams_predictions.checkpoint = 99
+														where teams.last_checkpoint < 99
 	                          order by expected_time asc");
 	$sth->execute();
 	$summary{general}->{latest_finish} = $sth->fetchrow_hashref();
@@ -371,7 +373,7 @@ sub get_checkpoints(){
 
 			push(@{$cps{$cp}->{routes}}, $route);
 
-			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and completed = 0 and retired = 0");
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and next_checkpoint > 0 and completed = 0 and retired = 0");
 			$sth_teams->execute($route, $cp);
 			while(my $t = $sth_teams->fetchrow_arrayref){
 				push(@{$cps{$cp}->{future}->{$route}}, $t->[0]);
@@ -434,7 +436,7 @@ sub get_checkpoint_details{
 		my $route = $r->{route_name};
 		push(@{$d->{routes}}, $route);
 		  # In general, we don't care about retired teams when we're wondering who has not yet been to a checkpoint
-			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and completed = 0 and retired = 0");
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and next_checkpoint > 0 and completed = 0 and retired = 0");
 			$sth_teams->execute($route, $checkpoint);
 			while(my $t = $sth_teams->fetchrow_arrayref){
 				push(@{$d->{teams}->{future}->{$route}}, $t->[0]);
