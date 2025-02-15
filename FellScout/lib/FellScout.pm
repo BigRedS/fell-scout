@@ -282,7 +282,34 @@ sub get_legs(){
 	return $legs;
 }
 
+# # # # # map
+any ['get', 'post'] => '/map' => sub {
+	my $return = {
+		checkpoints => get_checkpoints(),
+		page => vars->{page},
+	};
 
+	my @colours = qw/red blue green yellow orange/;
+
+	my $sth = database->prepare('select distinct route_name from routes order by route_name asc');
+	my $sth_cps = database->prepare('select leg_to from routes where route_name = ? order by `index` asc');
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		my $route_name = $row->{route_name};
+		$return->{routes}->{$route_name}->{colour} = shift(@colours);
+		push(@{ $return->{routes}->{$route_name}->{checkpoints} }, 0);
+		$sth_cps->execute($route_name);
+		while (my $cp = $sth_cps->fetchrow_hashref()){
+			push(@{$return->{routes}->{$route_name}->{checkpoints}}, $cp->{leg_to});
+		}
+	}
+
+	$return->{page}->{title} = 'Map';
+	return template 'map.tt', $return;
+};
+
+
+# # # # # checkpoints
 any ['get', 'post'] => '/checkpoints' => sub {
 	my $return = {
 		checkpoints => get_checkpoints(),
@@ -356,9 +383,9 @@ sub get_checkpoints(){
 				push(@{$cps{$cp}->{past}->{$route}}, $t->[0]);
 			}
 		}
-
-
+		$cps{$cp}->{details} = get_checkpoint_details($cp);
 	}
+		$cps{0}->{details} = get_checkpoint_details(0);
 	return \%cps;
 }
 

@@ -82,6 +82,9 @@
         <a class="nav-link" href="/checkpoints">Checkpoints</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="/map">Map</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="/legs">Legs</a>
       </li>
       <li class="nav-item">

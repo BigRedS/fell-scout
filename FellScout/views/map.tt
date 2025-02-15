@@ -1,0 +1,55 @@
+<h1>Map</h1>
+<p>
+"Checkpoint 99" is the finish.
+<p>
+You can also view a specific checkpoint's arrivals board here:
+<form method='get' action='/checkpoint'>
+	<select name='checkpoint'>
+		<option value='' selected>-</option>
+		<% foreach id IN checkpoints.keys.nsort %>
+			<option value='<% id %>' ><% id %></option>
+		<% end %>
+	</select>
+	<button type='submit' class='btn btn-primary btn-sm' name='go' value='go'>Go</button>
+</form>
+</p>
+
+<div id="map" style="height:800px;"></div>
+
+<script>
+	var map = L.map('map').setView([<% checkpoints.99.details.latitude %>, <% checkpoints.99.details.longitude %>], 12);
+
+	<% foreach route in routes.keys %>
+		var polyline_<% route %> = L.polyline([
+			<% foreach cp in routes.$route.checkpoints %>
+				[ <% checkpoints.$cp.details.latitude %>, <% checkpoints.$cp.details.longitude %> ],
+			<% end %>
+	  ],{
+			color: '<% routes.$route.colour %>'
+		}).addTo(map);
+	  polyline_<% route %>.bindPopup('Route <% route %>');
+  <% end %>
+  <% foreach cp in checkpoints.keys %>
+		var marker_cp<% cp %> = L.marker([<% checkpoints.$cp.details.latitude %>, <% checkpoints.$cp.details.longitude %>]).addTo(map);
+		marker_cp<% cp %>.bindPopup("Checkpoint <% cp %><br />\
+																<a href='/arrivals/<% cp %>'>Arrivals</a><br />\
+																<a href='/checkpoint/<% cp %>'>Info</a><br />\
+																<% checkpoints.$cp.details.what3words %><br />\
+																<% checkpoints.$cp.details.os_grid %><br />\
+																<% checkpoints.$cp.details.manager %>: <a href='tel:<%checkpoints.$cp.details.mobile %>'><% checkpoints.$cp.details.mobile %></a>\
+																<hr ><!--\
+																Number of Teams on previous leg:<br />\
+																<% foreach route in checkpoints.$cp.details.next.sort %>\
+																	<% route %>:<% checkpoints.$cp.details.next.$route %><br />\
+																<% end %>-->\
+																").openPopup();
+	<% end %>
+
+
+
+	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+</script>
+
