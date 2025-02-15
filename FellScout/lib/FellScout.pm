@@ -446,6 +446,14 @@ sub get_checkpoint_details{
 				push(@{$d->{teams}->{past}->{$route}}, $t->[0]);
 			}
 
+  		$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint = ?");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{next}->{$route}}, $t->[0]);
+			}
+
+
+
 			my $sth_route = database->prepare("select leg_from from routes where route_name = ? and leg_to = ?");
 			$sth_route->execute($route, $checkpoint);
 			my $prev = $sth_route->fetchrow_arrayref();
