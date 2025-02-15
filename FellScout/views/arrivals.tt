@@ -18,7 +18,11 @@
 		</tr>
 	</thead>
 	<% FOREACH team IN checkpoint.teams.keys %>
+	  <% if checkpoint.teams.$team.next_checkpoint == checkpoint.cp %>
+		<tr class='table-success'>
+		<% else %>
 		<tr>
+		<% end %>
 			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.this_cp_expected_epoch %>'><% checkpoint.teams.$team.this_cp_expected_hhmm %></td>
 			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_number %> </a></td>
 			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_name %> </a></td>

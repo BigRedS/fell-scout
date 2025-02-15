@@ -28,6 +28,22 @@
      </td>
   </tr>
   </table>
+<h2>Teams for whom this is the next checkpoint</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.next.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.next.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
 <h2>Teams That Have Been Here</h2>
 <table class="table">
   <% foreach route in details.routes %>

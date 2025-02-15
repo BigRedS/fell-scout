@@ -37,11 +37,15 @@ You can also view a specific checkpoint's arrivals board here:
 																<% checkpoints.$cp.details.what3words %><br />\
 																<% checkpoints.$cp.details.os_grid %><br />\
 																<% checkpoints.$cp.details.manager %>: <a href='tel:<%checkpoints.$cp.details.mobile %>'><% checkpoints.$cp.details.mobile %></a>\
-																<hr ><!--\
-																Number of Teams on previous leg:<br />\
-																<% foreach route in checkpoints.$cp.details.next.sort %>\
-																	<% route %>:<% checkpoints.$cp.details.next.$route %><br />\
-																<% end %>-->\
+																<hr >\
+																Teams on previous leg:<br />\
+																<% foreach route in checkpoints.$cp.details.teams.next.sort %>\
+																	<% route %>:\
+																	<% foreach team in checkpoints.$cp.details.teams.next.$route %>\
+																	  <% team %>\
+																	<% end %>\
+																	<br >\
+																<% end %>\
 																").openPopup();
 	<% end %>
 
