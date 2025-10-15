@@ -19,6 +19,8 @@ You can also view a specific checkpoint's arrivals board here:
 <script>
 	var map = L.map('map').setView([<% checkpoints.99.details.latitude %>, <% checkpoints.99.details.longitude %>], 12);
 
+
+
 	<% foreach route in routes.keys %>
 		var polyline_<% route %> = L.polyline([
 			<% foreach cp in routes.$route.checkpoints %>
@@ -30,7 +32,20 @@ You can also view a specific checkpoint's arrivals board here:
 	  polyline_<% route %>.bindPopup('Route <% route %>');
   <% end %>
   <% foreach cp in checkpoints.keys %>
-		var marker_cp<% cp %> = L.marker([<% checkpoints.$cp.details.latitude %>, <% checkpoints.$cp.details.longitude %>]).addTo(map);
+
+  // Create a ltitle organge SVG circle with a number in it for each checkpoint on the map
+	let circleSVGString_<% cp %> = '<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="250" height="250"><circle cx="125" cy="125" r="100" fill="#db7900"/><text x="50%" y="50%" text-anchor="middle" fill="white" font-size="100px" font-family="Arial" dy=".3em"><% cp %></text></svg>'
+let iconURL_<% cp %> = "data:image/svg+xml," + encodeURIComponent(circleSVGString_<% cp %>);
+var circleIcon_<% cp %> = L.icon({
+		iconUrl: iconURL_<% cp %>,
+		iconSize: [30, 30]
+});
+
+
+		var marker_cp<% cp %> = L.marker(
+			[<% checkpoints.$cp.details.latitude %>, <% checkpoints.$cp.details.longitude %>],
+			{ icon:circleIcon_<% cp %>}
+		).addTo(map);
 		marker_cp<% cp %>.bindPopup("Checkpoint <% cp %><br />\
 																<a href='/arrivals/<% cp %>'>Arrivals</a><br />\
 																<a href='/checkpoint/<% cp %>'>Info</a><br />\
