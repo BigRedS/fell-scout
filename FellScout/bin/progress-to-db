@@ -29,11 +29,6 @@ unless (-f "$in_file"){
 	exit 255;
 }
 
-# All the times in the CSV file are simply HH:MM and we will want to convert these to a full
-# date so we can do normal maths with them.
-# To do that, we'll remember that the event starts at 6am, now_hour will be used later in this
-# maths
-
 my $dbh = DBI->connect("dbi:MariaDB:database=$ENV{MYSQL_DATABASE};host=$ENV{MYSQL_HOST};port=$ENV{MYSQL_PORT}", "$ENV{MYSQL_USERNAME}", "$ENV{MYSQL_PASSWORD}") or die ("Failed to connect to db: $DBI::errstr");
 
 
@@ -59,6 +54,7 @@ if($config->{event_start_date}->{value} and $config->{event_start_date}->{value}
 	debug("Event_start_date unset");
 	$start = time();
 }
+
 
 my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
 debug("Ignoring teams: ".join(',', @ignore_teams));
@@ -181,12 +177,12 @@ foreach my $row (@{$data}){
 			next;
 		}
 
-		# The event spans midnight, but all times are simple hhmm. If hhmm time goes backwards we assume that midnight has happened, and tell mmhh_to_epoch() so
+		# The event spans midnight, but all times are simple hhmm. If hhmm time goes backwards we assume that midnight has happened, and tell hhmm_to_epoch() so
 		if ($previous_cp_time_hhmm > $this_cp_time_hhmm){
 			debug("[row $rownum $entrant] time went backwards from $previous_cp_time_hhmm to $this_cp_time_hhmm at cp $this_cp; assuming midnight happened");
 			$add_a_day = 1;
 		}
-		my $this_cp_time_epoch = mmhh_to_epoch($this_cp_time_hhmm, $add_a_day);
+		my $this_cp_time_epoch = hhmm_to_epoch($this_cp_time_hhmm, $add_a_day);
 
 		if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
 			debug("[row $rownum $entrant] IGNORE_FUTURE_EVENTS is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
@@ -291,7 +287,7 @@ foreach my $team_number (sort(keys(%teams))){
 
 print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 
-sub mmhh_to_epoch{
+sub hhmm_to_epoch{
 	my $time = shift;
 	my $added_days = shift || 0;
 
@@ -303,6 +299,16 @@ sub mmhh_to_epoch{
 
 	my $timestamp = timelocal(0, $m, $h, (localtime($now))[3,4,5]);
 
+	if ($config->{time_shift_events}->{value} and $config->{time_shift_events}->{value} =~ m/[-+]?(\d+):(\d+)/){
+		my ($add_hr,$add_min) = ($1,$2);
+		if($config->{time_shift_events}->{value} =~ m/^-/){
+			$timestamp -= ($add_hr * 3600);
+			$timestamp -= ($add_min * 60);
+		}else{
+			$timestamp += ($add_hr * 3600);
+			$timestamp += ($add_min * 60);
+		}
+	}
 	return $timestamp;
 }
 
