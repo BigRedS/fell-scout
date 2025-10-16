@@ -47,7 +47,7 @@ View a specific team:
 			<td><% teams.$id.next_checkpoint_expected_hhmm %></td>
 			<td><% teams.$id.next_checkpoint_expected_in %></td>
 			<td><% teams.$id.finish_expected_hhmm %></td>
-			<td><% teams.$id.district %>, <% teams.$id.unit %></td>
+			<td><% teams.$id.district %> <% teams.$id.unit %></td>
 		</tr>
 	<% END %>
 </table>
