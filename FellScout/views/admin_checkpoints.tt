@@ -1,20 +1,45 @@
 <h1>Checkpoints Admin</h1>
-<h2>Update the routes definition</h2>
-Upload a correctly-formed CSV (see the <a href='https://github.com/BigRedS/fell-scout/tree/master/FellScout/examples/checkpoints.csv'>example in the Git repo</a> for structure); the name doesn't matter.
 
-This will update the association of checkpoints with routes and any checkpoint details, but not affect any progress data.
+Routes are defined as a series of checkpoints; here you can see the current routes and upload a new CSV file to change it.
+
+<h2>Current routes and checkpoints</h2>
+The start is checkpoint 0, the finish is checkpoint 99
+<table class="table table-hover table-responsive">
+	<% FOREACH route IN routes_cps.keys.sort %>
+		<tr>
+			<td><% route %></td>
+			<td>
+				<% FOREACH cp IN routes_cps.$route %>
+					<a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/checkpoint/<% cp %>'><% cp %></a>
+				<% END %>
+			</td>
+		</tr>
+	<% END %>
+</table>
+
+
+<h2>Update the routes definition</h2>
+
+<p>After updating this, you will need to do 'Clear Database' and then 'Felltrack Update' on <a href='/admin'>the admin page</a> if you've made any changes to which checkpoints are on which route; you will lose any scratch teams. You don't need to do this when just updating information about checkpoints.</a></p>
 
 <form method="POST" enctype="multipart/form-data">
 <input type="file" name="csv">
 <input type="submit" name="submit" value="Upload">
 </form>
-<h2>Configured Checkpoints and Routes</h2>
-The start is checkpoint 0, the finish is checkpoint 99
-<% FOREACH route IN routes_cps.keys.sort %>
-	<h3><% route %></h3>
-		<table class="table table-striped table-hover table-responsive"><tr>
-			<% FOREACH cp IN routes_cps.$route %>
-				<td><% cp %></td>
-			<% END %>
-		</tr></table>
-<% END %>
+
+<p></p>This configuration is done via CSV file, the CSV file must have some very specific column names:</p>
+
+<table class="table table-striped table-hover table-responsive">
+	<tr><td><tt>cp </tt></td><td>The checkpoint number, either in the form CPxx where xx is a number, or the word 'Start' or 'Finish'</td></tr>
+	<tr><td><tt>description </tt></td><td>Peraps better called 'name'</td></tr>
+	<tr><td><tt>checkpoint manager</tt></td><td>The name of the person managing it </td></tr>
+	<tr><td><tt>mobile</tt></td><td>The phone number of the person managing it</td></tr>
+	<tr><td><tt>type of checkpoint	</tt></td><td></tf>Usually 'tent', 'building' etc.; has no meaning inside fellscout, is just displayed verbatim</td></tr>
+	<tr><td><tt>what3words	</tt></td><td>The What3Words address</td></tr>
+	<tr><td><tt>grid reference</tt></td><td>The OS grid ref of the checkpoint</td></tr>
+	<tr><td><tt>latitude</tt></td><td>The latitude of the checkpoint, will be used to create a google maps link</td></tr>
+	<tr><td><tt>longitude</tt></td><td>The longitude of the checkpoint, will be used to create a google maps link</td></tr>
+	<tr><td><tt>[route name] Leg distance</tt></td><td>One for each route, this has the distance in km from the previous point in that route (so the entry for CP2 will be the distance from CP1 to CP2). It should be empty for checkpoints not on the named route. The [route name] must exactly match what FellTrack puts in the route column</td></tr>
+</table>
+
+This will update the association of checkpoints with routes and any checkpoint details, but not affect any progress data.
