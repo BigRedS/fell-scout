@@ -1061,6 +1061,7 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 		my %routes;
 		foreach my $row (@{$checkpoints}){
 			my $cp = $row->{'cp'};
+			next unless $cp and $cp =~ m/\w+/;
 			$cp =~ s/CP//;
 			$cp =~ s/^0//;
 			$cp = 0 if $cp =~ m/Start/i;
@@ -1080,6 +1081,8 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 				}
 			}
 		}
+		my $del_sth = database->prepare('delete from routes');
+		$del_sth->execute();
 		my $routes_query = 'insert into routes(`route_name`, `leg_name`, `leg_from`, `leg_to`, `index`) values (?, ?, ?, ?, ?)';
 		my $routes_sth = database->prepare($routes_query);
 		foreach my $route (keys(%routes)){
