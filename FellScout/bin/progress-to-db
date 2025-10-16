@@ -46,7 +46,6 @@ my $start;
 if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
 	my($y,$m,$d) = ($1,$2,$3);
 	$m = $m - 1;
-	$d = $d -1;
 	debug("Start at $y-$m-$d");
 	$start = timelocal(1, 0, 0, $d, $m, $y);
 }else{
@@ -184,8 +183,9 @@ foreach my $row (@{$data}){
 		}
 		my $this_cp_time_epoch = hhmm_to_epoch($this_cp_time_hhmm, $add_a_day);
 
-		if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
-			debug("[row $rownum $entrant] IGNORE_FUTURE_EVENTS is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
+		#if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
+		if($config->{ignore_future_events}->{value} and $config->{ignore_future_events}->{value} eq 'on' and $this_cp_time_epoch > time() ){
+			debug("[row $rownum $entrant] ignore_future_events is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
 			last;
 		}
 
@@ -263,7 +263,7 @@ foreach my $team_number (sort(keys(%entrants))){
 		$next_checkpoint = $next_cps{ $teams{$team_number}->{route} }->{ $most_forward_cp };
 		unless($next_checkpoint){
 			error("No next_checkpoint found for team '$team_number' on route '$teams{$team_number}->{route}' with most_forward_cp '$most_forward_cp'");
-			error(Dumper(\%next_cps));
+			#error(Dumper(\%next_cps));
 		}
 		$current_leg = $most_forward_cp . '-' . $next_checkpoint;
 	}
