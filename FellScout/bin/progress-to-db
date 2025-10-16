@@ -129,6 +129,7 @@ foreach my $row (@{$data}){
 	}
 
 	$row->{'Route'} = $1 if $row->{'Route'} =~ m/(\d+\w+)/;
+	$row->{'Route'} = lc($row->{'Route'})
 	if($team_number){
 		$teams{$team_number} = {
 			team_name => $row->{'Team'},

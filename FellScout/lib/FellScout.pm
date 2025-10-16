@@ -1054,10 +1054,6 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 		$query.=" values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		my $sth = database->prepare($query);
 
-		#TODO: Uniqueness-constraint on routes table
-		my $del_sth = database->prepare('delete from routes');
-		$del_sth->execute();
-
 		my %routes;
 		foreach my $row (@{$checkpoints}){
 			my $cp = $row->{'cp'};
@@ -1068,13 +1064,9 @@ any ['get', 'post'] => '/admin/checkpoints' => sub {
 			$cp = 99 if $cp =~ m/Finish/i;
 			$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{'latitude'}, $row->{longitude}, $row->{what3words});
 
-			print "\n\n";
 			foreach my $field (sort(keys(%{$row}))){
-				if ($field =~ /Leg Distance/i){
-					my $route_name = $field;
-					$route_name =~ s/\(.+\)//;
-					$route_name =~ s/\s*leg distance//;
-					$route_name =~ s/\s+//g;
+				if ($field =~ /^(\S+) leg distance/){
+					my $route_name = lc($1);
 					if($row->{$field} =~ m/\d+/){
 						push(@{$routes{$route_name}}, $cp);
 					}
