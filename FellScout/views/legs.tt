@@ -1,9 +1,11 @@
 <h1>Checkpoint Legs</h1>
 
-<p>A 'leg' is the route between two checkpoints; each route is a series of legs, and since some routes 
+<p>A 'leg' is the route between two checkpoints; each route is a series of legs, and since some routes
 skip checkpoints that are found on other routes, not all checkpoints are visited sequentially</p>
 
-<p>This page shows each leg, along with the average times taken to complete them, and which teams are on them</p>
+<p>This page lists the legs along with the average times taken to complete them, and which teams are on them</p>
+
+<p>It will only show those legs for which enough teams have passed to predict the time.</p>
 
 <p>Checkpoint 99 is the finish</p>
 
