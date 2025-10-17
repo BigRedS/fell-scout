@@ -56,7 +56,7 @@ if($config->{event_start_date}->{value} and $config->{event_start_date}->{value}
 
 
 my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
-debug("Ignoring teams: ".join(',', @ignore_teams));
+print("Ignoring teams: ".join(',', @ignore_teams));
 
 my $sth = $dbh->prepare("select entrant_code, team_name, scratch_teams.team_number from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
 $sth->execute();
@@ -129,7 +129,7 @@ foreach my $row (@{$data}){
 	}
 
 	$row->{'Route'} = $1 if $row->{'Route'} =~ m/(\d+\w+)/;
-	$row->{'Route'} = lc($row->{'Route'})
+	$row->{'Route'} = lc($row->{'Route'});
 	if($team_number){
 		$teams{$team_number} = {
 			team_name => $row->{'Team'},
@@ -265,8 +265,9 @@ foreach my $team_number (sort(keys(%entrants))){
 		unless($next_checkpoint){
 			error("No next_checkpoint found for team '$team_number' on route '$teams{$team_number}->{route}' with most_forward_cp '$most_forward_cp'");
 			#error(Dumper(\%next_cps));
+		}else{
+			$current_leg = $most_forward_cp . '-' . $next_checkpoint;
 		}
-		$current_leg = $most_forward_cp . '-' . $next_checkpoint;
 	}
 	if($team_number < 0){
 		$teams{$team_number}->{unit} = 'scratch';
