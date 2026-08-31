@@ -27,22 +27,22 @@
 	<td><% summary.general.min_cp %></td>
 	<td><% summary.general.max_cp %></td>
 	<td>
-		<a href="/team/<% summary.general.latest_finish.team_number %>">
-		<% summary.general.latest_finish.team_name %>
-		<br />
-		<% summary.general.latest_finish.unit %>
-		</a>
-		<br>
-		<% summary.general.latest_finish.finish_expected_time %>
-	</td>
-	<td>
 		<a href="/team/<% summary.general.earliest_finish.team_number %>">
 		<% summary.general.earliest_finish.team_name %>
 		<br />
 		<% summary.general.earliest_finish.unit %>
 		</a>
 		<br>
-		<% summary.general.earliest_finish.finish_expected_time %>
+		<% summary.general.earliest_finish.finish_expected_in %>
+	</td>
+	<td>
+		<a href="/team/<% summary.general.latest_finish.team_number %>">
+		<% summary.general.latest_finish.team_name %>
+		<br />
+		<% summary.general.latest_finish.unit %>
+		</a>
+		<br>
+		<% summary.general.latest_finish.finish_expected_in %>
 	</td>
 	<td>
 		<% summary.general.num_not_completed %>
@@ -62,22 +62,22 @@
 			<td><% summary.routes.$route.min_cp %></td>
 			<td><% summary.routes.$route.max_cp %></td>
 			<td>
-				<a href="/team/<% summary.routes.$route.latest_finish.team_number %>">
-				<% summary.routes.$route.latest_finish.team_name %>
-				<br />
-				<% summary.routes.$route.latest_finish.unit %>
-				</a>
-				<br>
-				<% summary.routes.$route.latest_finish.finish_expected_time %>
-			</td>
-			<td>
 				<a href="/team/<% summary.routes.$route.earliest_finish.team_number %>">
 				<% summary.routes.$route.earliest_finish.team_name %>
 				<br />
 				<% summary.routes.$route.earliest_finish.unit %>
 				</a>
 				<br>
-				<% summary.routes.$route.earliest_finish.finish_expected_time %>
+				<% summary.routes.$route.earliest_finish.finish_expected_in %>
+			</td>
+			<td>
+				<a href="/team/<% summary.routes.$route.latest_finish.team_number %>">
+				<% summary.routes.$route.latest_finish.team_name %>
+				<br />
+				<% summary.routes.$route.latest_finish.unit %>
+				</a>
+				<br>
+				<% summary.routes.$route.latest_finish.finish_expected_in %>
 			</td>
 			<td>
 				<% summary.routes.$route.num_not_completed %>
