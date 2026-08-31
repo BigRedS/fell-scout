@@ -188,7 +188,7 @@ sub get_percentile{
 		#info("Pcile sample before: ".scalar(@in));
 		my $index = int(($sample_size/100) * $#in - 1 );
 		for(0 .. $index){
-			push(@numbers, $in[$index]);
+			push(@numbers, $in[$_]);
 		}
 		#info("Pcile sample after: ".scalar(@numbers));
 		#info("Index: $index");

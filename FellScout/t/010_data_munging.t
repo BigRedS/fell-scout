@@ -49,6 +49,23 @@ for my $case (@cases) {
 		25,
 		'get_percentile: percentile defaults to 90 when not given'
 	);
+
+	# Regression test for a fixed bug (improvements.md #3): the sample_size
+	# branch used to push $in[$index] N times instead of $in[$_], collapsing
+	# the "most-recent sample_size%" slice into N copies of one element.
+	{
+		# 20 samples; sample_size=40% -> take the first 7 (index 0..6), then
+		# the 95th percentile of that slice.
+		my @in = (1 .. 20);
+		my @slice = sort { $a <=> $b } @in[0 .. 6];
+		my $expected = $slice[ int((95 / 100) * $#slice - 1) ];
+
+		is(
+			get_percentile(\@in, percentile => 95, min_sample => 5, sample_size => 40),
+			$expected,
+			'get_percentile takes a slice of the most-recent sample_size%, not N copies of one element'
+		);
+	}
 }
 
 done_testing();

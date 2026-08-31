@@ -89,6 +89,40 @@ sub get_json {
 	);
 }
 
+# --- /api/arrivals/5 on a there-and-back route (improvements.md #4) ---
+# A route that revisits a checkpoint (out-and-back) makes "the leg ending at
+# checkpoint 5" ambiguous - here legs "0-5" and "10-5" both end at 5. Used to
+# crash outright ("Subquery returns more than 1 row"); now resolved by
+# picking the *last* occurrence (`order by index desc limit 1`), so the
+# board shows everyone who hasn't passed checkpoint 5 for the final time yet
+# - including teams on their way back out to it a second time.
+{
+	TestDB->insert_route('outback', [0, 5, 10, 5, 99]);
+	my %legs_by_team = (
+		101 => ['0-5', 5],   # approaching checkpoint 5 for the first time
+		102 => ['5-10', 10], # between the two visits
+		103 => ['10-5', 5],  # approaching checkpoint 5 for the second/last time
+		104 => ['5-99', 99], # already past checkpoint 5 for good
+	);
+	for my $team_number (sort keys %legs_by_team) {
+		my ($current_leg, $next_checkpoint) = @{ $legs_by_team{$team_number} };
+		TestDB->insert_team(
+			team_number => $team_number, route => 'outback', last_checkpoint => 5,
+			next_checkpoint => $next_checkpoint, current_leg => $current_leg, completed => 0, retired => 0,
+		);
+		TestDB->insert_prediction(checkpoint => $next_checkpoint, team_number => $team_number, expected_time => TestDB->offset_datetime(10));
+	}
+
+	my $arrivals = get_json('/api/arrivals/5');
+	my @team_numbers = sort { $a <=> $b } map { $_->{team_number} } values %{ $arrivals->{teams} };
+
+	is_deeply(
+		\@team_numbers,
+		[101, 102, 103],
+		'arrivals/5: everyone before the last visit to checkpoint 5 is listed, but not team 104 (already past it for good)'
+	);
+}
+
 # --- /api/laterunners/ ---
 {
 	my $laterunners = get_json('/api/laterunners/');
