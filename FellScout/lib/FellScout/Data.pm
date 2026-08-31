@@ -190,15 +190,8 @@ sub get_laterunners{
 
 sub get_legs{
 	my $dbh = shift;
-	my %teams;
-	my $sth = $dbh->prepare("select team_number, current_leg from teams where current_leg like '%-%'");
-	$sth->execute();
-	while(my $row = $sth->fetchrow_hashref()){
-		push(@{$teams{$row->{current_leg}}}, $row->{number});
-	}
-
 	my $legs = {};
-	$sth = $dbh->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
+	my $sth = $dbh->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $key = sprintf("%02d%02d", $row->{from}, $row->{to});
@@ -375,8 +368,9 @@ sub get_checkpoint_arrivals{
 		                              and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 		                            where teams.completed < 1 and current_leg in
 		                              (select leg_name from routes where route_name = ? and `index` <=
-		                                (select `index` from routes where route_name=? and leg_name like ?))');
-		$sth->execute($route, $route, "%-$checkpoint");
+		                                (select `index` from routes where route_name=? and leg_to = ?
+		                                  order by `index` desc limit 1))');
+		$sth->execute($route, $route, $checkpoint);
 		while(my $team = $sth->fetchrow_hashref()){
 			$team->{finish_expected_hhmm} = $finish_times->{$team->{team_number}}->{finish_expected_hhmm};
 			$team->{finish_expected_in} = $finish_times->{$team->{team_number}}->{finish_expected_in};
@@ -562,14 +556,6 @@ sub get_team{
 			$team{entrants}->{ $row->{entrant_code} }->{previous_team_name} = $row->{team_name};
 			$team{entrants}->{ $row->{entrant_code} }->{previous_team_number} = $row->{team_number};
 		}
-	}
-
-	my %legs_seconds;
-	$sth = $dbh->prepare("select seconds, legs.leg_name as leg_name, route_name, `index`, `to`
-	                          from routes join legs on legs.leg_name = routes.leg_name where route_name = ?");
-	$sth->execute( $team{route} );
-	while(my $row = $sth->fetchrow_hashref()){
-		$legs_seconds{ $row->{index} } = $row;
 	}
 
 	return \%team;
