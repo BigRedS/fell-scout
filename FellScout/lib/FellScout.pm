@@ -182,7 +182,6 @@ any ['get', 'post'] => '/checkpoint' => sub {
 	}else{
 		redirect "/checkpoints";
 	}
-	redirect "/checkpoint/$checkpoint";
 };
 
 any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
