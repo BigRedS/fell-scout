@@ -1,6 +1,7 @@
 *.swp
 */local/
 *.csv*
+!FellScout/t/fixtures/*.csv
 *.log
 *progresses*
 .pls_cache/*

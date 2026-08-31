@@ -9,6 +9,11 @@ recommends "HTTP::Parser::XS" => "0";
 on "test" => sub {
     requires "Test::More"            => "0";
     requires "HTTP::Request::Common" => "0";
+    requires "Plack::Test"           => "0";
+    requires "Ref::Util"             => "0";
+    requires "JSON"                  => "0";
+    requires "DBI"                   => "0";
+    requires "DBD::MariaDB"          => "0";
 };
 
 # progress-to-json
