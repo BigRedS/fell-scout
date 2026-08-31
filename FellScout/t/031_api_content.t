@@ -33,6 +33,16 @@ TestDB->insert_prediction(checkpoint => 2, team_number => 7, expected_time => Te
 # "still approaching checkpoint 1" arrivals assertion below.
 TestDB->insert_prediction(checkpoint => 1, team_number => 6, expected_time => TestDB->offset_datetime(10));
 
+# A second team with a finish prediction, sooner than team 1's (+120min), so
+# earliest_finish/latest_finish genuinely differ - team 1 alone can't tell
+# the two apart.
+TestDB->insert_team(
+	team_number => 120, team_name => 'Front Runner Team', route => '50km',
+	last_checkpoint => 3, next_checkpoint => 99, current_leg => '3-99', completed => 0, retired => 0,
+);
+TestDB->insert_entrant(code => '120A', team => 120, last_checkpoint => 3, completed => 0, retired => 0);
+TestDB->insert_prediction(checkpoint => 99, team_number => 120, expected_time => TestDB->offset_datetime(10));
+
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
 
@@ -49,17 +59,19 @@ sub get_json {
 
 	is($summary->{general}->{num_finished}, 1, 'summary: one finished team (team 2)');
 	is($summary->{general}->{num_retired}, 1, 'summary: one retired team (team 3)');
-	is($summary->{general}->{num_not_completed}, 5, 'summary: five not-completed teams (1, 4, -5, 6, 7)');
+	is($summary->{general}->{num_not_completed}, 6, 'summary: six not-completed teams (1, 4, -5, 6, 7, 120)');
 	is_deeply(
 		[ sort { $a <=> $b } @{ $summary->{general}->{teams_out} } ],
-		[-5, 1, 4, 6, 7],
+		[-5, 1, 4, 6, 7, 120],
 		'summary: teams_out lists exactly the not-completed teams'
 	);
-	is($summary->{general}->{earliest_finish}->{team_number}, 1, 'summary: only team 1 has a finish prediction, so it is both earliest and latest');
-	is($summary->{general}->{latest_finish}->{team_number}, 1, 'summary: latest_finish matches earliest_finish when only one team has a prediction');
+	is($summary->{general}->{earliest_finish}->{team_number}, 120, 'summary: earliest_finish is team 120 (+10min), not team 1 (+120min)');
+	is($summary->{general}->{latest_finish}->{team_number}, 1, 'summary: latest_finish is team 1 (+120min), the later of the two predictions');
 
-	is($summary->{routes}->{'50km'}->{num_not_completed}, 3, 'summary: 50km has three not-completed teams (1, -5, 7)');
+	is($summary->{routes}->{'50km'}->{num_not_completed}, 4, 'summary: 50km has four not-completed teams (1, -5, 7, 120)');
 	is($summary->{routes}->{'30km'}->{num_not_completed}, 2, 'summary: 30km has two not-completed teams (4, 6)');
+	is($summary->{routes}->{'50km'}->{earliest_finish}->{team_number}, 120, 'summary: per-route earliest_finish also correctly picks team 120');
+	is($summary->{routes}->{'50km'}->{latest_finish}->{team_number}, 1, 'summary: per-route latest_finish also correctly picks team 1');
 }
 
 # --- /api/teams ---

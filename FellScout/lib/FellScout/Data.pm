@@ -28,6 +28,66 @@ sub get_summary {
 	my $dbh = shift;
 	my %summary;
 
+	$summary{general} = _route_summary($dbh, undef);
+
+	my $routes_sth = $dbh->prepare("select distinct route_name from routes order by route_name");
+	$routes_sth->execute();
+	while (my $row = $routes_sth->fetchrow_hashref()){
+		$summary{routes}->{ $row->{route_name} } = _route_summary($dbh, $row->{route_name});
+	}
+
+	return \%summary;
+}
+
+# The stats block get_summary() computes twice: once for every team, once
+# per route with an extra `and route = ?`. $route is undef for the
+# all-teams case..
+sub _route_summary {
+	my ($dbh, $route) = @_;
+	my ($route_clause, @route_param) = defined($route) ? (' and route = ?', ($route)) : ('', ());
+	my %stats;
+
+	my $sth = $dbh->prepare("select last_checkpoint from teams where completed = 0$route_clause order by last_checkpoint asc limit 1");
+	$sth->execute(@route_param);
+	$stats{min_cp} = ($sth->fetchrow_array())[0];
+
+	$sth = $dbh->prepare("select last_checkpoint from teams where completed = 0$route_clause order by last_checkpoint desc limit 1");
+	$sth->execute(@route_param);
+	$stats{max_cp} = ($sth->fetchrow_array())[0];
+
+	$sth = $dbh->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0$route_clause order by team_number asc");
+	$sth->execute(@route_param);
+	my $num_out = 0;
+	while ( my $row = $sth->fetchrow_hashref()){
+		$num_out++;
+		push(@{$stats{teams_out}}, $row->{team_number});
+	}
+	$stats{num_not_completed} = $num_out;
+
+	$sth = $dbh->prepare("select count(*) from teams where retired > 0$route_clause");
+	$sth->execute(@route_param);
+	$stats{num_retired} = $sth->fetchrow_array;
+
+	$sth = $dbh->prepare("select count(*) from teams where last_checkpoint = 99$route_clause");
+	$sth->execute(@route_param);
+	$stats{num_finished} = $sth->fetchrow_array;
+
+	my ($finish_where, @finish_param) = defined($route)
+		? ('completed = 0 and route = ?', $route)
+		: ('teams.last_checkpoint < 99', ());
+	($stats{earliest_finish}, $stats{latest_finish}) = _finish_extremes($dbh, $finish_where, @finish_param);
+
+	return \%stats;
+}
+
+# The earliest- and latest-expected-to-finish team, from one query instead
+# of the same query run twice (ASC/DESC) - and unlike that old pair, whose
+# `desc`/`asc` labelling was backwards (each returned the *other* one), this
+# is unambiguous: the fetched rows are sorted soonest-first, so the first
+# row is genuinely the earliest finisher and the last is genuinely the
+# latest.
+sub _finish_extremes {
+	my ($dbh, $where, @params) = @_;
 	my $sth = $dbh->prepare("select teams.team_number, team_name, unit, district, route, last_checkpoint,
 	                             date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
 	                             date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as finish_expected_in
@@ -35,112 +95,12 @@ sub get_summary {
 	                             join checkpoints_teams_predictions on
 	                               checkpoints_teams_predictions.team_number = teams.team_number
 	                               and checkpoints_teams_predictions.checkpoint = 99
-															 where teams.last_checkpoint < 99
-	                             order by expected_time desc");
-	$sth->execute();
-	$summary{general}->{earliest_finish} = $sth->fetchrow_hashref();
-
-	$sth = $dbh->prepare("select teams.team_number, team_name, unit, district, route, last_checkpoint,
-	                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
-	                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as finish_expected_in
-	                          from teams
-	                          join checkpoints_teams_predictions on
-	                            checkpoints_teams_predictions.team_number = teams.team_number
-	                            and checkpoints_teams_predictions.checkpoint = 99
-														where teams.last_checkpoint < 99
-	                          order by expected_time asc");
-	$sth->execute();
-	$summary{general}->{latest_finish} = $sth->fetchrow_hashref();
-
-	$sth = $dbh->prepare("select last_checkpoint from teams where completed = 0 order by last_checkpoint asc limit 1");
-	$sth->execute();
-	$summary{general}->{min_cp} = ($sth->fetchrow_array())[0];
-
-	$sth = $dbh->prepare("select last_checkpoint from teams where completed = 0 order by last_checkpoint desc limit 1");
-	$sth->execute();
-	$summary{general}->{max_cp} = ($sth->fetchrow_array())[0];
-
-	$sth = $dbh->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0 order by team_number asc");
-	$sth->execute();
-	my $num_out = 0;
-	while ( my $row = $sth->fetchrow_hashref()){
-		$num_out++;
-		push(@{$summary{general}->{teams_out}}, $row->{team_number});
-	}
-	$summary{general}->{num_not_completed} = $num_out;
-
-	$sth = $dbh->prepare("select count(*) from teams where retired > 0");
-	$sth->execute();
-	my $result = $sth->fetchrow_array;
-	$summary{general}->{num_retired} = $result;
-
-	$sth = $dbh->prepare("select count(*) from teams where last_checkpoint = 99");
-	$sth->execute();
-	$result = $sth->fetchrow_array;
-	$summary{general}->{num_finished} = $result;
-
-	my $routes_sth = $dbh->prepare("select distinct route_name from routes order by route_name");
-	$routes_sth->execute();
-	while (my $row = $routes_sth->fetchrow_hashref()){
-		my $route = $row->{route_name};
-
-		my $sth = $dbh->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint asc limit 1");
-		$sth->execute($route);
-		$summary{routes}->{$route}->{min_cp} = ($sth->fetchrow_array())[0];
-
-		$sth = $dbh->prepare("select last_checkpoint from teams where completed = 0 and route = ? order by last_checkpoint desc limit 1");
-		$sth->execute($route);
-		$summary{routes}->{$route}->{max_cp} = ($sth->fetchrow_array())[0];
-
-		$sth = $dbh->prepare("select team_number, team_name, unit, district, last_checkpoint from teams where completed = 0 and route = ? order by team_number asc");
-		$sth->execute($route);
-		my $num_out = 0;
-		while ( my $row = $sth->fetchrow_hashref()){
-			$num_out++;
-			push(@{$summary{routes}->{$route}->{teams_out}}, $row->{team_number});
-		}
-		$summary{routes}->{$route}->{num_not_completed} = $num_out;
-
-		$sth = $dbh->prepare("select teams.team_number, team_name, unit, district, route, last_checkpoint,
-		                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
-		                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as finish_expected_in
-		                          from teams
-		                          join checkpoints_teams_predictions on
-		                            checkpoints_teams_predictions.team_number = teams.team_number
-		                            and checkpoints_teams_predictions.checkpoint = 99
-		                          where completed = 0
-		                            and route = ?
-		                          order by expected_time desc");
-
-		$sth->execute($route);
-		$summary{routes}->{$route}->{earliest_finish} = $sth->fetchrow_hashref();
-
-		$sth = $dbh->prepare("select teams.team_number, team_name, unit, district, route, last_checkpoint,
-		                          date_format(last_checkpoint_time, \"%H:%i\") as last_checkpoint_time,
-		                          date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as finish_expected_in
-		                          from teams
-		                          join checkpoints_teams_predictions on
-		                            checkpoints_teams_predictions.team_number = teams.team_number
-		                            and checkpoints_teams_predictions.checkpoint = 99
-		                          where completed = 0
-		                            and route = ?
-		                          order by expected_time asc");
-		$sth->execute($route);
-		$summary{routes}->{$route}->{latest_finish} = $sth->fetchrow_hashref();
-
-		$sth = $dbh->prepare("select count(*) from teams where retired > 0 and route = ?");
-		$sth->execute($route);
-		$result = $sth->fetchrow_array;
-		$summary{routes}->{$route}->{num_retired} = $result;
-
-		$sth = $dbh->prepare("select count(*) from teams where last_checkpoint = 99 and route = ?");
-		$sth->execute($route);
-		$result = $sth->fetchrow_array;
-		$summary{routes}->{$route}->{num_finished} = $result;
-
-	}
-
-	return \%summary;
+	                             where $where
+	                             order by expected_time asc");
+	$sth->execute(@params);
+	my $rows = $sth->fetchall_arrayref({});
+	return (undef, undef) unless @$rows;
+	return ($rows->[0], $rows->[-1]);
 }
 
 sub get_laterunners{
