@@ -22,6 +22,18 @@ services:
       - fellscout_db:/var/lib/mysql
       - ./build/sql:/docker-entrypoint-initdb.d
 
+  db-test:
+    image: "mariadb:11.8"
+    environment:
+      MARIADB_ROOT_PASSWORD: test
+      MARIADB_DATABASE: fellscout
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - ./build/sql:/docker-entrypoint-initdb.d
+    tmpfs:
+      - /var/lib/mysql
+
   cron:
     build:
       context: build/

@@ -9,289 +9,293 @@ use DBI;
 use 5.032;
 use lib '../local/lib/perl5';
 
-my $in_file = '../progress.csv';
+sub run {
+	my $in_file = '../progress.csv';
 
-if($ARGV[0]){
-	if ( -f $ARGV[0] ){
-		$in_file = $ARGV[0];
-	}else{
-		print "Usage:\n";
-		print " $0 (path to progress.csv file)\n";
-		print "Path defaults to ./progress.csv\n";
-		print "DB access requires env vars be set\n";
-		exit 1;
-	}
-}
-
-unless (-f "$in_file"){
-	print "File $in_file does not exist, aborting\n";
-	print "(PWD is ".cwd().")\n";
-	exit 255;
-}
-
-my $dbh = DBI->connect("dbi:MariaDB:database=$ENV{MYSQL_DATABASE};host=$ENV{MYSQL_HOST};port=$ENV{MYSQL_PORT}", "$ENV{MYSQL_USERNAME}", "$ENV{MYSQL_PASSWORD}") or die ("Failed to connect to db: $DBI::errstr");
-
-
-my $sth_config = $dbh->prepare("select name, value from config");
-$sth_config->execute();
-my $config = $sth_config->fetchall_hashref('name');
-
-# This event begins on Saturday morning and ends at some point on Sunday. Generally, we assume
-# that CP1 was hit 'today' and calculate a datetime string for that, and then carry on until
-# time goes backwards.
-# At this point, we realise that it's become Sunday, so want to remove a day from every previous
-# datetime.
-# Rather than do that, here we just read what the first day is from the db
-my $start;
-if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
-	my($y,$m,$d) = ($1,$2,$3);
-	$m = $m - 1;
-	debug("Start at $y-$m-$d");
-	$start = timelocal(1, 0, 0, $d, $m, $y);
-}else{
-	print "E: event_start_date unset; using today\n";
-	debug("Event_start_date unset");
-	$start = time();
-}
-
-
-my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
-print("Ignoring teams: ".join(',', @ignore_teams));
-
-my $sth = $dbh->prepare("select entrant_code, team_name, scratch_teams.team_number from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
-$sth->execute();
-my $scratch_entrants = $sth->fetchall_hashref('entrant_code');
-
-$sth = $dbh->prepare("select * from scratch_teams");
-$sth->execute();
-my $scratch_teams = $sth->fetchall_hashref('team_number');
-
-my $data = Text::CSV::csv(in => $in_file, headers => "auto", escape_char => "\\", binary => 1, auto_diag => 1, allow_loose_quotes => 1);
-
-# Starts at 2 since the heading is row 1. Used entirely in debug output.
-my $rownum = 2;
-
-# Later, we will store each team, along with their last checkpoint (which we know from
-# their row in the CSV file) and their expected next checkpoint, whcih we must work out
-# from their route.
-#
-# So here we build a hash for looking up the next checkpoint given a current checkpoint
-# and a route; $next_checkpoint = $next_cps{$route}->{$current_checkpoint}
-my %next_cps;
-
-
-$sth = $dbh->prepare("select distinct route_name from routes");
-$sth->execute();
-my @routes;
-while (my $row  = $sth->fetchrow_arrayref()){
-	push(@routes, $row->[0]);
-}
-$sth = $dbh->prepare("select leg_from from routes where route_name = ? order by `index` asc");
-
-foreach my $route (@routes){
-	my @cps;
-	$sth->execute($route);
-	while(my $row = $sth->fetchrow_arrayref()){
-		push(@cps, $row->[0]);
-	}
-	say "Route $route: ".join(', ', @cps);
-	for my $i (0 .. $#cps){
-		$next_cps{$route}->{0} = $cps[0];
-		if($cps[$i+1]){
-			$next_cps{$route}->{ $cps[$i] } = $cps[$i+1];
+	if($ARGV[0]){
+		if ( -f $ARGV[0] ){
+			$in_file = $ARGV[0];
 		}else{
-			$next_cps{$route}->{ $cps[$i] } = 99;
+			print "Usage:\n";
+			print " $0 (path to progress.csv file)\n";
+			print "Path defaults to ./progress.csv\n";
+			print "DB access requires env vars be set\n";
+			exit 1;
 		}
 	}
-}
 
-
-my $num_teams_added = 0;
-my $num_entrants_added = 0;
-my %entrants;
-my %teams;
-foreach my $row (@{$data}){
-	next unless my $entrant = $row->{Number};
-	debug("[row $rownum $entrant] name: $row->{Name}");
-	$entrant =~ m/^(\d+)\w/;
-	my $team_number = $1;
-
-	if($scratch_entrants->{$entrant}){
-		debug("[row $rownum] Entrant $entrant is in scratch team $scratch_entrants->{$entrant}->{team_number}\n");
-		$teams{$team_number}->{removed_entrants}->{$entrant}++;
-		$team_number = 0 - $scratch_entrants->{$entrant}->{team_number};
-		$row->{Team} = $scratch_entrants->{$entrant}->{team_name};
+	unless (-f "$in_file"){
+		print "File $in_file does not exist, aborting\n";
+		print "(PWD is ".cwd().")\n";
+		exit 255;
 	}
 
-	if(grep (/^$team_number$/, @ignore_teams)){
-		debug("Ignoring team $team_number; skipping entrant $entrant");
-		next;
-	}
+	my $dbh = DBI->connect("dbi:MariaDB:database=$ENV{MYSQL_DATABASE};host=$ENV{MYSQL_HOST};port=$ENV{MYSQL_PORT}", "$ENV{MYSQL_USERNAME}", "$ENV{MYSQL_PASSWORD}") or die ("Failed to connect to db: $DBI::errstr");
 
-	$row->{'Route'} = $1 if $row->{'Route'} =~ m/(\d+\w+)/;
-	$row->{'Route'} = lc($row->{'Route'});
-	if($team_number){
-		$teams{$team_number} = {
-			team_name => $row->{'Team'},
-			unit => $row->{'Extra field 2'},
-			district => $row->{'Extra field 1'},
-			route => $row->{'Route'},
-		};
+
+	my $sth_config = $dbh->prepare("select name, value from config");
+	$sth_config->execute();
+	my $config = $sth_config->fetchall_hashref('name');
+
+	# This event begins on Saturday morning and ends at some point on Sunday. Generally, we assume
+	# that CP1 was hit 'today' and calculate a datetime string for that, and then carry on until
+	# time goes backwards.
+	# At this point, we realise that it's become Sunday, so want to remove a day from every previous
+	# datetime.
+	# Rather than do that, here we just read what the first day is from the db
+	my $start;
+	if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
+		my($y,$m,$d) = ($1,$2,$3);
+		$m = $m - 1;
+		$start = timelocal(1, 0, 0, $d, $m, $y);
+		print ("Start at ".localtime($start));
 	}else{
-		error("[row $rownum] Entrant $entrant has no team number?");
+		print "E: event_start_date unset; using today\n";
+		debug("Event_start_date unset");
+		$start = time();
 	}
-	my $unit = $row->{'Extra field 2'};
-	my $district = $row->{'Extra field 1'};
 
-	$row->{'CP99'} = $row->{'The finish'} if $row->{'The finish'};
-	$row->{'CP0'} = $row->{'Main start'} if $row->{'Main start'};
-	my $retired = 0;
-	my @checkpoints;
-	my $this_cp_time_hhmm = undef;
-	my $previous_cp = 0;
-	my $previous_cp_time_hhmm = 0;
-	my $previous_cp_time_epoch = 0;
-	my $add_a_day = 0;
-	foreach my $key (sort(keys(%{$row}))){
-		if(!$row->{$key} or $row->{$key} eq ''){
-			next;
+
+	my @ignore_teams = split(m/\s/, $config->{ignore_teams}->{value});
+	print("Ignoring teams: ".join(',', @ignore_teams));
+
+	my $sth = $dbh->prepare("select entrant_code, team_name, scratch_teams.team_number from scratch_teams join scratch_team_entrants on scratch_team_entrants.team_number = scratch_teams.team_number");
+	$sth->execute();
+	my $scratch_entrants = $sth->fetchall_hashref('entrant_code');
+
+	$sth = $dbh->prepare("select * from scratch_teams");
+	$sth->execute();
+	my $scratch_teams = $sth->fetchall_hashref('team_number');
+
+	my $data = Text::CSV::csv(in => $in_file, headers => "auto", escape_char => "\\", binary => 1, auto_diag => 1, allow_loose_quotes => 1);
+
+	# Starts at 2 since the heading is row 1. Used entirely in debug output.
+	my $rownum = 2;
+
+	# Later, we will store each team, along with their last checkpoint (which we know from
+	# their row in the CSV file) and their expected next checkpoint, whcih we must work out
+	# from their route.
+	#
+	# So here we build a hash for looking up the next checkpoint given a current checkpoint
+	# and a route; $next_checkpoint = $next_cps{$route}->{$current_checkpoint}
+	my %next_cps;
+
+
+	$sth = $dbh->prepare("select distinct route_name from routes");
+	$sth->execute();
+	my @routes;
+	while (my $row  = $sth->fetchrow_arrayref()){
+		push(@routes, $row->[0]);
+	}
+	$sth = $dbh->prepare("select leg_from from routes where route_name = ? order by `index` asc");
+
+	foreach my $route (@routes){
+		my @cps;
+		$sth->execute($route);
+		while(my $row = $sth->fetchrow_arrayref()){
+			push(@cps, $row->[0]);
 		}
-		my($this_cp, $cp_time_hhmm, $cp_time_epoch);
-		if ($key =~ m/^CP0?(\d+)$/){
-			$this_cp = $1;
-			$this_cp_time_hhmm = $row->{$key};
-			$this_cp_time_hhmm =~ s/://;
-		}else{
-			next;
+		say "Route $route: ".join(', ', @cps);
+		for my $i (0 .. $#cps){
+			$next_cps{$route}->{0} = $cps[0];
+			if($cps[$i+1]){
+				$next_cps{$route}->{ $cps[$i] } = $cps[$i+1];
+			}else{
+				$next_cps{$route}->{ $cps[$i] } = 99;
+			}
 		}
-		if($this_cp_time_hhmm =~ s/^M//){
-		 debug("[row $rownum $entrant] manually modified checkpoint $this_cp");
+	}
+
+
+	my $num_teams_added = 0;
+	my $num_entrants_added = 0;
+	my %entrants;
+	my %teams;
+	foreach my $row (@{$data}){
+		next unless my $entrant = $row->{Number};
+		debug("[row $rownum $entrant] name: $row->{Name}");
+		$entrant =~ m/^(\d+)\w/;
+		my $team_number = $1;
+
+		if($scratch_entrants->{$entrant}){
+			debug("[row $rownum] Entrant $entrant is in scratch team $scratch_entrants->{$entrant}->{team_number}\n");
+			$teams{$team_number}->{removed_entrants}->{$entrant}++;
+			$team_number = 0 - $scratch_entrants->{$entrant}->{team_number};
+			$row->{Team} = $scratch_entrants->{$entrant}->{team_name};
 		}
-		if($this_cp_time_hhmm =~ s/R$//){
-			debug("[row $rownum $entrant] retired at $this_cp ");
-			$retired = $this_cp;
-			last;
-		}
-		if($this_cp_time_hhmm eq 'missed'){
-			debug("[row $rownum $entrant] skipped cp $this_cp");
+
+		if(grep (/^$team_number$/, @ignore_teams)){
+			debug("Ignoring team $team_number; skipping entrant $entrant");
 			next;
 		}
 
-		# The event spans midnight, but all times are simple hhmm. If hhmm time goes backwards we assume that midnight has happened, and tell hhmm_to_epoch() so
-		if ($previous_cp_time_hhmm > $this_cp_time_hhmm){
-			debug("[row $rownum $entrant] time went backwards from $previous_cp_time_hhmm to $this_cp_time_hhmm at cp $this_cp; assuming midnight happened");
-			$add_a_day = 1;
-		}
-		my $this_cp_time_epoch = hhmm_to_epoch($this_cp_time_hhmm, $add_a_day);
-
-		#if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
-		if($config->{ignore_future_events}->{value} and $config->{ignore_future_events}->{value} eq 'on' and $this_cp_time_epoch > time() ){
-			debug("[row $rownum $entrant] ignore_future_events is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
-			last;
-		}
-
-		my $seconds_gap = 0;
-		if($previous_cp_time_epoch > 0){
-			$seconds_gap = $this_cp_time_epoch - $previous_cp_time_epoch;
-		}
-		push(@checkpoints, {'cp' => $this_cp, 'time' => $this_cp_time_epoch, team_number => $team_number, 'previous_checkpoint' => $previous_cp, 'seconds_since_last_checkpoint' => $seconds_gap });
-
-		$previous_cp = $this_cp;
-		$previous_cp_time_hhmm = $this_cp_time_hhmm;
-		$previous_cp_time_epoch = $this_cp_time_epoch;
-	}
-	$entrants{$team_number}->{$entrant}->{retired} = $retired;
-	$entrants{$team_number}->{$entrant}->{cps} = \@checkpoints;
-	if($checkpoints[0]){
-		$entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
-		$entrants{$team_number}->{$entrant}->{last_cp} = $checkpoints[-1]->{'cp'};
-		if($checkpoints[-1]->{'cp'} == 99){
-			debug("[row $rownum $entrant] has finished (at $checkpoints[-1]->{'cp'})");
-			$entrants{$team_number}->{$entrant}->{completed} = 1;
+		$row->{'Route'} = $1 if $row->{'Route'} =~ m/(\d+\w+)/;
+		$row->{'Route'} = lc($row->{'Route'});
+		if($team_number){
+			$teams{$team_number} = {
+				team_name => $row->{'Team'},
+				unit => $row->{'Extra field 2'},
+				district => $row->{'Extra field 1'},
+				route => $row->{'Route'},
+			};
 		}else{
-			$entrants{$team_number}->{$entrant}->{completed} = 0;
+			error("[row $rownum] Entrant $entrant has no team number?");
 		}
-	}else{
-		debug("[row $rownum $entrant] no checkpoints, entrant probably hasn't hit cp 1 yet");
-	}
-	my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code, last_checkpoint, last_checkpoint_time) values (?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?))");
+		my $unit = $row->{'Extra field 2'};
+		my $district = $row->{'Extra field 1'};
 
-	$sth->execute($team_number, $row->{Name}, $unit, $district, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number}, $entrants{$team_number}->{$entrant}->{last_cp}, $entrants{$team_number}->{$entrant}->{last_cp_time});
-	debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
-	$rownum++;
-	$num_entrants_added++;
+		$row->{'CP99'} = $row->{'The finish'} if $row->{'The finish'};
+		$row->{'CP0'} = $row->{'Main start'} if $row->{'Main start'};
+		my $retired = 0;
+		my @checkpoints;
+		my $this_cp_time_hhmm = undef;
+		my $previous_cp = 0;
+		my $previous_cp_time_hhmm = 0;
+		my $previous_cp_time_epoch = 0;
+		my $add_a_day = 0;
+		foreach my $key (sort(keys(%{$row}))){
+			if(!$row->{$key} or $row->{$key} eq ''){
+				next;
+			}
+			my($this_cp, $cp_time_hhmm, $cp_time_epoch);
+			if ($key =~ m/^CP0?(\d+)$/){
+				$this_cp = $1;
+				$this_cp_time_hhmm = $row->{$key};
+				$this_cp_time_hhmm =~ s/://;
+			}else{
+				next;
+			}
+			if($this_cp_time_hhmm =~ s/^M//){
+			 debug("[row $rownum $entrant] manually modified checkpoint $this_cp");
+			}
+			if($this_cp_time_hhmm =~ s/R$//){
+				debug("[row $rownum $entrant] retired at $this_cp ");
+				$retired = $this_cp;
+				last;
+			}
+			if($this_cp_time_hhmm eq 'missed'){
+				debug("[row $rownum $entrant] skipped cp $this_cp");
+				next;
+			}
 
-}
+			# The event spans midnight, but all times are simple hhmm. If hhmm time goes backwards we assume that midnight has happened, and tell hhmm_to_epoch() so
+			if ($previous_cp_time_hhmm > $this_cp_time_hhmm){
+				debug("[row $rownum $entrant] time went backwards from $previous_cp_time_hhmm to $this_cp_time_hhmm at cp $this_cp; assuming midnight happened");
+				$add_a_day = 1;
+			}
+			my $this_cp_time_epoch = hhmm_to_epoch($this_cp_time_hhmm, $add_a_day, $start, $config->{time_shift_events}->{value});
 
-# We now have a hash, $entrants, which has a series of 'team' keys, each of which has a series of entrants.
-#
-# So now, we go through these and, for each team pick the person who is furthest forward (as in, has reached
-# the highest checkpoint at the latest time) and use that person to represent the team:
+			#if($ENV{IGNORE_FUTURE_EVENTS} and $ENV{IGNORE_FUTURE_EVENTS} eq 'on' and ($this_cp_time_epoch > time()) ){
+			if($config->{ignore_future_events}->{value} and $config->{ignore_future_events}->{value} eq 'on' and $this_cp_time_epoch > time() ){
+				debug("[row $rownum $entrant] ignore_future_events is set; skipping the rest of the checkpoints after $this_cp at $this_cp_time_hhmm");
+				last;
+			}
 
-my $team_sth = $dbh->prepare("replace into teams (team_number, team_name, unit, district, completed, retired, route, representative_entrant, last_checkpoint, last_checkpoint_time, next_checkpoint, current_leg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?), ?, ?)");
-my $cp_team_sth = $dbh->prepare("replace into checkpoints_teams (checkpoint, team_number, time, previous_checkpoint, seconds_since_previous_checkpoint) values (?, ?, from_unixtime(?), ?, ?)");
-foreach my $team_number (sort(keys(%entrants))){
-	my $most_forward_entrant = '';
-	my $most_forward_cp = 0;
-	my $most_forward_cp_time = undef;
-	foreach my $entrant (sort(keys(%{$entrants{$team_number}}))){
-		#debug("Entrant $entrant");
-		if($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp){
-			debug("Entrant $entrant is further ahead than $most_forward_entrant ($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp)") if $most_forward_cp > 0;
-			$most_forward_cp = $entrants{$team_number}->{$entrant}->{last_cp};
-			$most_forward_cp_time = $entrants{$team_number}->{$entrant}->{last_cp_time};
-			$most_forward_entrant = $entrant;
+			my $seconds_gap = 0;
+			if($previous_cp_time_epoch > 0){
+				$seconds_gap = $this_cp_time_epoch - $previous_cp_time_epoch;
+			}
+			push(@checkpoints, {'cp' => $this_cp, 'time' => $this_cp_time_epoch, team_number => $team_number, 'previous_checkpoint' => $previous_cp, 'seconds_since_last_checkpoint' => $seconds_gap });
+
+			$previous_cp = $this_cp;
+			$previous_cp_time_hhmm = $this_cp_time_hhmm;
+			$previous_cp_time_epoch = $this_cp_time_epoch;
 		}
-	}
-
-	debug("Team $team_number is represented by entrant $most_forward_entrant");
-	foreach my $cp (@{$entrants{$team_number}->{$most_forward_entrant}->{cps}}){
-		$cp_team_sth->execute($cp->{cp}, $team_number, $cp->{time}, $cp->{previous_checkpoint}, $cp->{seconds_since_last_checkpoint});
-	}
-
-	# TODO: 'retired' is but one way of completing. This might want a rethink.
-	my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed} + 0;
-	$completed++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
-
-	my $retired = 0;
-	$retired++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
-
-	my ($next_checkpoint, $current_leg);
-	if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
-		$next_checkpoint = 0;
-		$current_leg = '';
-	}else{
-		$next_checkpoint = $next_cps{ $teams{$team_number}->{route} }->{ $most_forward_cp };
-		unless($next_checkpoint){
-			error("No next_checkpoint found for team '$team_number' on route '$teams{$team_number}->{route}' with most_forward_cp '$most_forward_cp'");
-			#error(Dumper(\%next_cps));
+		$entrants{$team_number}->{$entrant}->{retired} = $retired;
+		$entrants{$team_number}->{$entrant}->{cps} = \@checkpoints;
+		if($checkpoints[0]){
+			$entrants{$team_number}->{$entrant}->{last_cp_time} = $checkpoints[-1]->{'time'};
+			$entrants{$team_number}->{$entrant}->{last_cp} = $checkpoints[-1]->{'cp'};
+			if($checkpoints[-1]->{'cp'} == 99){
+				debug("[row $rownum $entrant] has finished (at $checkpoints[-1]->{'cp'})");
+				$entrants{$team_number}->{$entrant}->{completed} = 1;
+			}else{
+				$entrants{$team_number}->{$entrant}->{completed} = 0;
+			}
 		}else{
-			$current_leg = $most_forward_cp . '-' . $next_checkpoint;
+			debug("[row $rownum $entrant] no checkpoints, entrant probably hasn't hit cp 1 yet");
+		}
+		my $sth = $dbh->prepare("replace into entrants (team, entrant_name, unit, district, completed, retired, code, last_checkpoint, last_checkpoint_time) values (?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?))");
+
+		$sth->execute($team_number, $row->{Name}, $unit, $district, $entrants{$team_number}->{$entrant}->{completed}, $retired, $row->{Number}, $entrants{$team_number}->{$entrant}->{last_cp}, $entrants{$team_number}->{$entrant}->{last_cp_time});
+		debug("[row $rownum $entrant] wrote entrant in team $team_number; completed: $entrants{$team_number}->{$entrant}->{completed}");
+		$rownum++;
+		$num_entrants_added++;
+
+	}
+
+	# We now have a hash, $entrants, which has a series of 'team' keys, each of which has a series of entrants.
+	#
+	# So now, we go through these and, for each team pick the person who is furthest forward (as in, has reached
+	# the highest checkpoint at the latest time) and use that person to represent the team:
+
+	my $team_sth = $dbh->prepare("replace into teams (team_number, team_name, unit, district, completed, retired, route, representative_entrant, last_checkpoint, last_checkpoint_time, next_checkpoint, current_leg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, from_unixtime(?), ?, ?)");
+	my $cp_team_sth = $dbh->prepare("replace into checkpoints_teams (checkpoint, team_number, time, previous_checkpoint, seconds_since_previous_checkpoint) values (?, ?, from_unixtime(?), ?, ?)");
+	foreach my $team_number (sort(keys(%entrants))){
+		my $most_forward_entrant = '';
+		my $most_forward_cp = 0;
+		my $most_forward_cp_time = undef;
+		foreach my $entrant (sort(keys(%{$entrants{$team_number}}))){
+			#debug("Entrant $entrant");
+			if($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp){
+				debug("Entrant $entrant is further ahead than $most_forward_entrant ($entrants{$team_number}->{$entrant}->{last_cp} > $most_forward_cp)") if $most_forward_cp > 0;
+				$most_forward_cp = $entrants{$team_number}->{$entrant}->{last_cp};
+				$most_forward_cp_time = $entrants{$team_number}->{$entrant}->{last_cp_time};
+				$most_forward_entrant = $entrant;
+			}
+		}
+
+		debug("Team $team_number is represented by entrant $most_forward_entrant");
+		foreach my $cp (@{$entrants{$team_number}->{$most_forward_entrant}->{cps}}){
+			$cp_team_sth->execute($cp->{cp}, $team_number, $cp->{time}, $cp->{previous_checkpoint}, $cp->{seconds_since_last_checkpoint});
+		}
+
+		# TODO: 'retired' is but one way of completing. This might want a rethink.
+		my $completed = $entrants{$team_number}->{$most_forward_entrant}->{completed} + 0;
+		$completed++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
+
+		my $retired = 0;
+		$retired++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
+
+		my ($next_checkpoint, $current_leg);
+		if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
+			$next_checkpoint = 0;
+			$current_leg = '';
+		}else{
+			$next_checkpoint = $next_cps{ $teams{$team_number}->{route} }->{ $most_forward_cp };
+			unless($next_checkpoint){
+				error("No next_checkpoint found for team '$team_number' on route '$teams{$team_number}->{route}' with most_forward_cp '$most_forward_cp'");
+				#error(Dumper(\%next_cps));
+			}else{
+				$current_leg = $most_forward_cp . '-' . $next_checkpoint;
+			}
+		}
+		if($team_number < 0){
+			$teams{$team_number}->{unit} = 'scratch';
+			$teams{$team_number}->{district} = 'scratch';
+		}
+		$num_teams_added++;
+		$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $retired, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
+	}
+
+	foreach my $team_number (sort(keys(%teams))){
+		my $num_entrants = scalar(keys(%{$entrants{$team_number}}));
+		my $num_removed_entrants = scalar(keys(%{$teams{$team_number}->{removed_entrants}}));
+		if($num_entrants == 0){
+			my $sth = $dbh->prepare('update teams set completed = 1 where team_number = ?');
+			$sth->execute($team_number);
+			debug("Team '$team_number' has no entrants left, marking as complete");
 		}
 	}
-	if($team_number < 0){
-		$teams{$team_number}->{unit} = 'scratch';
-		$teams{$team_number}->{district} = 'scratch';
-	}
-	$num_teams_added++;
-	$team_sth->execute($team_number, $teams{$team_number}->{team_name}, $teams{$team_number}->{unit}, $teams{$team_number}->{district}, $completed, $retired, $teams{$team_number}->{route}, $most_forward_entrant, $most_forward_cp, $most_forward_cp_time, $next_checkpoint, $current_leg);
-}
 
-foreach my $team_number (sort(keys(%teams))){
-	my $num_entrants = scalar(keys(%{$entrants{$team_number}}));
-	my $num_removed_entrants = scalar(keys(%{$teams{$team_number}->{removed_entrants}}));
-	if($num_entrants == 0){
-		my $sth = $dbh->prepare('update teams set completed = 1 where team_number = ?');
-		$sth->execute($team_number);
-		debug("Team '$team_number' has no entrants left, marking as complete");
-	}
+	print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 }
-
-print "Done. $num_teams_added teams, $num_entrants_added entrants\n";
 
 sub hhmm_to_epoch{
 	my $time = shift;
 	my $added_days = shift || 0;
+	my $start = shift;
+	my $time_shift_events = shift;
 
 	abort("Invalid time: '$time'") unless $time =~ m/^(\d\d?)(\d\d?)/;
 	my ($h,$m) = ($1,$2);
@@ -301,9 +305,9 @@ sub hhmm_to_epoch{
 
 	my $timestamp = timelocal(0, $m, $h, (localtime($now))[3,4,5]);
 
-	if ($config->{time_shift_events}->{value} and $config->{time_shift_events}->{value} =~ m/[-+]?(\d+):(\d+)/){
+	if ($time_shift_events and $time_shift_events =~ m/[-+]?(\d+):(\d+)/){
 		my ($add_hr,$add_min) = ($1,$2);
-		if($config->{time_shift_events}->{value} =~ m/^-/){
+		if($time_shift_events =~ m/^-/){
 			$timestamp -= ($add_hr * 3600);
 			$timestamp -= ($add_min * 60);
 		}else{
@@ -333,3 +337,7 @@ sub debug{
 	chomp($message);
 	print STDERR "DEBUG: $message\n";
 }
+
+run() unless caller;
+
+1;
