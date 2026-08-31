@@ -568,11 +568,8 @@ any ['get', 'post'] => '/entrants' => sub {
 };
 
 sub get_entrants(){
-	my $sth = database->prepare('select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
-	                             teams.last_checkpoint as team_last_checkpoint, teams.next_checkpoint as team_next_checkpoint,
-												       routes.leg_name as leg, teams.route as route, entrants.retired as retired,
-															 date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as expected_hhmm,
-															 date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as expected_in,
+	my $sth = database->prepare("select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
+	                             teams.last_checkpoint as team_last_checkpoint,
 	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
 	                             join teams

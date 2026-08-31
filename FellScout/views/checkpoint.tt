@@ -82,13 +82,25 @@
 
 <script>
 
-  var map = L.map('map').setView([<% details.latitude %>,<% details.longitude %>], 13);
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-
-  var marker = L.marker([<% details.latitude %>,<% details.longitude %>]).addTo(map);
-
-</script>
+<table class='table'>
+	<thead>
+		<tr>
+			<th>Expected here</th>
+			<th>Number</th>
+			<th>Team Name</th>
+			<th>Unit, District</th>
+			<th>Next Expected Checkpoint</th>
+			<th>Expected at finish</th>
+		</tr>
+	</thead>
+	<% FOREACH team IN checkpoint.teams.keys %>
+		<tr>
+			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.this_cp_expected_epoch %>'><% checkpoint.teams.$team.this_cp_expected_hhmm %></td>
+			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_number %> </a></td>
+			<td> <a href='/team/<% checkpoint.teams.$team.team_number %>' > <% checkpoint.teams.$team.team_name %> </a></td>
+			<td><% checkpoint.teams.$team.unit %> (<% checkpoint.teams.$team.district %>)</td>
+			<td> <a href='/checkpoint/<% checkpoint.teams.$team.next_checkpoint %>' > <% checkpoint.teams.$team.next_checkpoint %> </a> (<% checkpoint.teams.$team.next_checkpoint_expected_hhmm %>)</td>
+			<td data-sortas='numeric' data-sortvalue='<% checkpoint.teams.$team.finish_expected_epoch %>'><% checkpoint.teams.$team.finish_expected_hhmm %></td>
+		</tr>
+	<% END %>
+</table>
