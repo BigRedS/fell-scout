@@ -11,6 +11,7 @@ BEGIN {
 }
 
 use FellScout;
+use FellScout::Sync qw(get_percentile);
 use Test::More;
 use Plack::Test;
 use HTTP::Request::Common;
@@ -19,31 +20,14 @@ use HTTP::Request::Common;
 # to assert *correct* behaviour. They are expected to fail against the
 # current code - that's the point: they prove the bug is real and give a
 # concrete way to confirm the fix later.
+#
+# improvements.md #2 (scratch-team deletion only resetting the first
+# entrant) used to have a test here too; it's fixed now (see
+# FellScout::Data::delete_scratch_team) and its regression coverage lives in
+# t/034_scratch_teams.t instead, alongside the rest of that module's tests.
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
-
-# --- improvements.md #2: scratch-team deletion only resets the first entrant ---
-# `foreach (my $row = $sth->fetchrow_hashref())` evaluates the assignment
-# once and loops over that single value, instead of `while`.
-{
-	TestDB->reset;
-	TestDB->seed_sample_world; # brings scratch team -5 with entrants 9A and 9B
-
-	my $res = $test->request( POST '/scratch-teams', [
-		update    => 1,
-		team_number => 5,
-		team_name   => 'Scratch Squad',
-		entrants    => '', # empty entrants list triggers the deletion path
-	] );
-	ok($res->is_success, '[POST /scratch-teams] (delete) successful') or diag($res->status_line, "\n", $res->content);
-
-	my ($still_scratch) = TestDB->dbh->selectrow_array(
-		"select count(*) from entrants where code in ('9A','9B') and team = -5"
-	);
-	is($still_scratch, 0, 'deleting a scratch team resets every entrant back to their original team, not just the first')
-		or diag("$still_scratch of 2 entrants were left stranded on the deleted scratch team");
-}
 
 # --- improvements.md #4: leg-matching LIKE pattern is too broad ---
 # The single-dash "$from-$to" leg-naming scheme means `LIKE '%-$checkpoint'`
@@ -89,7 +73,7 @@ my $test = Plack::Test->create($app);
 	};
 
 	is(
-		FellScout::get_percentile(\@in, percentile => 95, min_sample => 5, sample_size => 40),
+		get_percentile(\@in, percentile => 95, min_sample => 5, sample_size => 40),
 		$correct,
 		'get_percentile takes a slice of the most-recent sample_size%, not N copies of one element'
 	);

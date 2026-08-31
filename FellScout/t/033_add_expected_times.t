@@ -10,14 +10,14 @@ BEGIN {
 	TestDB->set_env;
 }
 
-use FellScout;
+use FellScout::Sync qw(add_expected_times_to_teams);
 use Test::More;
 
-# add_expected_times_to_teams() touches the database but, since the vars
-# decoupling, no longer touches Dancer2's request-scoped `vars` keyword - so
-# unlike run_cronjobs() as a whole, it can be called directly against a
-# seeded database without going through Plack::Test/HTTP at all. This is a
-# faster, more focused layer under t/032_cron.t's full-pipeline coverage.
+# add_expected_times_to_teams() takes $dbh and config as plain arguments -
+# no Dancer2 at all - so unlike run_cronjobs() as a whole, it can be called
+# directly against a seeded database without going through Plack::Test/HTTP.
+# This is a faster, more focused layer under t/032_cron.t's full-pipeline
+# coverage.
 
 TestDB->reset;
 TestDB->insert_route('50km', [0, 1, 2, 3, 99], seconds => { '1-2' => 3600 });
@@ -27,7 +27,7 @@ TestDB->insert_team(
 	next_checkpoint => 2, current_leg => '1-2', completed => 0, retired => 0,
 );
 
-FellScout::add_expected_times_to_teams(1.2);
+add_expected_times_to_teams(TestDB->dbh, 1.2);
 
 my $prediction = TestDB->dbh->selectrow_hashref(
 	'select * from checkpoints_teams_predictions where team_number = 1 and checkpoint = 2'
@@ -54,7 +54,7 @@ TestDB->insert_team(
 	last_checkpoint => 0, last_checkpoint_time => TestDB->offset_datetime(-5),
 	next_checkpoint => 1, current_leg => 'nonexistent-leg', completed => 0, retired => 0,
 );
-my $ok = eval { FellScout::add_expected_times_to_teams(1.2); 1 };
+my $ok = eval { add_expected_times_to_teams(TestDB->dbh, 1.2); 1 };
 ok($ok, 'a team with no matching route/leg data does not make the whole run die') or diag($@);
 
 my ($team2_predictions) = TestDB->dbh->selectrow_array(
