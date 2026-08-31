@@ -20,7 +20,7 @@ sub run_cronjobs{
 	my $dbh = shift;
 	my %config = @_;
 
-	my $cmd = join(" ", cwd()."/bin/get-data", $config{felltrack_owner}, $config{felltrack_username}, $config{felltrack_password});
+	my @get_data_cmd = (cwd()."/bin/get-data", $config{felltrack_owner}, $config{felltrack_username}, $config{felltrack_password});
 
 	my $sth_log = $dbh->prepare("replace into logs (`message`, `name`) values (?, ?)");
 
@@ -33,26 +33,34 @@ sub run_cronjobs{
 		$ENV{SKIP_FETCH_FROM_FELLTRACK} = undef;
 	}
 
-	info("Cron: Getting data: $cmd");
+	info("Cron: Getting data: ".join(" ", @get_data_cmd));
 	my $output = '';
-	foreach my $line (qx/$cmd/){
-		chomp($line);
-		info(">  $line");
-		$output .= $line;
+	if (open(my $fh, '-|', @get_data_cmd)){
+		while (my $line = <$fh>){
+			chomp($line);
+			info(">  $line");
+			$output .= $line;
+		}
+		close($fh);
+	}else{
+		error("Failed to run get-data: $!");
 	}
 	$sth_log->execute($output, 'get-data');
 	info("Exited: $?");
 
-	$cmd = cwd().'/bin/progress-to-db';
-	if ($config{progress_csv_path}) {
-		$cmd .= " $config{progress_csv_path}";
-	}
-	info("Cron: Updating DB from CSV : $cmd");
+	my @progress_cmd = (cwd().'/bin/progress-to-db');
+	push(@progress_cmd, $config{progress_csv_path}) if $config{progress_csv_path};
+	info("Cron: Updating DB from CSV : ".join(" ", @progress_cmd));
 	$output = '';
-	foreach my $line (qx/$cmd/){
-		chomp($line);
-		$output .= $line;
-		info(">  $line");
+	if (open(my $fh, '-|', @progress_cmd)){
+		while (my $line = <$fh>){
+			chomp($line);
+			$output .= $line;
+			info(">  $line");
+		}
+		close($fh);
+	}else{
+		error("Failed to run progress-to-db: $!");
 	}
 	$sth_log->execute($output, 'progress-to-db');
 	info("Exited: $?");
