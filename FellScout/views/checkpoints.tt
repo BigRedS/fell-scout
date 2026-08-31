@@ -26,14 +26,46 @@ You can also view a specific checkpoint's arrivals board here:
 <table class='table table-hover table-sm table-responsive'>
 	<thead>
 		<tr>
-			<th>Checkpoint</th>
+			<th class="text-center">Checkpoint</th>
+			<th class="text-center">Links</th>
+			<th class="text-center">Routes</th>
+			<th class="text-center">Teams</br /> passed</th>
+			<th class="text-center">Teams<br /> not passed</th>
 			<th>Arrivals</th>
 			<th>Recent Departures</th>
 		</tr>
 	</thead>
 	<% FOREACH checkpoint IN checkpoints.keys.nsort %>
 		<tr>
-			<td><a href='/checkpoint/<% checkpoint %>'><% checkpoint %></a></td>
+			<td class="text-center"><% checkpoint %></td>
+			<td class="text-center">
+				<a href='/arrivals/<% checkpoint %>'>Arrivals</a>
+				<br>
+				<a href='/checkpoint/<% checkpoint %>'>Info</a>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+					<% route %><br />
+				<% END %>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+				  <% if checkpoints.$checkpoint.past.$route.size < 1 %>
+					 0<br />
+					<% else %>
+						<% checkpoints.$checkpoint.past.$route.size %><br />
+					<% end %>
+				<% END %>
+			</td>
+			<td class="text-center">
+				<% FOREACH route IN checkpoints.$checkpoint.routes %>
+				<% if checkpoints.$checkpoint.future.$route.size < 1 %>
+				 0<br />
+				<% else %>
+					<% checkpoints.$checkpoint.future.$route.size %><br />
+				<% end %>
+				<% END %>
+			</td>
 			<td>
 				<ul>
 					<% FOREACH team in checkpoints.$checkpoint.arrivals	%>

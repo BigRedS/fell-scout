@@ -1,10 +1,11 @@
 create database if not exists fellscout;
 use fellscout;
--- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: fellscout-dev
 -- ------------------------------------------------------
--- Server version	10.11.4-MariaDB-1~deb12u1
+-- Server version	11.8.3-MariaDB-0+deb13u1 from Debian
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,7 +16,27 @@ use fellscout;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+
+--
+-- Table structure for table `checkpoints`
+--
+
+DROP TABLE IF EXISTS `checkpoints`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkpoints` (
+  `checkpoint_number` tinyint(4) NOT NULL,
+  `description` varchar(64) DEFAULT NULL,
+  `mobile` tinytext DEFAULT NULL,
+  `type` varchar(64) DEFAULT NULL,
+  `os_grid` varchar(12) DEFAULT NULL,
+  `longitude` varchar(32) DEFAULT NULL,
+  `what3words` tinytext DEFAULT NULL,
+  `latitude` varchar(32) DEFAULT NULL,
+  `manager` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `checkpoints_teams`
@@ -23,7 +44,7 @@ use fellscout;
 
 DROP TABLE IF EXISTS `checkpoints_teams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `checkpoints_teams` (
   `checkpoint` tinyint(4) NOT NULL,
   `team_number` smallint(6) NOT NULL,
@@ -40,7 +61,7 @@ CREATE TABLE `checkpoints_teams` (
 
 DROP TABLE IF EXISTS `checkpoints_teams_predictions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `checkpoints_teams_predictions` (
   `checkpoint` tinyint(4) NOT NULL,
   `team_number` smallint(6) NOT NULL,
@@ -55,7 +76,7 @@ CREATE TABLE `checkpoints_teams_predictions` (
 
 DROP TABLE IF EXISTS `config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `config` (
   `name` varchar(100) DEFAULT NULL,
   `value` varchar(250) DEFAULT NULL,
@@ -71,7 +92,7 @@ CREATE TABLE `config` (
 
 DROP TABLE IF EXISTS `entrants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entrants` (
   `team` smallint(6) DEFAULT NULL,
   `entrant_name` text DEFAULT NULL,
@@ -92,7 +113,7 @@ CREATE TABLE `entrants` (
 
 DROP TABLE IF EXISTS `legs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `legs` (
   `from` tinyint(4) NOT NULL,
   `to` tinyint(4) NOT NULL,
@@ -108,7 +129,7 @@ CREATE TABLE `legs` (
 
 DROP TABLE IF EXISTS `logs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `logs` (
   `name` text DEFAULT NULL,
   `message` text DEFAULT NULL,
@@ -124,11 +145,13 @@ CREATE TABLE `logs` (
 
 DROP TABLE IF EXISTS `routes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `routes` (
   `route_name` varchar(32) NOT NULL,
   `index` tinyint(4) NOT NULL,
   `leg_name` tinytext DEFAULT NULL,
+  `leg_from` tinyint(4) DEFAULT NULL,
+  `leg_to` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`index`,`route_name`),
   KEY `route_name` (`route_name`,`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -140,7 +163,7 @@ CREATE TABLE `routes` (
 
 DROP TABLE IF EXISTS `routes_checkpoints`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `routes_checkpoints` (
   `route_name` text DEFAULT NULL,
   `checkpoint_number` int(11) DEFAULT NULL
@@ -153,7 +176,7 @@ CREATE TABLE `routes_checkpoints` (
 
 DROP TABLE IF EXISTS `scratch_team_entrants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `scratch_team_entrants` (
   `team_number` smallint(6) NOT NULL,
   `entrant_code` char(4) NOT NULL,
@@ -168,7 +191,7 @@ CREATE TABLE `scratch_team_entrants` (
 
 DROP TABLE IF EXISTS `scratch_teams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `scratch_teams` (
   `team_number` smallint(6) NOT NULL AUTO_INCREMENT,
   `team_name` text DEFAULT NULL,
@@ -183,7 +206,7 @@ CREATE TABLE `scratch_teams` (
 
 DROP TABLE IF EXISTS `teams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `teams` (
   `team_number` smallint(6) NOT NULL,
   `team_name` text DEFAULT NULL,
@@ -209,14 +232,15 @@ CREATE TABLE `teams` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2024-02-05 22:36:52
--- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (aarch64)
+-- Dump completed on 2025-10-15 22:16:14
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: fellscout-dev
 -- ------------------------------------------------------
--- Server version	10.11.4-MariaDB-1~deb12u1
+-- Server version	11.8.3-MariaDB-0+deb13u1 from Debian
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -227,7 +251,7 @@ CREATE TABLE `teams` (
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
 --
 -- Table structure for table `config`
@@ -235,7 +259,7 @@ CREATE TABLE `teams` (
 
 DROP TABLE IF EXISTS `config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `config` (
   `name` varchar(100) DEFAULT NULL,
   `value` varchar(250) DEFAULT NULL,
@@ -251,6 +275,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `config` VALUES
 ('route_50mile','','space-separated list of checkpoints on 50 mile route'),
 ('route_50km','','space-separated list of checkpoints on 50km route'),
@@ -261,16 +286,18 @@ INSERT INTO `config` VALUES
 ('felltrack_password','',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
 ('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
-('skip_fetch_from_felltrack','off','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
+('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
 ('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
 ('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
 ('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
 ('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
 ('google_maps_url','','address of the route on Google Maps route'),
-('event_start_date','2024-02-11','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint');
+('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint'),
+('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -279,6 +306,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2024-02-05 22:36:52
+-- Dump completed on 2025-10-15 22:16:14

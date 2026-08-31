@@ -1,10 +1,86 @@
-<h1>Checkpoint <% checkpoint.cp %> Arrivals Board</h1>
+<h1>Checkpoint <% details.checkpoint_number %> Details</h1>
 
-<p>This page shows every team that has yet to reach this checkpoint, and when they're expected here</p>
+<a href="/arrivals/<% details.checkpoint_number %>">Arrivals Board</a>
+<table class='table'>
+  <tr>
+    <td>Description</td>
+    <td><% details.description %> (<% details.type %>)</td>
+  </tr>
+  <tr>
+    <td>Manager</td>
+    <td> <% details.manager %> : <a href="tel:<% details.mobile %>"> <% details.mobile %> </a> </td>
+  </tr>
+  <tr>
+    <td>Location</td>
+    <td>
+      <tt><% details.os_grid %></tt>
+      <br ><a href='https://www.google.com/maps/place/<% details.latitude %>,<% details.longitude %>'>Google Maps</a>
+      <br /><a href='https://www.bing.com/maps?q=<% details.latitude %>,<% details.longitude %>&style=s'>OS Maps (Bing)</a>
+      <br /><a href="https://what3words.com/<% details.what3words %>">What3Words</a>
+    </td>
+  </tr>
+  <tr>
+    <td>Routes</td>
+    <td>
+      <% foreach route in details.routes %>
+        <% route %>: <a href='/checkpoint/<% details.previous.$route %>'><% details.previous.$route %></a> -> <% details.checkpoint_number %> -> <a href='<% details.next.$route %>'><% details.next.$route %></a> <br >
+      <% end %>
+     </td>
+  </tr>
+  </table>
+<h2>Teams for whom this is the next checkpoint</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.next.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.next.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<h2>Teams That Have Been Here</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.past.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.past.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<h2>Teams That Have Not Yet Been Here</h2>
+<table class="table">
+  <% foreach route in details.routes %>
+    <tr>
+      <td>
+        <% route %>
+      </td>
+      <td><% details.teams.future.$route.size %></td>
+      <td>
+        <% foreach team in details.teams.future.$route %>
+          <a class='badge badge-primary mb-1' style='min-width:50px;font-size:1.1em' href='/team/<% team %>'><% team %></a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
 
-<p>'Expected at finish' will only populate when enough teams have finished the event to make for reasonable estimates for the teams behind them</p>
+<h2>Map</h2>
+<div id="map" style="height:300px;"></div>
 
-<p>You can see all teams and all checkpoints on the general <a href='/checkpoints'>checkpoints page</a>.</p>
+<script>
 
 <table class='table'>
 	<thead>

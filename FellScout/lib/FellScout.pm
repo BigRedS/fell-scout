@@ -4,6 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::Database;
 use Data::Dumper;
 use POSIX qw(strftime);
+use Text::CSV qw/csv/;
 use Cwd;
 
 setting('plugins')->{'Database'}->{'host'}=$ENV{'MYSQL_HOST'};
@@ -64,6 +65,7 @@ sub get_summary {
 	                             join checkpoints_teams_predictions on
 	                               checkpoints_teams_predictions.team_number = teams.team_number
 	                               and checkpoints_teams_predictions.checkpoint = 99
+															 where teams.last_checkpoint < 99
 	                             order by expected_time desc");
 	$sth->execute();
 	$summary{general}->{earliest_finish} = $sth->fetchrow_hashref();
@@ -75,6 +77,7 @@ sub get_summary {
 	                          join checkpoints_teams_predictions on
 	                            checkpoints_teams_predictions.team_number = teams.team_number
 	                            and checkpoints_teams_predictions.checkpoint = 99
+														where teams.last_checkpoint < 99
 	                          order by expected_time asc");
 	$sth->execute();
 	$summary{general}->{latest_finish} = $sth->fetchrow_hashref();
@@ -190,7 +193,7 @@ any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 	while(my $row = $sth->fetchrow_hashref()){
 		$return->{page}->{ $row->{name} } = $row->{value};
 	}
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{table_sort_column} = 8;
 	$return->{page}->{table_sort_order} = 'desc';
 	$return->{page}->{title} = 'Late Runners';
@@ -281,7 +284,34 @@ sub get_legs(){
 	return $legs;
 }
 
+# # # # # map
+any ['get', 'post'] => '/map' => sub {
+	my $return = {
+		checkpoints => get_checkpoints(),
+		page => vars->{page},
+	};
 
+	my @colours = qw/red blue green yellow orange/;
+
+	my $sth = database->prepare('select distinct route_name from routes order by route_name asc');
+	my $sth_cps = database->prepare('select leg_to from routes where route_name = ? order by `index` asc');
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		my $route_name = $row->{route_name};
+		$return->{routes}->{$route_name}->{colour} = shift(@colours);
+		push(@{ $return->{routes}->{$route_name}->{checkpoints} }, 0);
+		$sth_cps->execute($route_name);
+		while (my $cp = $sth_cps->fetchrow_hashref()){
+			push(@{$return->{routes}->{$route_name}->{checkpoints}}, $cp->{leg_to});
+		}
+	}
+
+	$return->{page}->{title} = 'Map';
+	return template 'map.tt', $return;
+};
+
+
+# # # # # checkpoints
 any ['get', 'post'] => '/checkpoints' => sub {
 	my $return = {
 		checkpoints => get_checkpoints(),
@@ -297,10 +327,10 @@ any ['get', 'post'] => '/api/checkpoints' => sub{
 
 sub get_checkpoints(){
 	my %cps;
-	my $sth = database->prepare("select distinct `to` from legs order by `to` asc");
+	my $sth = database->prepare("select distinct leg_to from routes order by leg_to asc");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
-		my $cp = $row->{to};
+		my $cp = $row->{leg_to};
 		$cps{$cp}->{cp} = $cp;
 
 		my $sth = database->prepare("select teams.team_number, team_name, route, last_checkpoint,
@@ -308,7 +338,7 @@ sub get_checkpoints(){
 		                             date_format(checkpoints_teams_predictions.expected_time, \"%H:%i\") as next_checkpoint_expected_hhmm,
 		                             date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), \"%kh%im\") as next_checkpoint_expected_in
 		                             from teams
-		                             join checkpoints_teams_predictions on
+		                             left outer join checkpoints_teams_predictions on
 		                               checkpoints_teams_predictions.team_number = teams.team_number
 		                               and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 		                             where completed < 1
@@ -335,7 +365,29 @@ sub get_checkpoints(){
 		while(my $row = $sth->fetchrow_hashref()){
 			push(@{$cps{$cp}->{departures}}, $row);
 		}
+
+		$sth = database->prepare("select distinct route_name from routes where leg_from = ?");
+		$sth->execute($cp);
+		while(my $r = $sth->fetchrow_hashref()){
+			my $route = $r->{route_name};
+
+			push(@{$cps{$cp}->{routes}}, $route);
+
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and next_checkpoint > 0 and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $cp);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$cps{$cp}->{future}->{$route}}, $t->[0]);
+			}
+
+			$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint > ? and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $cp);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$cps{$cp}->{past}->{$route}}, $t->[0]);
+			}
+		}
+		$cps{$cp}->{details} = get_checkpoint_details($cp);
 	}
+		$cps{0}->{details} = get_checkpoint_details(0);
 	return \%cps;
 }
 
@@ -349,27 +401,97 @@ any ['get', 'post'] => '/checkpoint' => sub {
 	redirect "/checkpoint/$checkpoint";
 };
 
-any ['get', 'post'] => '/checkpoint/:checkpoint' => sub {
+any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
 	my $return = {
-		checkpoint => get_checkpoint(param('checkpoint')),
+		checkpoint => get_checkpoint_arrivals(param('checkpoint')),
+		page => vars->{page},
+	};
+	$return->{page}->{title} = 'Arrivals for checkpoint '.param('checkpoint');
+	$return->{page}->{enable_fancytable} = 1;
+	$return->{page}->{table_is_searchable} = 'false';
+	return template 'arrivals.tt', $return;
+};
+
+
+any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
+	my $checkpoint = param('checkpoint');
+	my $return = {
+		arrivals => get_checkpoint_arrivals($checkpoint),
+		details => get_checkpoint_details($checkpoint),
+	};
+	return encode_json($return);
+};
+
+sub get_checkpoint_details{
+	my $checkpoint = shift;
+	my $d;
+
+	my $sth = database->prepare('select * from checkpoints where checkpoint_number = ?');
+	$sth->execute($checkpoint);
+	$d = $sth->fetchrow_hashref();
+
+	$sth = database->prepare("select distinct route_name from routes where leg_from = ?");
+	$sth->execute($checkpoint);
+	while(my $r = $sth->fetchrow_hashref()){
+		my $route = $r->{route_name};
+		push(@{$d->{routes}}, $route);
+		  # In general, we don't care about retired teams when we're wondering who has not yet been to a checkpoint
+			my $sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint <= ? and next_checkpoint > 0 and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{future}->{$route}}, $t->[0]);
+			}
+
+			$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint > ?");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{past}->{$route}}, $t->[0]);
+			}
+
+  		$sth_teams = database->prepare("select team_number from teams where route = ? and next_checkpoint = ?");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{next}->{$route}}, $t->[0]);
+			}
+
+
+
+			my $sth_route = database->prepare("select leg_from from routes where route_name = ? and leg_to = ?");
+			$sth_route->execute($route, $checkpoint);
+			my $prev = $sth_route->fetchrow_arrayref();
+			$d->{previous}->{$route} = $prev->[0];
+
+			my $sth_route = database->prepare("select leg_to from routes where route_name = ? and leg_from = ?");
+			$sth_route->execute($route, $checkpoint);
+			my $prev = $sth_route->fetchrow_arrayref();
+			$d->{next}->{$route} = $prev->[0];
+		}
+	return $d;
+}
+any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
+	my $checkpoint = param('checkpoint');
+
+	my $return = {
+		arrivals => get_checkpoint_arrivals($checkpoint),
+		details => get_checkpoint_details($checkpoint),
 		page => vars->{page},
 	};
 	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 0;
 	$return->{page}->{table_sort_column} = 1;
-	$return->{page}->{table_sort_order} = 'desc';
+	$return->{page}->{table_sort_order} = 'asc';
+
 	return template 'checkpoint.tt', $return;
 };
 
-any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
-	return encode_json( get_checkpoint(param('checkpoint')));
+any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
+	return encode_json( get_checkpoint_arrivals(param('checkpoint')));
 };
 
-sub get_checkpoint(){
+sub get_checkpoint_arrivals(){
 	my $checkpoint = shift;
 	my %cp;
 	$cp{cp} = $checkpoint;
-
 	# First, everyone's finish times
 	my $sth = database->prepare('select team_number,
 	                            date_format(expected_time, "%H:%i") as finish_expected_hhmm,
@@ -440,7 +562,7 @@ any ['get', 'post'] => '/entrants' => sub {
 		page => vars->{page},
 		entrants => get_entrants(),
 	};
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{title} = 'entrants';
 	return template 'entrants.tt', $return;
 };
@@ -451,9 +573,13 @@ sub get_entrants(){
 	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
 	                             join teams
-	                             on entrants.team = teams.team_number
+	                               on entrants.team = teams.team_number
+															 join routes
+															   on teams.last_checkpoint = routes.leg_from
+															 left outer join checkpoints_teams_predictions
+															   on teams.next_checkpoint = checkpoints_teams_predictions.checkpoint
 	                             left join scratch_team_entrants
-	                             on entrants.code = scratch_team_entrants.entrant_code");
+	                               on entrants.code = scratch_team_entrants.entrant_code');
 	$sth->execute();
 	return $sth->fetchall_hashref('code');
 }
@@ -637,7 +763,7 @@ any ['get', 'post'] => '/teams' => sub {
 		teams => get_teams(),
 		page => vars->{page},
 	};
-	$return->{page}->{table_is_searchable} = 1;
+	$return->{page}->{enable_fancytable} = 1;
 	$return->{page}->{title} = 'Teams';
 	return template 'teams.tt', $return;
 };
@@ -909,6 +1035,87 @@ any ['get','post'] => '/admin' => sub {
 	return template 'admin.tt', \%return;
 };
 
+any ['get', 'post'] => '/admin/checkpoints' => sub {
+	my $upload;
+	if($upload = request->upload('csv')){
+		# TODO: Think about where to put this file, when and how to delete it
+		unlink('/tmp/checkpoints.csv');
+		if($upload->link_to('/tmp/checkpoints.csv')){
+			info("wrote /tmp/checkpoints.csv");
+		}else{
+			info("Failed to write /tmp/checkpoints.csv: $!");
+		}
+		my $checkpoints = csv( in => '/tmp/checkpoints.csv', encoding => 'UTF-8', detect_bom => 1);
+		my $query = "replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)";
+
+		$query.=" values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		my $sth = database->prepare($query);
+
+		my %routes;
+		foreach my $row (@{$checkpoints}){
+			my $cp = $row->{'cp'};
+			next unless $cp and $cp =~ m/\w+/;
+			$cp =~ s/CP//;
+			$cp =~ s/^0//;
+			$cp = 0 if $cp =~ m/Start/i;
+			$cp = 99 if $cp =~ m/Finish/i;
+			$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{'latitude'}, $row->{longitude}, $row->{what3words});
+
+			foreach my $field (sort(keys(%{$row}))){
+				if ($field =~ /^(\S+) leg distance/){
+					my $route_name = lc($1);
+					if($row->{$field} =~ m/\d+/){
+						push(@{$routes{$route_name}}, $cp);
+					}
+				}
+			}
+		}
+		my $del_sth = database->prepare('delete from routes');
+		$del_sth->execute();
+		my $routes_query = 'insert into routes(`route_name`, `leg_name`, `leg_from`, `leg_to`, `index`) values (?, ?, ?, ?, ?)';
+		my $routes_sth = database->prepare($routes_query);
+		foreach my $route (keys(%routes)){
+			my @cps = @{$routes{$route}};
+
+			for my $idx (0 .. $#cps){
+				my $leg_to;
+				if($cps[$idx + 1]){
+					$leg_to = $cps[$idx + 1];
+				}else{
+					$leg_to = '99';
+				}
+				my $leg_name = $cps[$idx] . '-' . $leg_to;
+				next if $leg_name eq '99-99';
+				info("$route $leg_name $idx");
+				$routes_sth->execute($route, $leg_name, $cps[$idx], $leg_to, $idx);
+			}
+		}
+
+	}
+
+	my $routes_sth = database->prepare('select distinct route_name from routes');
+	$routes_sth->execute();
+
+	my $cps_sth = database->prepare('select leg_name from routes where route_name = ? order by `index` asc');
+
+	my %routes_cps;
+	while( my $row =  $routes_sth->fetchrow_arrayref() ){
+		my $route = $row->[0];
+		$cps_sth->execute($route);
+		while( my $r = $cps_sth->fetchrow_arrayref() ){
+			my $cp = $r->[0];
+			$cp =~ s/^\d+-//;
+			push(@{$routes_cps{$route}}, $cp);
+		}
+	}
+
+	my $return;
+	$return->{routes_cps} = \%routes_cps;
+
+	$return->{page}->{title} = 'Checkpoint Admin';
+	return template 'admin_checkpoints.tt', $return;
+};
+
 any ['get', 'post'] => '/clear-cache' => sub {
 	clear_cache();
 	return "Cleanup done, you can now click 'back' to get back to where you were";
@@ -973,7 +1180,7 @@ sub run_cronjobs(){
 	info("Exited: $?");
 
 
-	#info("Cron: Updating legs");
+	info("Cron: Updating legs");
 
 	# First, get every possible leg given the routes definition into the legs table
 	my $sth = database->prepare("select name, value from config where name like 'route%'");
@@ -1016,6 +1223,7 @@ sub run_cronjobs(){
 	#info("Cron: Adding expected times to teams");
 	add_expected_times_to_teams();
 	$sth_log->execute('completed', 'periodic-jobs');
+	info("Finished crons");
 	return $output;
 }
 
@@ -1040,7 +1248,8 @@ sub add_expected_times_to_teams {
 	                         join routes on routes.route_name = teams.route
 	                           and routes.leg_name = teams.current_leg
 	                         where completed < 1");
-	my $sth_update = database->prepare("replace into checkpoints_teams_predictions set checkpoint = ?, team_number = ?, expected_time = from_unixtime(?)");
+	my $sth_update = database->prepare("replace into checkpoints_teams_predictions set checkpoint = ?,
+	team_number = ?, expected_time = from_unixtime(?)");
 	$sth->execute();
 	my $teams = $sth->fetchall_hashref('team_number');
 	foreach my $team_number (keys(%{$teams})){
@@ -1057,6 +1266,7 @@ sub add_expected_times_to_teams {
 		my $current_leg = $team{current_leg} or error("Team $team_number has no current_leg");
 
 		my $leg_index = $leg_to_index{ $team{route} }->{ $team{current_leg} };
+		unless($leg_index){ error("Failed to get leg index from current leg: $team{current_leg} on route $team{route} ")}
 		while(my $leg_name = $index_to_leg{ $team{route} }->{$leg_index} ){
 			my $seconds;
 			unless($legs{$leg_name}->{to}){
@@ -1066,6 +1276,7 @@ sub add_expected_times_to_teams {
 			if($legs{$leg_name}->{seconds}){
 				$expected_time += $legs{$leg_name}->{seconds} * vars->{leg_estimate_multiplier};
 				$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
+
 			}else{
 				#info("No prediction data for leg $leg_name for team $team_number; skipping the rest of the legs");
 				last;

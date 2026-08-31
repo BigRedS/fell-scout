@@ -15,16 +15,26 @@
 	<!-- FancyTable -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery.fancytable/dist/fancyTable.min.js"></script>
 
+  <!-- LeafletJS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+	integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+	crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
 	<script src="/javascripts/page_timer.js"></script>
 
-	<% IF page.table_is_searchable %>
+	<% IF page.enable_fancytable %>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$(".table").fancyTable({
 					sortColumn:<% if page.table_sort_column %> <% page.table_sort_column %> <% else %> 0 <% end %>,
 					pagination: false,
 					globalSearch:true,
-					searchable:true,
+					searchable:<% if page.table_is_searchable %><% page.table_is_searchable %> <% else %> true <% end %>,
+					sortable:<% if page.table_is_sortable %><% page.table_is_sortable %> <% else %> true <% end %>,
 					sortable:true,
 					sortOrder:<% if page.table_sort_order %>'<% page.table_sort_order %>' <% else %> 'ascending' <% end %>,
 				});
@@ -72,6 +82,9 @@
         <a class="nav-link" href="/checkpoints">Checkpoints</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="/map">Map</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="/legs">Legs</a>
       </li>
       <li class="nav-item">
@@ -101,7 +114,7 @@
 	<% else %>
 		<button type='button' class='btn btn-outline-success'>
 	<% end %>
-		Last felltrack sync<br> <% page.time_since_last_felltrack_update %> 
+		Last felltrack sync<br> <% page.time_since_last_felltrack_update %>
 	</button>
     	<button type='button' class='btn btn-outline-secondary'>Page age<br> <a class=page_timer id='page_timer'>0s</a></button>
     </div>
