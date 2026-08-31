@@ -33,7 +33,7 @@ engines:
     template_toolkit:
       start_tag: '<%'
       end_tag: '%>'
-progress_csv_path: progress.csv
+progress_csv_path: ../progress.csv
 commands:
   progress_to_json_args: --teams --entrants
 

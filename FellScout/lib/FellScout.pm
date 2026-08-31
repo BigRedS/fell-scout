@@ -17,7 +17,7 @@ our $VERSION = '0.1';
 
 
 hook 'before' => sub {
-	header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
+	response_header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
 
 	my $sth = database->prepare("select name, value from config");
 	$sth->execute();
@@ -200,7 +200,7 @@ any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 	return template 'laterunners.tt', $return;
 };
 any ['get', 'post'] => '/api/laterunners/' => sub {
-	return encode_json(laterunners => get_laterunners( param('threshold') ) )
+	return encode_json({ laterunners => get_laterunners( param('threshold') ) })
 };
 
 sub get_laterunners(){
@@ -1172,6 +1172,9 @@ sub run_cronjobs(){
 	info("Exited: $?");
 
 	$cmd = cwd().'/bin/progress-to-db';
+	if (my $csv_path = setting('progress_csv_path')) {
+		$cmd .= " $csv_path";
+	}
 	info("Cron: Updating DB from CSV : $cmd");
 	$output = '';
 	foreach my $line (qx/$cmd/){
@@ -1218,19 +1221,25 @@ sub run_cronjobs(){
 	$sth = database->prepare("replace into legs (`leg_name`, `from`, `to`, `seconds`) values (?, ?, ?, ?)");
 	foreach my $leg(keys(%{$legs})){
 		my ($from,$to) = split(m/-/, $leg);
-		my $expected_seconds = get_percentile($legs->{$leg});
+		my $expected_seconds = get_percentile($legs->{$leg},
+			percentile  => vars->{percentile},
+			min_sample  => vars->{percentile_min_sample},
+			sample_size => vars->{percentile_sample_size},
+		);
 		next if $leg eq '0-0';
 		$sth->execute($leg, $from, $to, $expected_seconds);
 	}
 
 	#info("Cron: Adding expected times to teams");
-	add_expected_times_to_teams();
+	add_expected_times_to_teams(vars->{leg_estimate_multiplier});
 	$sth_log->execute('completed', 'periodic-jobs');
 	info("Finished crons");
 	return $output;
 }
 
 sub add_expected_times_to_teams {
+	my $leg_estimate_multiplier = shift;
+
 	# First, a couple of look-up hashes which we'll use to estimate time-to-finish. We need to find out where in the ordered list
 	# of legs for a given route the current leg comes, and then retrieve each of those that come after it.
 	my %index_to_leg;
@@ -1277,7 +1286,7 @@ sub add_expected_times_to_teams {
 				next;
 			}
 			if($legs{$leg_name}->{seconds}){
-				$expected_time += $legs{$leg_name}->{seconds} * vars->{leg_estimate_multiplier};
+				$expected_time += $legs{$leg_name}->{seconds} * $leg_estimate_multiplier;
 				$sth_update->execute($legs{$leg_name}->{to}, $team_number, $expected_time);
 
 			}else{
@@ -1312,19 +1321,19 @@ sub to_hh_mm{
 
 sub get_percentile{
 	my @in = @{$_[0]};
+	my %opts = @_[1 .. $#_];
 
-	my $percentile = 90;
-	if(vars->{percentile}){
-		$percentile = vars->{percentile};
-	}
+	my $percentile = $opts{percentile} || 90;
+	my $min_sample = $opts{min_sample};
+	my $sample_size = $opts{sample_size};
 
 	my @numbers;
 	# If the whole set of numbers we have is already smaller than the percentile_min_sample
 	# then we do not want to shrink it further by taking only the most-recent percentile_sample_size
-	if (vars->{'percentile_min_sample'} and scalar(@in) >= vars->{percentile_min_sample} and
-	    vars->{'percentile_sample_size'} and vars->{'percentile_sample_size'} > 0 ){
+	if ($min_sample and scalar(@in) >= $min_sample and
+	    $sample_size and $sample_size > 0 ){
 		#info("Pcile sample before: ".scalar(@in));
-		my $index = int((vars->{'percentile_sample_size'}/100) * $#in - 1 );
+		my $index = int(($sample_size/100) * $#in - 1 );
 		for(0 .. $index){
 			push(@numbers, $in[$index]);
 		}
@@ -1336,8 +1345,8 @@ sub get_percentile{
 	}
 
 	# Having potentially shrunk the sample above, check it's still big enough for a percentile.
-	if (vars->{percentile_min_sample} and scalar(@numbers) < vars->{percentile_min_sample} ){
-		#info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of ".vars->{percentile_min_sample}."), using mean");
+	if ($min_sample and scalar(@numbers) < $min_sample ){
+		#info("Not enough samples for pcile (".scalar(@numbers)." < percentile_min_sample of $min_sample), using mean");
 		my $sum = 0;
 		map { $sum += $_ } @in;
 		return $sum / scalar(@in);

@@ -9,7 +9,7 @@ It's called 'FellScout' because we're Scouts and that sounded less creepy than S
 
 Fell Track is a great system for running the event and tracking hundreds of entrants and various supporting functions.
 
-What it's not so great at is displaying information for people other than those strictly running the event. 
+What it's not so great at is displaying information for people other than those strictly running the event.
 
 Fell Scout aims to provide some better views of this information.
 
@@ -51,7 +51,7 @@ And then they behave like a normal team; viewable in the /teams page, listed in 
 
 # How does it work?
 
-FellTrack provides an 'Entrants Progress' CSV export, which contains every entrant and their progress. 
+FellTrack provides an 'Entrants Progress' CSV export, which contains every entrant and their progress.
 
 FellScout periodically downloads this CSV file, processes it and writes all the data to a local database. Outside of Scratch Teams, all it does is cache and display data that is in FellTrack.
 
@@ -96,7 +96,7 @@ On the /laterunners page, teams that are later than lateness_percent_red percent
 
 Defaults to `90`
 
-We calculate the expected time for teams to traverse legs by taking an average of the times entrants have already taken; the average we take is the fastest nth percentile, and this is where we set the n. 
+We calculate the expected time for teams to traverse legs by taking an average of the times entrants have already taken; the average we take is the fastest nth percentile, and this is where we set the n.
 
 ## `percentile_min_sample`
 
@@ -116,7 +116,7 @@ This only applies if the sample after taking the most-recent mth percentile woul
 
 Defines the routes of the event. The logic in the app is that any config named `route_*` defines a route, named for whatever's after that first underscore; you can add more routes by manually inserting that into the db.
 
-Each route is defined as a space-separated ordered list of checkpoint numbers. 
+Each route is defined as a space-separated ordered list of checkpoint numbers.
 
 ## `skip_fetch_from_felltrack`
 
@@ -144,10 +144,10 @@ so you may wish to restrict access to these. I use this in Apache:
 
     <Virtualhost *:80>
             ServerName fellscout.avi.st
-    
+
             Proxypass / http://localhost:5001/
             proxypassreverse / http://localhost:5001/
-    
+
             <location />
                     authtype basic
                     authname Fell Scout
@@ -166,13 +166,13 @@ You can then visit http://<your felltrack URL>/admin where you'll see this form:
 
 <img width="480" alt="image" src="https://github.com/BigRedS/fell-scout/assets/128592/4feb6dbd-fd08-4f92-803a-5aa86e0690fd">
 
-You need to set a few fields for Fell Scout to work. 
+You need to set a few fields for Fell Scout to work.
 
 First, the routes; each is defined with a simple space-separated (ordered) list of those checkpoints that make up the route:
 
 <img width="480" alt="image" src="https://github.com/BigRedS/fell-scout/assets/128592/82faae07-a1e4-4650-bedf-bf3b77e96e26">
 
-For the Fell Track sync to work, you need to set the `felltrack_owner`, `felltrack_password` and `felltrack_username`. They 
+For the Fell Track sync to work, you need to set the `felltrack_owner`, `felltrack_password` and `felltrack_username`. They
 (or Central Control) will have given you the username and password.
 
 The owner can be found by poking about in the source of https://felltrack.com. Alternatively, visit https://felltrack.com and
@@ -184,10 +184,19 @@ Now click the `Update from Felltrack` link at the bottom of the page, and have a
 
 ## Dev tips
 
+### Running the tests
+
+    cd FellScout
+    prove -lr t/
+
+Docker must be running - the test suite brings up a dedicated `db-test` MariaDB
+container (`docker compose up -d db-test`, port 3307) and seeds it with data
+from `build/sql/all.sql`
+
 ### Running without Docker Compose
 * Create a database to suit the details in the top of `run.sh` and `build.sh`
 * Put a `progress.csv` downloaded from FellTrack in the root of the repo. Link to `example-progress.csv` to use an anoymised one from 2023.
-* From the root of the repo run `./un.sh` to bring up the webapp on port `5001`.  
+* From the root of the repo run `./un.sh` to bring up the webapp on port `5001`.
 * Run (or cron) `./update.sh` to run the process to update from the CSV file to the DB.
 
 Use the `./FellScout/bin/get-data` scipt to actually download from FellTrack; see the script for required env vars.
