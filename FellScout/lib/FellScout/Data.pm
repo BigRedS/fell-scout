@@ -434,7 +434,7 @@ sub get_team{
 	};
 	if($@){
 		error("Team $team_number does not exist");
-		return %team;
+		return \%team;
 	}
 
 	unless($team{last_checkpoint} == 99){

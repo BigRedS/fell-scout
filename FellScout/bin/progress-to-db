@@ -258,7 +258,7 @@ sub run {
 		$retired++ if $entrants{$team_number}->{$most_forward_entrant}->{retired};
 
 		my ($next_checkpoint, $current_leg);
-		if($entrants{$team_number}->{$most_forward_entrant}->{completed_time} or $most_forward_cp == 99){
+		if($most_forward_cp == 99){
 			$next_checkpoint = 0;
 			$current_leg = '';
 		}else{
@@ -280,7 +280,6 @@ sub run {
 
 	foreach my $team_number (sort(keys(%teams))){
 		my $num_entrants = scalar(keys(%{$entrants{$team_number}}));
-		my $num_removed_entrants = scalar(keys(%{$teams{$team_number}->{removed_entrants}}));
 		if($num_entrants == 0){
 			my $sth = $dbh->prepare('update teams set completed = 1 where team_number = ?');
 			$sth->execute($team_number);
