@@ -14,7 +14,7 @@ services:
       - SKIP_FETCH_FROM_FELLTRACK=1
 
   db:
-    image: "mariadb:latest"
+    image: "mariadb:11.8"
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: supersecret
