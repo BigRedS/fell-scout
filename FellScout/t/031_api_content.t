@@ -148,4 +148,16 @@ sub get_json {
 	ok(!defined $team1, 'laterunners: team 1, not yet due, is not listed');
 }
 
+# --- /api/team/:team for a team that doesn't exist ---
+# get_team()'s error path used to `return %team` instead of `return \%team`,
+# so a nonexistent team collapsed to an empty list rather than an empty
+# hashref - encode_json(get_team(...)) then got zero arguments and 500'd
+# ("hash- or arrayref expected, not a simple scalar").
+{
+	my $res = $test->request( GET '/api/team/99999' );
+	ok($res->is_success, '[GET /api/team/99999] does not 500 for a nonexistent team')
+		or diag($res->status_line, "\n", $res->content);
+	is_deeply(decode_json($res->content), {}, 'a nonexistent team serialises to an empty JSON object');
+}
+
 done_testing();
