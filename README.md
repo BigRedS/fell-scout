@@ -133,6 +133,10 @@ Set to `off` once you've got the username, password and owner set properly.
 
 cd into the repo, then do:
 
+    cp .env.example .env
+
+and set a real root db password in .env, then
+
     docker-compose build
     docker-compose up
 

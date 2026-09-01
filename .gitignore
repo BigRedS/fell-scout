@@ -1,5 +1,6 @@
 *.swp
 */local/
+.env
 *.csv*
 !FellScout/t/fixtures/*.csv
 *.log
