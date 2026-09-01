@@ -7,7 +7,7 @@ services:
       - "127.0.0.1:5001:5000"
     environment:
       - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=supersecret
+      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=fellscout
@@ -17,7 +17,7 @@ services:
     image: "mariadb:11.8"
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: supersecret
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - fellscout_db:/var/lib/mysql
       - ./build/sql:/docker-entrypoint-initdb.d
@@ -41,7 +41,7 @@ services:
     environment:
       - CRON_INTERVAL_SECONDS=60
       - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=supersecret
+      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=fellscout
