@@ -5,41 +5,28 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-
-# use this block if you don't need middleware, and only have a single target Dancer app to run here
-use FellScout;
-
-FellScout->to_app;
-
-=begin comment
-# use this block if you want to include middleware such as Plack::Middleware::Deflater
-
 use FellScout;
 use Plack::Builder;
 
+# Static assets (public/) are served by Dancer2's own Plack::App::File
+# handler, which runs before any of FellScout's hooks - so this can't be
+# done as a Dancer2 `hook 'after'`. Devices running this app get one
+# reliable connection (at the start/finish) and then poor-to-none at
+# checkpoints for the rest of the event; without an explicit Cache-Control,
+# browsers fall back to a heuristic (and often short) freshness guess. A
+# week comfortably covers a single event without meaningful staleness risk,
+# since the Docker image is rebuilt fresh before each one anyway.
 builder {
-    enable 'Deflater';
-    FellScout->to_app;
-}
-
-=end comment
-
-=cut
-
-=begin comment
-# use this block if you want to mount several applications on different path
-
-use FellScout;
-use FellScout_admin;
-
-use Plack::Builder;
-
-builder {
-    mount '/'      => FellScout->to_app;
-    mount '/admin'      => FellScout_admin->to_app;
-}
-
-=end comment
-
-=cut
-
+	enable sub {
+		my $app = shift;
+		sub {
+			my $env = shift;
+			my $res = $app->($env);
+			if ($env->{PATH_INFO} =~ m{\.(?:css|js|jpe?g|png|gif|svg|ico|woff2?)$}) {
+				push @{ $res->[1] }, 'Cache-Control', 'public, max-age=604800';
+			}
+			return $res;
+		};
+	};
+	FellScout->to_app;
+};
