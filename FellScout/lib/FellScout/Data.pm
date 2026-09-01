@@ -552,7 +552,7 @@ sub get_problems{
 sub clear_cache{
 	my $dbh = shift;
 	info("Clearing cache");
-	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes routes_checkpoints teams logs scratch_teams scratch_team_entrants/;
+	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes teams logs scratch_teams scratch_team_entrants/;
 	foreach my $table (@tables){
 		# Can't use placeholders here because dbh adds quotes and   delete from 'table_name'  is invalid
 		my $sth = $dbh->prepare("delete from $table");

@@ -71,22 +71,6 @@ CREATE TABLE `checkpoints_teams_predictions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `config`
---
-
-DROP TABLE IF EXISTS `config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `config` (
-  `name` varchar(100) DEFAULT NULL,
-  `value` varchar(250) DEFAULT NULL,
-  `notes` text DEFAULT NULL,
-  UNIQUE KEY `name_2` (`name`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `entrants`
 --
 
@@ -154,19 +138,6 @@ CREATE TABLE `routes` (
   `leg_to` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`index`,`route_name`),
   KEY `route_name` (`route_name`,`index`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `routes_checkpoints`
---
-
-DROP TABLE IF EXISTS `routes_checkpoints`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `routes_checkpoints` (
-  `route_name` text DEFAULT NULL,
-  `checkpoint_number` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
