@@ -71,6 +71,14 @@ for my $path (@get_routes) {
 	ok( $res->is_success, "[GET $path] successful" ) or diag($res->status_line, "\n", $res->content);
 }
 
+# jQuery used to be loaded twice (two different versions - the second,
+# loaded later, silently winning over the first). Only one now.
+{
+	my $res = $test->request( GET '/' );
+	my @jquery_core_includes = $res->content =~ m{<script src="[^"]*code\.jquery\.com/jquery-[^"]*"}g;
+	is(scalar(@jquery_core_includes), 1, 'the layout includes jQuery core exactly once');
+}
+
 # These routes redirect based on a query param rather than rendering
 # directly - smoke test that the redirect itself doesn't crash.
 for my $case (
