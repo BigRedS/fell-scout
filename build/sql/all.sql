@@ -306,3 +306,24 @@ CREATE TABLE `incidents` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `retirements`
+--
+-- Also added for the pre-event Control-tooling push - tracks the
+-- pickup/transport workflow for a retired entrant. Keyed at entrant
+-- granularity (not team) to match how entrants.retired already records
+-- retirement per-entrant, not per-team.
+
+CREATE TABLE `retirements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entrant_code` char(4) NOT NULL,
+  `team_number` int(11) DEFAULT NULL,
+  `checkpoint_number` int(11) DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `vehicle` varchar(32) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Awaiting pickup',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
