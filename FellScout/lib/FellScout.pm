@@ -81,6 +81,25 @@ sub _sync_config {
 	);
 }
 
+# Feature toggles live as ordinary config rows (same 'on'/'' convention as
+# skip_fetch_from_felltrack etc.) so the config table stays the one
+# canonical place to turn things on/off - no separate switch to keep in
+# sync. Checked at the top of every route for the gated feature, not just
+# used to hide the nav link, so a disabled feature is actually disabled.
+sub _feature_enabled {
+	my $name = shift;
+	return (vars->{$name} // '') eq 'on';
+}
+
+sub _require_feature {
+	my $name = shift;
+	unless(_feature_enabled($name)){
+		status(403);
+		return encode_json({ error => "The $name feature is disabled in Admin" });
+	}
+	return undef;
+}
+
 # # # # # SUMMARY
 
 any ['get', 'post'] => '/api/summary' => sub{
@@ -91,6 +110,10 @@ any ['get'] => '/api/status' => sub{
 	my $status = get_status(database);
 	$status->{google_maps_url} = vars->{google_maps_url};
 	$status->{stale_after_seconds} = 600;
+	# \1 / \0, not a plain 1/0 - encode_json's JSON module treats a scalar
+	# ref to 1 or 0 as a real JSON boolean rather than the number 1 or 0.
+	$status->{incidents_enabled} = _feature_enabled('enable_incidents') ? \1 : \0;
+	$status->{retirements_enabled} = _feature_enabled('enable_retirements') ? \1 : \0;
 	return encode_json($status);
 };
 
@@ -185,40 +208,48 @@ any ['get'] => '/api/entrants/export' => sub{
 # # # # # INCIDENTS
 
 any ['get'] => '/api/incidents' => sub{
+	if(my $err = _require_feature('enable_incidents')){ return $err; }
 	return encode_json( get_incidents(database) );
 };
 
 any ['post'] => '/api/incidents' => sub{
+	if(my $err = _require_feature('enable_incidents')){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( create_incident(database, $body) );
 };
 
 any ['put'] => '/api/incidents/:id' => sub{
+	if(my $err = _require_feature('enable_incidents')){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( update_incident(database, param('id'), $body) );
 };
 
 any ['delete'] => '/api/incidents/:id' => sub{
+	if(my $err = _require_feature('enable_incidents')){ return $err; }
 	return encode_json( delete_incident(database, param('id')) );
 };
 
 # # # # # RETIREMENTS
 
 any ['get'] => '/api/retirements' => sub{
+	if(my $err = _require_feature('enable_retirements')){ return $err; }
 	return encode_json( get_retirements(database) );
 };
 
 any ['post'] => '/api/retirements' => sub{
+	if(my $err = _require_feature('enable_retirements')){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( create_retirement(database, $body) );
 };
 
 any ['put'] => '/api/retirements/:id' => sub{
+	if(my $err = _require_feature('enable_retirements')){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( update_retirement(database, param('id'), $body) );
 };
 
 any ['delete'] => '/api/retirements/:id' => sub{
+	if(my $err = _require_feature('enable_retirements')){ return $err; }
 	return encode_json( delete_retirement(database, param('id')) );
 };
 

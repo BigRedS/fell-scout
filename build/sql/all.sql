@@ -271,7 +271,9 @@ INSERT INTO `config` VALUES
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
 ('google_maps_url','','address of the route on Google Maps route'),
 ('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint'),
-('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing');
+('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
+('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
+('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;

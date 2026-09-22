@@ -83,4 +83,19 @@ my $id;
 	ok(!exists $retirements->{$id}, 'retirement is gone after DELETE');
 }
 
+# --- disabled via config: the API refuses, not just the nav link hiding it ---
+{
+	TestDB->seed_config(enable_retirements => '');
+
+	my $get_res = $test->request( GET '/api/retirements' );
+	is($get_res->code, 403, '[GET /api/retirements] returns 403 when disabled');
+
+	my $post_res = json_request(\&POST, '/api/retirements', { entrant_code => '1A' });
+	is($post_res->code, 403, '[POST /api/retirements] returns 403 when disabled');
+
+	TestDB->seed_config(enable_retirements => 'on');
+	my $reenabled_res = $test->request( GET '/api/retirements' );
+	ok($reenabled_res->is_success, '[GET /api/retirements] works again once re-enabled');
+}
+
 done_testing();

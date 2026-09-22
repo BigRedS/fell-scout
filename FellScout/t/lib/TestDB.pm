@@ -44,6 +44,8 @@ my %BASELINE_CONFIG = (
 	google_maps_url              => '',
 	event_start_date             => '2020-01-01',
 	time_shift_events            => '0:00',
+	enable_incidents             => 'on',
+	enable_retirements           => 'on',
 );
 
 my $dbh;

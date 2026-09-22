@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { getRetirements, createRetirement, updateRetirement, deleteRetirement } from '../api/client'
+import { getStatus, getRetirements, createRetirement, updateRetirement, deleteRetirement } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
@@ -14,7 +14,22 @@ const retirements = ref(null)
 // ScratchTeamsView/AdminView.
 const vehicleDrafts = ref({})
 
+// The nav already hides the link when this feature's off, but someone can
+// still navigate here directly (bookmark, back button) - check first rather
+// than calling the API and letting its 403 fail silently. null = not
+// checked yet, so nothing renders until we actually know either way.
+const featureEnabled = ref(null)
+
+async function checkFeatureEnabled() {
+  if (featureEnabled.value === null) {
+    const status = await getStatus()
+    featureEnabled.value = !!status.retirements_enabled
+  }
+  return featureEnabled.value
+}
+
 async function refresh() {
+  if (!(await checkFeatureEnabled())) return
   const data = await getRetirements()
   retirements.value = data
   for (const id of Object.keys(data)) {
@@ -69,59 +84,66 @@ const columns = [
 <template>
   <h1>Retirements</h1>
 
-  <p>Tracks entrants who've retired and need picking up - who, from where, and which vehicle's assigned.</p>
+  <div v-if="featureEnabled === false" class="alert alert-secondary">
+    The Retirements feature is currently disabled. A Control admin can turn it back on from the
+    <router-link to="/admin">Admin</router-link> page.
+  </div>
 
-  <h3>Log a retirement</h3>
-  <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addRetirement">
-    <div class="col-auto">
-      <input v-model="newRetirement.entrant_code" type="text" class="form-control form-control-sm" placeholder="Entrant code" style="width: 8em" required />
-    </div>
-    <div class="col-auto">
-      <input v-model="newRetirement.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
-    </div>
-    <div class="col-auto">
-      <input v-model="newRetirement.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
-    </div>
-    <div class="col">
-      <input v-model="newRetirement.reason" type="text" class="form-control form-control-sm" placeholder="Reason" />
-    </div>
-    <div class="col-auto">
-      <button type="submit" class="btn btn-primary btn-sm">Log retirement</button>
-    </div>
-  </form>
+  <template v-else-if="featureEnabled">
+    <p>Tracks entrants who've retired and need picking up - who, from where, and which vehicle's assigned.</p>
 
-  <SortableTable
-    v-if="retirements"
-    :rows="rows"
-    :columns="columns"
-    :row-key="(row) => row.id"
-    :default-sort-column="7"
-    default-sort-order="desc"
-    :filterable-keys="['status']"
-  >
-    <template #team="{ row }">
-      <TeamLink v-if="row.team_number" :team-number="row.team_number" />
-    </template>
-    <template #checkpoint="{ row }">
-      <CheckpointLink v-if="row.checkpoint_number" :checkpoint="row.checkpoint_number" />
-    </template>
-    <template #vehicle="{ row }">
-      <div class="d-flex gap-1">
-        <input v-model="vehicleDrafts[row.id]" type="text" class="form-control form-control-sm" style="width: 8em" />
-        <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveVehicle(row)">Save</button>
+    <h3>Log a retirement</h3>
+    <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addRetirement">
+      <div class="col-auto">
+        <input v-model="newRetirement.entrant_code" type="text" class="form-control form-control-sm" placeholder="Entrant code" style="width: 8em" required />
       </div>
-    </template>
-    <template #status="{ row }">
-      <select
-        class="form-select form-select-sm w-auto"
-        :value="row.status"
-        @change="setStatus(row, $event.target.value)"
-      >
-        <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
-      </select>
-    </template>
-    <template #actions="{ row }">
-      <button type="button" class="btn btn-outline-danger btn-sm" @click="removeRetirement(row)">Delete</button>
-    </template>
-  </SortableTable>
+      <div class="col-auto">
+        <input v-model="newRetirement.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
+      </div>
+      <div class="col-auto">
+        <input v-model="newRetirement.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
+      </div>
+      <div class="col">
+        <input v-model="newRetirement.reason" type="text" class="form-control form-control-sm" placeholder="Reason" />
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">Log retirement</button>
+      </div>
+    </form>
+
+    <SortableTable
+      v-if="retirements"
+      :rows="rows"
+      :columns="columns"
+      :row-key="(row) => row.id"
+      :default-sort-column="7"
+      default-sort-order="desc"
+      :filterable-keys="['status']"
+    >
+      <template #team="{ row }">
+        <TeamLink v-if="row.team_number" :team-number="row.team_number" />
+      </template>
+      <template #checkpoint="{ row }">
+        <CheckpointLink v-if="row.checkpoint_number" :checkpoint="row.checkpoint_number" />
+      </template>
+      <template #vehicle="{ row }">
+        <div class="d-flex gap-1">
+          <input v-model="vehicleDrafts[row.id]" type="text" class="form-control form-control-sm" style="width: 8em" />
+          <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveVehicle(row)">Save</button>
+        </div>
+      </template>
+      <template #status="{ row }">
+        <select
+          class="form-select form-select-sm w-auto"
+          :value="row.status"
+          @change="setStatus(row, $event.target.value)"
+        >
+          <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
+        </select>
+      </template>
+      <template #actions="{ row }">
+        <button type="button" class="btn btn-outline-danger btn-sm" @click="removeRetirement(row)">Delete</button>
+      </template>
+    </SortableTable>
+  </template>
 </template>
