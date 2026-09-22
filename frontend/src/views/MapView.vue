@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import '../leafletIcons'
 import { getCheckpoints, getMapRoutes } from '../api/client'
 import { usePolling } from '../composables/usePolling'
+import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
 
 const router = useRouter()
 const checkpoints = ref(null)
@@ -13,6 +14,9 @@ const routes = ref(null)
 const jumpToCheckpoint = ref('')
 const mapEl = ref(null)
 let leafletMap = null
+const markersByCheckpoint = new Map()
+
+const STATUS_COLOURS = { open: '#198754', issue: '#ffc107', closed: '#dc3545' }
 
 async function refresh() {
   const [cps, routeMap] = await Promise.all([getCheckpoints(), getMapRoutes()])
@@ -34,12 +38,17 @@ function coordsOf(cp) {
   return [details.latitude, details.longitude]
 }
 
-function numberedIcon(cp) {
-  const svg = `<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="250" height="250"><circle cx="125" cy="125" r="100" fill="#db7900"/><text x="50%" y="50%" text-anchor="middle" fill="white" font-size="100px" font-family="Arial" dy=".3em">${cp}</text></svg>`
+function numberedIcon(cp, status) {
+  const colour = STATUS_COLOURS[status] ?? STATUS_COLOURS.open
+  const svg = `<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="250" height="250"><circle cx="125" cy="125" r="100" fill="${colour}"/><text x="50%" y="50%" text-anchor="middle" fill="white" font-size="100px" font-family="Arial" dy=".3em">${cp}</text></svg>`
   return L.icon({
     iconUrl: 'data:image/svg+xml,' + encodeURIComponent(svg),
     iconSize: [30, 30],
   })
+}
+
+function statusOf(cp) {
+  return checkpoints.value?.[cp]?.details?.status ?? 'open'
 }
 
 function popupHtml(cp) {
@@ -49,7 +58,7 @@ function popupHtml(cp) {
     .map((route) => `${route}: ${(details.teams.next[route] ?? []).join(' ')}`)
     .join('<br>')
   return `
-    Checkpoint ${cp}<br>
+    Checkpoint ${cp} (${details.status ?? 'open'})<br>
     <a href="/arrivals/${cp}">Arrivals</a><br>
     <a href="/checkpoint/${cp}">Info</a><br>
     ${details.what3words ?? ''}<br>
@@ -83,7 +92,10 @@ watch([checkpoints, routes], ([cps, routeMap]) => {
     for (const cp of checkpointIdsSorted.value) {
       const coords = coordsOf(cp)
       if (!coords) continue
-      L.marker(coords, { icon: numberedIcon(cp) }).addTo(leafletMap).bindPopup(popupHtml(cp))
+      const marker = L.marker(coords, { icon: numberedIcon(cp, statusOf(cp)) })
+        .addTo(leafletMap)
+        .bindPopup(popupHtml(cp))
+      markersByCheckpoint.set(cp, marker)
     }
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -91,6 +103,18 @@ watch([checkpoints, routes], ([cps, routeMap]) => {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(leafletMap)
   })
+})
+
+// Coordinates/routes only get drawn once (they don't change mid-event), but
+// status can - re-colour existing markers (and refresh their popup text) on
+// every poll tick rather than only ever showing whatever it was when the
+// map first loaded.
+watch(checkpoints, (cps) => {
+  if (!cps) return
+  for (const [cp, marker] of markersByCheckpoint) {
+    marker.setIcon(numberedIcon(cp, statusOf(cp)))
+    marker.setPopupContent(popupHtml(cp))
+  }
 })
 
 onUnmounted(() => {
@@ -105,6 +129,11 @@ function goToCheckpoint() {
 <template>
   <h1>Map</h1>
   <p>"Checkpoint 99" is the finish.</p>
+  <p class="d-flex align-items-center gap-3">
+    <CheckpointStatusBadge status="open" />
+    <CheckpointStatusBadge status="issue" />
+    <CheckpointStatusBadge status="closed" />
+  </p>
 
   <form class="d-flex align-items-center gap-2 mb-3" @submit.prevent="goToCheckpoint">
     <label class="mb-0">View a specific checkpoint's arrivals board:</label>
