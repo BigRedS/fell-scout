@@ -302,7 +302,7 @@ CREATE TABLE `incidents` (
   `description` text DEFAULT NULL,
   `checkpoint_number` int(11) DEFAULT NULL,
   `team_number` int(11) DEFAULT NULL,
-  `assigned_to` varchar(64) DEFAULT NULL,
+  `owner` varchar(64) DEFAULT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'Open',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
