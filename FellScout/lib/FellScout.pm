@@ -28,6 +28,7 @@ use FellScout::Data qw(
 	delete_scratch_team
 	update_scratch_team
 	get_scratch_teams
+	rows_to_csv
 );
 use FellScout::Sync qw(run_cronjobs);
 
@@ -154,6 +155,12 @@ any ['get', 'post'] => '/api/entrants' => sub {
 	return encode_json(get_entrants(database));
 };
 
+any ['get'] => '/api/entrants/export' => sub{
+	response_header 'Content-Type' => 'text/csv';
+	response_header 'Content-Disposition' => 'attachment; filename="entrants.csv"';
+	return rows_to_csv(get_entrants(database));
+};
+
 # # # # # TEAMS
 
 any ['get'] => '/api/scratch-teams' => sub{
@@ -201,6 +208,12 @@ any ['delete'] => '/api/scratch-teams/:team_number' => sub{
 
 any ['get', 'post'] => '/api/teams' => sub {
 	return encode_json(get_teams(database));
+};
+
+any ['get'] => '/api/teams/export' => sub{
+	response_header 'Content-Type' => 'text/csv';
+	response_header 'Content-Disposition' => 'attachment; filename="teams.csv"';
+	return rows_to_csv(get_teams(database));
 };
 
 any ['get', 'post'] => '/api/team/:team' => sub {
