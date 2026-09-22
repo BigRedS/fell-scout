@@ -61,6 +61,7 @@ my @get_routes = qw(
 	/api/laterunners/
 	/api/entrants
 	/api/problems
+	/api/status
 );
 # /clear-cache wipes every table, so it must run last, after every other
 # route has had a chance to exercise the seeded data.
@@ -73,8 +74,10 @@ for my $path (@get_routes) {
 
 # jQuery used to be loaded twice (two different versions - the second,
 # loaded later, silently winning over the first). Only one now.
+# ('/' is now the Vue SPA shell, not a TT-rendered page, so this checks a
+# still server-rendered route instead.)
 {
-	my $res = $test->request( GET '/' );
+	my $res = $test->request( GET '/teams' );
 	my @jquery_core_includes = $res->content =~ m{<script src="[^"]*code\.jquery\.com/jquery-[^"]*"}g;
 	is(scalar(@jquery_core_includes), 1, 'the layout includes jQuery core exactly once');
 }

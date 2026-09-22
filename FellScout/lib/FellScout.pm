@@ -3,12 +3,19 @@ package FellScout;
 use Dancer2;
 use Dancer2::Plugin::Database;
 use POSIX qw(strftime);
-use Text::CSV qw/csv/;
 use Cwd;
 
 use FellScout::Data qw(
+	get_status
 	get_summary
 	get_laterunners
+	get_lateness_thresholds
+	get_routes_map
+	get_config
+	update_config
+	get_logs
+	get_routes_checkpoints
+	import_checkpoints_csv
 	get_legs
 	get_checkpoints
 	get_checkpoint_details
@@ -77,17 +84,28 @@ sub _sync_config {
 }
 
 # # # # # SUMMARY
-any ['get', 'post'] => '/' => sub{
+
+any ['get', 'post'] => '/api/summary' => sub{
+	encode_json(get_summary(database));
+};
+
+any ['get'] => '/api/status' => sub{
+	my $status = get_status(database);
+	$status->{google_maps_url} = vars->{google_maps_url};
+	$status->{stale_after_seconds} = 600;
+	return encode_json($status);
+};
+
+# Temporary, for comparing against the new Vue summary page page-by-page
+# during the frontend migration - delete once the Summary page is trusted
+# to have full parity with this.
+any ['get', 'post'] => '/summary-old' => sub{
 	my $return = {
 		summary => get_summary(database),
 		page => vars->{page},
 	};
-	$return->{page}->{title} = 'Event Summary';
+	$return->{page}->{title} = 'Event Summary (old)';
 	return template 'summary.tt', $return;
-};
-
-any ['get', 'post'] => '/api/summary' => sub{
-	encode_json(get_summary(database));
 };
 
 # # # # # laterunners
@@ -117,7 +135,10 @@ any ['get', 'post'] => '/laterunners/:threshold?' => sub {
 	return template 'laterunners.tt', $return;
 };
 any ['get', 'post'] => '/api/laterunners/' => sub {
-	return encode_json({ laterunners => get_laterunners( database, param('threshold') ) })
+	return encode_json({
+		laterunners => get_laterunners( database, param('threshold') ),
+		%{ get_lateness_thresholds(database) },
+	});
 };
 
 # # # # # LEGS + CHECKPOINTS
@@ -173,6 +194,38 @@ any ['get', 'post'] => '/checkpoints' => sub {
 
 any ['get', 'post'] => '/api/checkpoints' => sub{
 	return encode_json( get_checkpoints(database) );
+};
+
+any ['get'] => '/api/map' => sub{
+	return encode_json( get_routes_map(database) );
+};
+
+any ['get'] => '/api/checkpoints/routes' => sub{
+	return encode_json( get_routes_checkpoints(database) );
+};
+
+any ['post'] => '/api/checkpoints/import' => sub{
+	my $upload = request->upload('csv');
+	unless($upload){
+		status(400);
+		return encode_json({ error => 'No csv file uploaded (expected a multipart field named "csv")' });
+	}
+	my $result = import_checkpoints_csv(database, $upload->tempname);
+	return encode_json($result);
+};
+
+any ['get'] => '/api/config' => sub{
+	return encode_json( get_config(database) );
+};
+
+any ['patch'] => '/api/config' => sub{
+	my $body = decode_json( request->body || '{}' );
+	my $changes = update_config(database, $body);
+	return encode_json({ changes => $changes });
+};
+
+any ['get'] => '/api/logs' => sub{
+	return encode_json( get_logs(database) );
 };
 
 any ['get', 'post'] => '/checkpoint' => sub {
@@ -242,6 +295,50 @@ any ['get', 'post'] => '/entrants' => sub {
 };
 
 # # # # # TEAMS
+
+any ['get'] => '/api/scratch-teams' => sub{
+	return encode_json( get_scratch_teams(database) );
+};
+
+any ['post'] => '/api/scratch-teams' => sub{
+	my $body = decode_json( request->body || '{}' );
+	my $result = update_scratch_team(database,
+		team_number => undef,
+		team_name   => $body->{team_name} // '',
+		entrants    => $body->{entrants} // '',
+		add         => 1,
+	);
+	run_cronjobs(database, _sync_config());
+	return encode_json($result);
+};
+
+any ['put'] => '/api/scratch-teams/:team_number' => sub{
+	my $body = decode_json( request->body || '{}' );
+	my $entrants = $body->{entrants} // '';
+	my $result;
+	if($entrants eq ''){
+		# Matches the old form's behaviour: clearing every entrant out of a
+		# scratch team is how you delete it, and (like the old page) that
+		# path skips the felltrack re-sync below - there's nothing for it
+		# to usefully recompute once the team's gone.
+		$result = delete_scratch_team(database, param('team_number'));
+	}else{
+		$result = update_scratch_team(database,
+			team_number => param('team_number'),
+			team_name   => '',
+			entrants    => $entrants,
+			add         => 0,
+		);
+		run_cronjobs(database, _sync_config());
+	}
+	return encode_json($result);
+};
+
+any ['delete'] => '/api/scratch-teams/:team_number' => sub{
+	my $result = delete_scratch_team(database, param('team_number'));
+	return encode_json($result);
+};
+
 any ['get','post'] => '/scratch-teams' => sub {
 
 	my %return;
@@ -363,81 +460,12 @@ any ['get','post'] => '/admin' => sub {
 };
 
 any ['get', 'post'] => '/admin/checkpoints' => sub {
-	my $upload;
-	if($upload = request->upload('csv')){
-		# TODO: Think about where to put this file, when and how to delete it
-		unlink('/tmp/checkpoints.csv');
-		if($upload->link_to('/tmp/checkpoints.csv')){
-			info("wrote /tmp/checkpoints.csv");
-		}else{
-			info("Failed to write /tmp/checkpoints.csv: $!");
-		}
-		my $checkpoints = csv( in => '/tmp/checkpoints.csv', encoding => 'UTF-8', detect_bom => 1);
-		my $query = "replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)";
-
-		$query.=" values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		my $sth = database->prepare($query);
-
-		my %routes;
-		foreach my $row (@{$checkpoints}){
-			my $cp = $row->{'cp'};
-			next unless $cp and $cp =~ m/\w+/;
-			$cp =~ s/CP//;
-			$cp =~ s/^0//;
-			$cp = 0 if $cp =~ m/Start/i;
-			$cp = 99 if $cp =~ m/Finish/i;
-			$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{'latitude'}, $row->{longitude}, $row->{what3words});
-
-			foreach my $field (sort(keys(%{$row}))){
-				if ($field =~ /^(\S+) leg distance/){
-					my $route_name = lc($1);
-					if($row->{$field} =~ m/\d+/){
-						push(@{$routes{$route_name}}, $cp);
-					}
-				}
-			}
-		}
-		my $del_sth = database->prepare('delete from routes');
-		$del_sth->execute();
-		my $routes_query = 'insert into routes(`route_name`, `leg_name`, `leg_from`, `leg_to`, `index`) values (?, ?, ?, ?, ?)';
-		my $routes_sth = database->prepare($routes_query);
-		foreach my $route (keys(%routes)){
-			my @cps = @{$routes{$route}};
-
-			for my $idx (0 .. $#cps){
-				my $leg_to;
-				if($cps[$idx + 1]){
-					$leg_to = $cps[$idx + 1];
-				}else{
-					$leg_to = '99';
-				}
-				my $leg_name = $cps[$idx] . '-' . $leg_to;
-				next if $leg_name eq '99-99';
-				info("$route $leg_name $idx");
-				$routes_sth->execute($route, $leg_name, $cps[$idx], $leg_to, $idx);
-			}
-		}
-
-	}
-
-	my $routes_sth = database->prepare('select distinct route_name from routes');
-	$routes_sth->execute();
-
-	my $cps_sth = database->prepare('select leg_name from routes where route_name = ? order by `index` asc');
-
-	my %routes_cps;
-	while( my $row =  $routes_sth->fetchrow_arrayref() ){
-		my $route = $row->[0];
-		$cps_sth->execute($route);
-		while( my $r = $cps_sth->fetchrow_arrayref() ){
-			my $cp = $r->[0];
-			$cp =~ s/^\d+-//;
-			push(@{$routes_cps{$route}}, $cp);
-		}
+	if(my $upload = request->upload('csv')){
+		import_checkpoints_csv(database, $upload->tempname);
 	}
 
 	my $return;
-	$return->{routes_cps} = \%routes_cps;
+	$return->{routes_cps} = get_routes_checkpoints(database);
 
 	$return->{page}->{title} = 'Checkpoint Admin';
 	return template 'admin_checkpoints.tt', $return;
@@ -454,6 +482,13 @@ any ['get', 'post'] => '/cron' => sub {
 		redirect request_header('referer');
 	}
 	return "Cronjobs done, you can now click 'back' to get back to where you were";
+};
+
+# Vue app shell - serves the SPA for '/' and any other non-API,
+# non-still-server-rendered path, so client-side routing survives a hard
+# refresh. Must stay last: every route above needs first-match priority.
+any ['get'] => qr{^(?!/api/).*} => sub {
+	send_file('index.html');
 };
 
 1;

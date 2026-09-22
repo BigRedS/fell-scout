@@ -101,6 +101,126 @@ sub get_json {
 	);
 }
 
+# --- /api/checkpoint/1 (bundles get_checkpoint_arrivals + get_checkpoint_details) ---
+{
+	my $checkpoint = get_json('/api/checkpoint/1');
+
+	is_deeply(
+		[ sort keys %{ $checkpoint->{arrivals}->{teams} } ],
+		[6],
+		'checkpoint/1: arrivals sub-shape matches /api/arrivals/1 (only team 6)'
+	);
+
+	my $details = $checkpoint->{details};
+	is($details->{checkpoint_number}, 1, 'checkpoint/1 details: checkpoint_number');
+	is_deeply([ sort @{ $details->{routes} } ], ['30km', '50km'], 'checkpoint/1 details: routes');
+	is_deeply($details->{previous}, { '30km' => 0, '50km' => 0 }, 'checkpoint/1 details: previous checkpoint per route');
+	is_deeply($details->{next}, { '30km' => 3, '50km' => 2 }, 'checkpoint/1 details: next checkpoint per route');
+
+	is_deeply(
+		[ sort { $a <=> $b } @{ $details->{teams}->{past}->{'50km'} } ],
+		[-5, 1, 3, 7, 120],
+		'checkpoint/1 details: teams.past.50km - everyone who has already been through checkpoint 1'
+	);
+	is_deeply(
+		$details->{teams}->{next}->{'30km'},
+		[6],
+		'checkpoint/1 details: teams.next.30km - team 6, for whom this is the next checkpoint'
+	);
+	is_deeply(
+		$details->{teams}->{future}->{'30km'},
+		[6],
+		'checkpoint/1 details: teams.future.30km'
+	);
+}
+
+# --- /api/checkpoints (every checkpoint at once) ---
+{
+	my $checkpoints = get_json('/api/checkpoints');
+
+	# Checkpoint 0 is never a leg's destination (`leg_to`), only ever a
+	# leg's origin - get_checkpoints() only loops over distinct `leg_to`
+	# values, so 0 is special-cased to carry just `details`, with none of
+	# the routes/past/future/arrivals/departures keys the other checkpoints
+	# get. A real (if minor and long-standing) gap, not something this port
+	# should silently paper over - documented here so it's a known, tested
+	# shape rather than a surprise.
+	is_deeply(
+		[ sort keys %{ $checkpoints->{0} } ],
+		['details'],
+		'checkpoints: checkpoint 0 (never a leg_to) only has a details key, unlike every other checkpoint'
+	);
+	is($checkpoints->{0}->{details}->{checkpoint_number}, 0, 'checkpoints: checkpoint 0 details still populated');
+
+	my $cp1 = $checkpoints->{1};
+	is_deeply([ sort @{ $cp1->{routes} } ], ['30km', '50km'], 'checkpoints: checkpoint 1 routes');
+	is_deeply(
+		[ sort { $a <=> $b } @{ $cp1->{past}->{'50km'} } ],
+		[-5, 1, 7, 120],
+		'checkpoints: checkpoint 1 past.50km - not-yet-finished 50km teams already through checkpoint 1'
+	);
+	is_deeply($cp1->{future}->{'30km'}, [6], 'checkpoints: checkpoint 1 future.30km - team 6, approaching');
+	ok(!exists $cp1->{future}->{'50km'}, 'checkpoints: checkpoint 1 future.50km is absent (no 50km team approaching)');
+
+	is_deeply(
+		[ map { $_->{team_number} } @{ $cp1->{arrivals} } ],
+		[6],
+		'checkpoints: checkpoint 1 arrivals lists team 6'
+	);
+	is_deeply(
+		[ sort { $a <=> $b } map { $_->{team_number} } @{ $cp1->{departures} } ],
+		[-5, 1, 4, 7],
+		'checkpoints: checkpoint 1 departures - teams that left checkpoint 1 (both routes)'
+	);
+}
+
+# --- /api/entrants ---
+{
+	my $entrants = get_json('/api/entrants');
+
+	ok(exists $entrants->{'1A'}, 'entrants: 1A present');
+	is($entrants->{'1A'}->{team_number}, 1, 'entrants: 1A team_number');
+	is($entrants->{'1A'}->{team_name}, 'In Progress Team', 'entrants: 1A team_name');
+	is($entrants->{'1A'}->{route}, '50km', 'entrants: 1A route');
+	is($entrants->{'1A'}->{retired}, 0, 'entrants: 1A not retired');
+
+	# team 3 (retired) - the entrant's own retired-at-checkpoint value, not
+	# the team's, is what the old page (and this port) displays.
+	is($entrants->{'3A'}->{retired}, 2, 'entrants: 3A retired at checkpoint 2');
+	is($entrants->{'3A'}->{entrant_last_checkpoint}, 1, 'entrants: 3A entrant_last_checkpoint');
+}
+
+# --- /api/legs ---
+{
+	my $legs = get_json('/api/legs');
+
+	ok(!exists $legs->{'0000'}, "legs: the '0-0' leg is filtered out");
+
+	is($legs->{'0102'}->{leg_name}, '1-2', 'legs: 0102 key is leg 1-2');
+	is($legs->{'0102'}->{time}, '1h 00m', 'legs: 0102 average time (1 hour, per the fixture route)');
+	is_deeply(
+		[ sort { $a <=> $b } @{ $legs->{'0102'}->{teams} } ],
+		[-5, 1, 7],
+		'legs: 0102 teams currently on this leg'
+	);
+
+	ok(!exists $legs->{'0203'}->{teams}, 'legs: 0203 (2-3) has no teams currently on it');
+}
+
+# --- /api/map (route-ordered checkpoint lists + colours, for the Map page) ---
+{
+	my $routes = get_json('/api/map');
+
+	is_deeply($routes->{'30km'}->{checkpoints}, [0, 1, 3, 99], 'map: 30km checkpoint order');
+	is_deeply($routes->{'50km'}->{checkpoints}, [0, 1, 2, 3, 99], 'map: 50km checkpoint order');
+
+	# '30km' sorts before '50km', so the fixed 5-colour palette is assigned
+	# in that order - not asserting the exact colours (an implementation
+	# detail), just that every route gets a distinct one.
+	isnt($routes->{'30km'}->{colour}, $routes->{'50km'}->{colour}, 'map: each route gets a distinct colour');
+	ok(defined $routes->{'30km'}->{colour} && defined $routes->{'50km'}->{colour}, 'map: colours are set');
+}
+
 # --- /api/arrivals/5 on a there-and-back route (improvements.md #4) ---
 # A route that revisits a checkpoint (out-and-back) makes "the leg ending at
 # checkpoint 5" ambiguous - here legs "0-5" and "10-5" both end at 5. Used to
@@ -146,6 +266,72 @@ sub get_json {
 
 	my ($team1) = grep { $_->{team_number} == 1 } @{ $laterunners->{laterunners} };
 	ok(!defined $team1, 'laterunners: team 1, not yet due, is not listed');
+
+	# Bundled alongside the list itself, so the row-colouring thresholds the
+	# old HTML-only page fetched separately are available to the Vue port.
+	is($laterunners->{lateness_percent_amber}, '30', 'laterunners: lateness_percent_amber bundled in the response');
+	is($laterunners->{lateness_percent_red}, '80', 'laterunners: lateness_percent_red bundled in the response');
+}
+
+# --- /api/team/:team for an existing team (the Vue team-detail page's data) ---
+{
+	my $team = get_json('/api/team/1');
+
+	is($team->{team_number}, 1, 'team/1: team_number');
+	is($team->{team_name}, 'In Progress Team', 'team/1: team_name');
+	is($team->{route}, '50km', 'team/1: route');
+	is($team->{last_checkpoint}, 1, 'team/1: last_checkpoint');
+	is($team->{next_checkpoint}, 2, 'team/1: next_checkpoint');
+
+	is_deeply(
+		[ sort keys %{ $team->{entrants} } ],
+		['1A', '1B', '1C'],
+		'team/1: all three entrants present'
+	);
+	is($team->{entrants}->{'1A'}->{entrant_name}, 'Entrant 1A', 'team/1: entrant name');
+	is($team->{active_entrants}, '1C', 'team/1: active_entrants is the last non-retired entrant seen');
+
+	ok(exists $team->{remaining_checkpoints}->{2}, 'team/1: remaining_checkpoints includes the next checkpoint (2)');
+	ok(exists $team->{remaining_checkpoints}->{99}, 'team/1: remaining_checkpoints includes the finish (99)');
+	is($team->{remaining_checkpoints}->{2}->{expected_hhmm}, $team->{next_checkpoint_expected_hhmm},
+		'team/1: remaining_checkpoints.2 matches next_checkpoint_expected_hhmm');
+
+	is_deeply($team->{previous_checkpoints}, {}, 'team/1: no previous_checkpoints recorded by this fixture');
+}
+
+# --- /api/team/:team for a scratch team ---
+{
+	my $team = get_json('/api/team/-5');
+
+	is($team->{team_number}, -5, 'team/-5: team_number is negative');
+	is($team->{team_name}, 'Scratch Squad', 'team/-5: team_name');
+	is_deeply(
+		[ sort keys %{ $team->{entrants} } ],
+		['9A', '9B'],
+		'team/-5: both scratch-team entrants present'
+	);
+	# seed_sample_world's scratch entrants reference previous_team_number 9/10,
+	# which aren't real seeded teams - so previous_team_name/number cross-link
+	# fields (only populated via a join to an existing teams row) are absent
+	# here. Not exercised by this test; see t/034_scratch_teams.t for the
+	# Data.pm-level scratch-team mutation coverage.
+}
+
+# --- /api/problems ---
+{
+	my $problems = get_json('/api/problems');
+
+	is_deeply(
+		[ sort { $a <=> $b } map { $_->{team} } @{ $problems->{'small team'} } ],
+		[-5, 4, 6, 7, 120],
+		'problems: small team - every team with fewer than 3 active entrants'
+	);
+
+	is_deeply(
+		$problems->{'split team'},
+		[ { team => 4, message => 'is split between checkpoints 0, 1' } ],
+		'problems: split team - team 4, whose two entrants are at different checkpoints'
+	);
 }
 
 # --- /api/team/:team for a team that doesn't exist ---
