@@ -53,7 +53,10 @@ const isStale = computed(() => {
 
 const { isDark, toggle: toggleDarkMode } = useDarkMode()
 
-const navLinks = [
+// Incidents/Retirements are behind config toggles (Admin page) - hidden
+// from the nav until /api/status positively confirms they're on, rather
+// than flashing them and then hiding them once the real value arrives.
+const navLinks = computed(() => [
   { label: 'Summary', to: '/' },
   { label: 'Late Teams', to: '/laterunners' },
   { label: 'Scratch Teams', to: '/scratch-teams' },
@@ -62,10 +65,10 @@ const navLinks = [
   { label: 'Map', to: '/map' },
   { label: 'Legs', to: '/legs' },
   { label: 'Entrants', to: '/entrants' },
-  { label: 'Incidents', to: '/incidents' },
-  { label: 'Retirements', to: '/retirements' },
+  ...(status.value.incidents_enabled ? [{ label: 'Incidents', to: '/incidents' }] : []),
+  ...(status.value.retirements_enabled ? [{ label: 'Retirements', to: '/retirements' }] : []),
   { label: 'Admin', to: '/admin' },
-]
+])
 </script>
 
 <template>

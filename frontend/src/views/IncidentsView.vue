@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { getIncidents, createIncident, updateIncident, deleteIncident } from '../api/client'
+import { getStatus, getIncidents, createIncident, updateIncident, deleteIncident } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
@@ -11,7 +11,22 @@ const STATUSES = ['Open', 'In Progress', 'Resolved']
 
 const incidents = ref(null)
 
+// The nav already hides the link when this feature's off, but someone can
+// still navigate here directly (bookmark, back button) - check first rather
+// than calling the API and letting its 403 fail silently. null = not
+// checked yet, so nothing renders until we actually know either way.
+const featureEnabled = ref(null)
+
+async function checkFeatureEnabled() {
+  if (featureEnabled.value === null) {
+    const status = await getStatus()
+    featureEnabled.value = !!status.incidents_enabled
+  }
+  return featureEnabled.value
+}
+
 async function refresh() {
+  if (!(await checkFeatureEnabled())) return
   incidents.value = await getIncidents()
 }
 
@@ -63,58 +78,65 @@ const columns = [
 <template>
   <h1>Incidents</h1>
 
-  <p>A log of medical, lost-team, behavioural, and transport incidents during the event.</p>
+  <div v-if="featureEnabled === false" class="alert alert-secondary">
+    The Incidents feature is currently disabled. A Control admin can turn it back on from the
+    <router-link to="/admin">Admin</router-link> page.
+  </div>
 
-  <h3>Log a new incident</h3>
-  <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addIncident">
-    <div class="col-auto">
-      <select v-model="newIncident.type" class="form-select form-select-sm">
-        <option v-for="t in INCIDENT_TYPES" :key="t" :value="t">{{ t }}</option>
-      </select>
-    </div>
-    <div class="col">
-      <input v-model="newIncident.description" type="text" class="form-control form-control-sm" placeholder="Description" required />
-    </div>
-    <div class="col-auto">
-      <input v-model="newIncident.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
-    </div>
-    <div class="col-auto">
-      <input v-model="newIncident.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
-    </div>
-    <div class="col-auto">
-      <input v-model="newIncident.assigned_to" type="text" class="form-control form-control-sm" placeholder="Assigned to" />
-    </div>
-    <div class="col-auto">
-      <button type="submit" class="btn btn-primary btn-sm">Log incident</button>
-    </div>
-  </form>
+  <template v-else-if="featureEnabled">
+    <p>A log of medical, lost-team, behavioural, and transport incidents during the event.</p>
 
-  <SortableTable
-    v-if="incidents"
-    :rows="rows"
-    :columns="columns"
-    :row-key="(row) => row.id"
-    :default-sort-column="7"
-    default-sort-order="desc"
-    :filterable-keys="['status', 'type']"
-  >
-    <template #checkpoint="{ row }">
-      <CheckpointLink v-if="row.checkpoint_number" :checkpoint="row.checkpoint_number" />
-    </template>
-    <template #team="{ row }">
-      <TeamLink v-if="row.team_number" :team-number="row.team_number" />
-    </template>
-    <template #status="{ row }">
-      <select
-        class="form-select form-select-sm w-auto"
-        :value="row.status"
-        @change="setStatus(row, $event.target.value)"
-      >
-        <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
-      </select>
-    </template>
-    <template #actions="{ row }">
-      <button type="button" class="btn btn-outline-danger btn-sm" @click="removeIncident(row)">Delete</button>
-    </template>
-  </SortableTable>
+    <h3>Log a new incident</h3>
+    <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addIncident">
+      <div class="col-auto">
+        <select v-model="newIncident.type" class="form-select form-select-sm">
+          <option v-for="t in INCIDENT_TYPES" :key="t" :value="t">{{ t }}</option>
+        </select>
+      </div>
+      <div class="col">
+        <input v-model="newIncident.description" type="text" class="form-control form-control-sm" placeholder="Description" required />
+      </div>
+      <div class="col-auto">
+        <input v-model="newIncident.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
+      </div>
+      <div class="col-auto">
+        <input v-model="newIncident.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
+      </div>
+      <div class="col-auto">
+        <input v-model="newIncident.assigned_to" type="text" class="form-control form-control-sm" placeholder="Assigned to" />
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">Log incident</button>
+      </div>
+    </form>
+
+    <SortableTable
+      v-if="incidents"
+      :rows="rows"
+      :columns="columns"
+      :row-key="(row) => row.id"
+      :default-sort-column="7"
+      default-sort-order="desc"
+      :filterable-keys="['status', 'type']"
+    >
+      <template #checkpoint="{ row }">
+        <CheckpointLink v-if="row.checkpoint_number" :checkpoint="row.checkpoint_number" />
+      </template>
+      <template #team="{ row }">
+        <TeamLink v-if="row.team_number" :team-number="row.team_number" />
+      </template>
+      <template #status="{ row }">
+        <select
+          class="form-select form-select-sm w-auto"
+          :value="row.status"
+          @change="setStatus(row, $event.target.value)"
+        >
+          <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
+        </select>
+      </template>
+      <template #actions="{ row }">
+        <button type="button" class="btn btn-outline-danger btn-sm" @click="removeIncident(row)">Delete</button>
+      </template>
+    </SortableTable>
+  </template>
 </template>
