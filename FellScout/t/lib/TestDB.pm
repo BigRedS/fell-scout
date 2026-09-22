@@ -19,7 +19,7 @@ my @TABLES = qw(
 	checkpoints checkpoints_teams checkpoints_teams_predictions config
 	entrants legs logs routes
 	scratch_team_entrants scratch_teams teams
-	incidents
+	incidents retirements
 );
 
 # Baseline config rows, mirroring build/sql/all.sql but with deterministic

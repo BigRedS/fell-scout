@@ -34,6 +34,10 @@ our @EXPORT_OK = qw(
 	create_incident
 	update_incident
 	delete_incident
+	get_retirements
+	create_retirement
+	update_retirement
+	delete_retirement
 	to_hh_mm
 	rows_to_csv
 );
@@ -1005,6 +1009,46 @@ sub delete_incident{
 	my ($dbh, $id) = @_;
 	$dbh->prepare('delete from incidents where id = ?')->execute($id);
 	return { successes => ["Deleted incident $id"] };
+}
+
+sub get_retirements{
+	my $dbh = shift;
+	my $sth = $dbh->prepare('select * from retirements order by created_at desc');
+	$sth->execute();
+	return $sth->fetchall_hashref('id');
+}
+
+sub create_retirement{
+	my ($dbh, $fields) = @_;
+	my $sth = $dbh->prepare(
+		'insert into retirements (entrant_code, team_number, checkpoint_number, reason, vehicle, status)
+		 values (?, ?, ?, ?, ?, ?)'
+	);
+	$sth->execute(
+		uc($fields->{entrant_code} // ''), $fields->{team_number} || undef, $fields->{checkpoint_number} || undef,
+		$fields->{reason}, $fields->{vehicle}, $fields->{status} || 'Awaiting pickup',
+	);
+	my $id = $dbh->last_insert_id(undef, undef, undef, undef);
+	return $dbh->selectrow_hashref('select * from retirements where id = ?', undef, $id);
+}
+
+sub update_retirement{
+	my ($dbh, $id, $fields) = @_;
+	my $sth = $dbh->prepare(
+		'update retirements set entrant_code = ?, team_number = ?, checkpoint_number = ?,
+		   reason = ?, vehicle = ?, status = ? where id = ?'
+	);
+	$sth->execute(
+		uc($fields->{entrant_code} // ''), $fields->{team_number} || undef, $fields->{checkpoint_number} || undef,
+		$fields->{reason}, $fields->{vehicle}, $fields->{status}, $id,
+	);
+	return $dbh->selectrow_hashref('select * from retirements where id = ?', undef, $id);
+}
+
+sub delete_retirement{
+	my ($dbh, $id) = @_;
+	$dbh->prepare('delete from retirements where id = ?')->execute($id);
+	return { successes => ["Deleted retirement $id"] };
 }
 
 # We have two formats for times. A time is always represented as
