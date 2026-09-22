@@ -14,7 +14,7 @@ use FellScout;
 use Test::More;
 use Plack::Test;
 use HTTP::Request::Common;
-use JSON qw(decode_json);
+use JSON qw(decode_json encode_json);
 
 TestDB->reset;
 TestDB->seed_sample_world;
@@ -147,6 +147,37 @@ sub get_json {
 		[6],
 		'checkpoint/1 details: teams.future.30km'
 	);
+
+	is($details->{status}, 'open', 'checkpoint/1 details: status defaults to open');
+	is($details->{status_notes}, undef, 'checkpoint/1 details: status_notes defaults to unset');
+}
+
+# --- PATCH /api/checkpoint/:checkpoint/status ---
+{
+	my $req = PATCH(
+		'/api/checkpoint/1/status',
+		'Content-Type' => 'application/json',
+		Content        => encode_json({ status => 'issue', notes => 'Poor phone signal' }),
+	);
+	my $res = $test->request($req);
+	ok($res->is_success, '[PATCH /api/checkpoint/1/status] successful') or diag($res->status_line, "\n", $res->content);
+
+	my $details = decode_json($res->content);
+	is($details->{status}, 'issue', 'checkpoint status: updated value returned directly');
+	is($details->{status_notes}, 'Poor phone signal', 'checkpoint status: notes returned directly');
+	ok($details->{status_updated_at}, 'checkpoint status: status_updated_at is set');
+
+	my $refetched = get_json('/api/checkpoint/1')->{details};
+	is($refetched->{status}, 'issue', 'checkpoint status: change persists on a fresh GET');
+
+	# An invalid status is a 400, not a 500 or a silently-accepted garbage value.
+	my $bad_req = PATCH(
+		'/api/checkpoint/1/status',
+		'Content-Type' => 'application/json',
+		Content        => encode_json({ status => 'on_fire', notes => '' }),
+	);
+	my $bad_res = $test->request($bad_req);
+	is($bad_res->code, 400, '[PATCH /api/checkpoint/1/status] with an invalid status returns 400');
 }
 
 # --- /api/checkpoints (every checkpoint at once) ---

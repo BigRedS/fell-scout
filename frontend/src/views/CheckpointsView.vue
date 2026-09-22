@@ -5,6 +5,7 @@ import { getCheckpoints } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
+import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
 
 const router = useRouter()
 const checkpoints = ref(null)
@@ -30,6 +31,7 @@ function cpRows() {
     const cp = checkpoints.value[id]
     return {
       id,
+      status: cp.details?.status ?? 'open',
       routes: cp.routes ?? [],
       past: cp.past ?? {},
       future: cp.future ?? {},
@@ -70,6 +72,7 @@ function goToCheckpoint() {
       <thead>
         <tr>
           <th class="text-center">Checkpoint</th>
+          <th class="text-center">Status</th>
           <th class="text-center">Links</th>
           <th class="text-center">Routes</th>
           <th class="text-center">Teams<br />passed</th>
@@ -81,6 +84,7 @@ function goToCheckpoint() {
       <tbody>
         <tr v-for="row in rows" :key="row.id">
           <td class="text-center">{{ row.id }}</td>
+          <td class="text-center"><CheckpointStatusBadge :status="row.status" /></td>
           <td class="text-center">
             <router-link :to="`/arrivals/${row.id}`">Arrivals</router-link>
             <br />

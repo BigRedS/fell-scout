@@ -20,6 +20,7 @@ our @EXPORT_OK = qw(
 	get_legs
 	get_checkpoints
 	get_checkpoint_details
+	update_checkpoint_status
 	get_checkpoint_arrivals
 	get_entrants
 	get_teams
@@ -114,9 +115,17 @@ sub import_checkpoints_csv{
 	my $csv_path = shift;
 
 	my $checkpoints = csv( in => $csv_path, encoding => 'UTF-8', detect_bom => 1 );
+	# `on duplicate key update`, not `replace into` - REPLACE is DELETE+INSERT
+	# under the hood, so any column not in this list (status/status_notes/
+	# status_updated_at) would silently reset to its default on every
+	# re-import. This only ever touches the columns the CSV actually owns.
 	my $sth = $dbh->prepare(
-		"replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)
-		 values (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		"insert into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)
+		 values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 on duplicate key update
+		   description = values(description), manager = values(manager), mobile = values(mobile),
+		   type = values(type), os_grid = values(os_grid), latitude = values(latitude),
+		   longitude = values(longitude), what3words = values(what3words)"
 	);
 
 	my %routes;
@@ -420,6 +429,19 @@ sub get_checkpoints{
 	}
 		$cps{0}->{details} = get_checkpoint_details($dbh, 0);
 	return \%cps;
+}
+
+my @VALID_CHECKPOINT_STATUSES = qw(open issue closed);
+
+sub update_checkpoint_status{
+	my ($dbh, $checkpoint_number, $status, $notes) = @_;
+	die "invalid checkpoint status '$status'" unless grep { $_ eq $status } @VALID_CHECKPOINT_STATUSES;
+
+	my $sth = $dbh->prepare(
+		'update checkpoints set status = ?, status_notes = ?, status_updated_at = now() where checkpoint_number = ?'
+	);
+	$sth->execute($status, $notes, $checkpoint_number);
+	return get_checkpoint_details($dbh, $checkpoint_number);
 }
 
 sub get_checkpoint_details{

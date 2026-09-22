@@ -19,6 +19,7 @@ use FellScout::Data qw(
 	get_legs
 	get_checkpoints
 	get_checkpoint_details
+	update_checkpoint_status
 	get_checkpoint_arrivals
 	get_entrants
 	get_teams
@@ -147,6 +148,18 @@ any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
 
 any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
 	return encode_json( get_checkpoint_arrivals(database, param('checkpoint')));
+};
+
+any ['patch'] => '/api/checkpoint/:checkpoint/status' => sub{
+	my $body = decode_json( request->body || '{}' );
+	my $details = eval {
+		update_checkpoint_status(database, param('checkpoint'), $body->{status}, $body->{notes});
+	};
+	if($@){
+		status(400);
+		return encode_json({ error => "$@" });
+	}
+	return encode_json($details);
 };
 
 # # # # # ENTRANTS
