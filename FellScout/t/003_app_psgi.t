@@ -25,10 +25,10 @@ TestDB->reset;
 my $app  = Plack::Util::load_psgi("$FindBin::Bin/../bin/app.psgi");
 my $test = Plack::Test->create($app);
 
-my $css_res = $test->request( GET '/css/style.css' );
-ok($css_res->is_success, '[GET /css/style.css] successful');
+my $favicon_res = $test->request( GET '/favicon.svg' );
+ok($favicon_res->is_success, '[GET /favicon.svg] successful');
 is(
-	$css_res->header('Cache-Control'),
+	$favicon_res->header('Cache-Control'),
 	'public, max-age=604800',
 	'static assets get a long Cache-Control - devices get one reliable connection (start/finish), then poor-to-none at checkpoints'
 );
