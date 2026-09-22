@@ -3,8 +3,10 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getTeams } from '../api/client'
 import { usePolling } from '../composables/usePolling'
+import { teamOrEntrantStatus } from '../status'
 import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
+import StatusBadge from '../components/StatusBadge.vue'
 
 const router = useRouter()
 const teams = ref(null)
@@ -31,6 +33,7 @@ function goToTeam() {
 const columns = [
   { key: 'id', label: 'ID', value: (row) => row.team_number, numeric: true },
   { key: 'name', label: 'Name', value: (row) => row.team_name },
+  { key: 'status', label: 'Status', value: (row) => teamOrEntrantStatus(row) },
   { key: 'route', label: 'Route', value: (row) => row.route },
   { key: 'last_checkin', label: 'Last Checkin', value: (row) => row.last_checkpoint_hhmm },
   { key: 'last_cp', label: 'Last CP', value: (row) => row.last_checkpoint, numeric: true },
@@ -57,17 +60,27 @@ const columns = [
   </p>
   <p>Use the search box to search by any field of the table, and click the column headers to sort the table by that field.</p>
 
-  <form class="d-flex align-items-center gap-2 mb-3" @submit.prevent="goToTeam">
-    <label class="mb-0">View a specific team:</label>
-    <select v-model="jumpToTeam" class="form-select form-select-sm w-auto">
-      <option value="">-</option>
-      <option v-for="id in teamIdsSorted" :key="id" :value="id">{{ id }}</option>
-    </select>
-    <button type="submit" class="btn btn-primary btn-sm">Go</button>
-  </form>
+  <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+    <form class="d-flex align-items-center gap-2" @submit.prevent="goToTeam">
+      <label class="mb-0">View a specific team:</label>
+      <select v-model="jumpToTeam" class="form-select form-select-sm w-auto">
+        <option value="">-</option>
+        <option v-for="id in teamIdsSorted" :key="id" :value="id">{{ id }}</option>
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Go</button>
+    </form>
+    <a href="/api/teams/export" download class="btn btn-outline-secondary btn-sm">Export CSV</a>
+  </div>
 
-  <SortableTable v-if="teams" :rows="rows" :columns="columns" :row-key="(row) => row.team_number">
+  <SortableTable
+    v-if="teams"
+    :rows="rows"
+    :columns="columns"
+    :row-key="(row) => row.team_number"
+    :filterable-keys="['status', 'route']"
+  >
     <template #id="{ row }"><TeamLink :team-number="row.team_number" /></template>
     <template #name="{ row }"><TeamLink :team-number="row.team_number">{{ row.team_name }}</TeamLink></template>
+    <template #status="{ row }"><StatusBadge :status="teamOrEntrantStatus(row)" /></template>
   </SortableTable>
 </template>

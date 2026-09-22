@@ -86,6 +86,21 @@ sub get_json {
 	is($teams->{-5}->{team_name}, 'Scratch Squad', 'teams: scratch team name');
 }
 
+# --- /api/teams/export ---
+{
+	my $res = $test->request( GET '/api/teams/export' );
+	ok($res->is_success, '[GET /api/teams/export] successful') or diag($res->status_line, "\n", $res->content);
+	like($res->header('Content-Type'), qr{^text/csv}, 'teams export: Content-Type is text/csv');
+	like($res->header('Content-Disposition'), qr{attachment}, 'teams export: served as an attachment');
+
+	my @lines = split(/\r\n/, $res->content);
+	my @header = split(/,/, $lines[0]);
+	ok((grep { $_ eq 'team_number' } @header), 'teams export: header includes team_number');
+	ok((grep { $_ eq 'team_name' } @header), 'teams export: header includes team_name');
+	# header + one row per team (seed_sample_world's 6, plus 7 and 120 added above)
+	is(scalar(@lines), 9, 'teams export: one row per team, plus the header');
+}
+
 # --- /api/arrivals/1 (checkpoint 1) ---
 {
 	my $arrivals = get_json('/api/arrivals/1');
@@ -188,6 +203,41 @@ sub get_json {
 	# the team's, is what the old page (and this port) displays.
 	is($entrants->{'3A'}->{retired}, 2, 'entrants: 3A retired at checkpoint 2');
 	is($entrants->{'3A'}->{entrant_last_checkpoint}, 1, 'entrants: 3A entrant_last_checkpoint');
+
+	# get_entrants() used to omit `completed` entirely, so a finished
+	# entrant (team 2's, per seed_sample_world) was indistinguishable from
+	# an active one from this endpoint alone.
+	is($entrants->{'2A'}->{completed}, 1, "entrants: 2A completed (get_entrants didn't used to select this at all)");
+	is($entrants->{'1A'}->{completed}, 0, 'entrants: 1A (still active) not completed');
+
+	# get_entrants() used to INNER JOIN on routes via
+	# `teams.last_checkpoint = routes.leg_from` - checkpoint 99 (the finish)
+	# is never a leg_from, so every entrant of every finished team (2A here)
+	# was silently missing from the whole endpoint.
+	ok(exists $entrants->{'2A'}, 'entrants: 2A (finished team) is present at all');
+
+	# get_entrants()'s prediction join used to match on checkpoint number
+	# alone (not team_number too), so any team sharing a next_checkpoint
+	# with another team could show that other team's expected time. Teams 1
+	# and 7 both have next_checkpoint 2 with deliberately different
+	# predictions (+15min vs -15min) - each entrant must show their own
+	# team's.
+	isnt(
+		$entrants->{'1A'}->{expected_hhmm}, $entrants->{'7A'}->{expected_hhmm},
+		"entrants: 1A and 7A (different teams, same next_checkpoint) get their own team's prediction, not each other's"
+	);
+}
+
+# --- /api/entrants/export ---
+{
+	my $res = $test->request( GET '/api/entrants/export' );
+	ok($res->is_success, '[GET /api/entrants/export] successful') or diag($res->status_line, "\n", $res->content);
+	like($res->header('Content-Type'), qr{^text/csv}, 'entrants export: Content-Type is text/csv');
+
+	my @lines = split(/\r\n/, $res->content);
+	my @header = split(/,/, $lines[0]);
+	ok((grep { $_ eq 'code' } @header), 'entrants export: header includes code');
+	ok((grep { $_ eq 'completed' } @header), 'entrants export: header includes completed');
 }
 
 # --- /api/legs ---

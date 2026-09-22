@@ -30,6 +30,7 @@ our @EXPORT_OK = qw(
 	update_scratch_team
 	get_scratch_teams
 	to_hh_mm
+	rows_to_csv
 );
 
 sub get_status{
@@ -38,6 +39,27 @@ sub get_status{
 		"select unix_timestamp(time) from logs where name = 'periodic-jobs'"
 	);
 	return { last_sync_epoch => $last_sync_epoch };
+}
+
+# Turns a get_teams()/get_entrants()-shaped hashref ({id => {field=>value}})
+# into a CSV string - column set is just whatever fields the first row has,
+# sorted for a stable, predictable order, rather than a separately
+# maintained list that could drift from what those functions actually return.
+sub rows_to_csv{
+	my $rows_by_id = shift;
+	my @rows = values %$rows_by_id;
+	return '' unless @rows;
+
+	my @fieldnames = sort keys %{ $rows[0] };
+	my $csv = Text::CSV->new({ binary => 1, eol => "\r\n" });
+	my $out = '';
+	$csv->combine(@fieldnames);
+	$out .= $csv->string();
+	foreach my $row (@rows){
+		$csv->combine(map { $row->{$_} // '' } @fieldnames);
+		$out .= $csv->string();
+	}
+	return $out;
 }
 
 # Ordered checkpoint-list-per-route plus a colour to draw it with, for the
@@ -517,17 +539,17 @@ sub get_entrants{
 	my $dbh = shift;
 	my $sth = $dbh->prepare('select code, entrant_name, teams.team_number, team_name, entrants.unit, entrants.district,
 	                             teams.last_checkpoint as team_last_checkpoint, teams.next_checkpoint as team_next_checkpoint,
-												       routes.leg_name as leg, teams.route as route, entrants.retired as retired,
-															 date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as expected_hhmm,
-															 date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as expected_in,
+	                             teams.route as route, entrants.retired as retired,
+	                             entrants.completed as completed,
+	                             date_format(checkpoints_teams_predictions.expected_time, "%H:%i") as expected_hhmm,
+	                             date_format( timediff( checkpoints_teams_predictions.expected_time, now() ), "%kh%im") as expected_in,
 	                             entrants.last_checkpoint as entrant_last_checkpoint
 	                             from entrants
 	                             join teams
 	                               on entrants.team = teams.team_number
-															 join routes
-															   on teams.last_checkpoint = routes.leg_from
-															 left outer join checkpoints_teams_predictions
-															   on teams.next_checkpoint = checkpoints_teams_predictions.checkpoint
+	                             left outer join checkpoints_teams_predictions
+	                               on checkpoints_teams_predictions.team_number = teams.team_number
+	                               and checkpoints_teams_predictions.checkpoint = teams.next_checkpoint
 	                             left join scratch_team_entrants
 	                               on entrants.code = scratch_team_entrants.entrant_code');
 	$sth->execute();
