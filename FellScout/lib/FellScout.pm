@@ -43,25 +43,13 @@ our $VERSION = '0.1';
 hook 'before' => sub {
 	response_header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
 
+	# Every config row is exposed as a Dancer var - _sync_config() and
+	# /api/status both read specific ones back out by name.
 	my $sth = database->prepare("select name, value from config");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		var $row->{name} => $row->{value};
 	}
-
-	$sth = database->prepare("select
-	                          date_format( timediff(now(), time ), \"%kh%im\") as time_since_last_felltrack_update,
-	                          timestampdiff(SECOND, time, CURTIME()) as seconds_since_last_felltrack_update
-	                          from logs
-	                          where
-	                          name = 'periodic-jobs'");
-	$sth->execute();
-	my $page = $sth->fetchrow_hashref();
-	$page->{auto_refresh} = param('auto_refresh') if param('auto_refresh') and param('auto_refresh') > 0;
-
-	$page->{google_maps_url} = vars->{'google_maps_url'} if vars->{'google_maps_url'};
-
-	var page => $page;
 };
 
 # A few functions run FellScout::Sync::run_cronjobs() on completion (it's
@@ -96,44 +84,8 @@ any ['get'] => '/api/status' => sub{
 	return encode_json($status);
 };
 
-# Temporary, for comparing against the new Vue summary page page-by-page
-# during the frontend migration - delete once the Summary page is trusted
-# to have full parity with this.
-any ['get', 'post'] => '/summary-old' => sub{
-	my $return = {
-		summary => get_summary(database),
-		page => vars->{page},
-	};
-	$return->{page}->{title} = 'Event Summary (old)';
-	return template 'summary.tt', $return;
-};
-
 # # # # # laterunners
 
-any ['get', 'post'] => '/laterunners' => sub {
-	if(param('threshold') and param('threshold') =~ m/^\d+(m|pc)$/){
-		redirect "/laterunners/".param('threshold');
-	}else{
-		redirect "/laterunners/0";
-	}
-};
-any ['get', 'post'] => '/laterunners/:threshold?' => sub {
-	my $return = {
-		laterunners => get_laterunners(database, param('threshold')),
-		threshold => param('threshold'),
-		page => vars->{page}
-	};
-	my $sth = database->prepare("select name,value from config where name like 'lateness_percent_%'");
-	$sth->execute();
-	while(my $row = $sth->fetchrow_hashref()){
-		$return->{page}->{ $row->{name} } = $row->{value};
-	}
-	$return->{page}->{enable_fancytable} = 1;
-	$return->{page}->{table_sort_column} = 8;
-	$return->{page}->{table_sort_order} = 'desc';
-	$return->{page}->{title} = 'Late Runners';
-	return template 'laterunners.tt', $return;
-};
 any ['get', 'post'] => '/api/laterunners/' => sub {
 	return encode_json({
 		laterunners => get_laterunners( database, param('threshold') ),
@@ -142,54 +94,9 @@ any ['get', 'post'] => '/api/laterunners/' => sub {
 };
 
 # # # # # LEGS + CHECKPOINTS
-any ['get', 'post'] => '/legs' => sub {
-	my $return = {
-		legs => get_legs(database),
-		page => vars->{page},
-	};
-	$return->{page}->{title} = 'Legs';
-	return template 'legs.tt', $return;
-};
 
 any ['get', 'post'] => '/api/legs' => sub{
 	return encode_json( get_legs(database) );
-};
-
-# # # # # map
-any ['get', 'post'] => '/map' => sub {
-	my $return = {
-		checkpoints => get_checkpoints(database),
-		page => vars->{page},
-	};
-
-	my @colours = qw/red blue green yellow orange/;
-
-	my $sth = database->prepare('select distinct route_name from routes order by route_name asc');
-	my $sth_cps = database->prepare('select leg_to from routes where route_name = ? order by `index` asc');
-	$sth->execute();
-	while(my $row = $sth->fetchrow_hashref()){
-		my $route_name = $row->{route_name};
-		$return->{routes}->{$route_name}->{colour} = shift(@colours);
-		push(@{ $return->{routes}->{$route_name}->{checkpoints} }, 0);
-		$sth_cps->execute($route_name);
-		while (my $cp = $sth_cps->fetchrow_hashref()){
-			push(@{$return->{routes}->{$route_name}->{checkpoints}}, $cp->{leg_to});
-		}
-	}
-
-	$return->{page}->{title} = 'Map';
-	return template 'map.tt', $return;
-};
-
-
-# # # # # checkpoints
-any ['get', 'post'] => '/checkpoints' => sub {
-	my $return = {
-		checkpoints => get_checkpoints(database),
-		page => vars->{page},
-	};
-	$return->{page}->{title} = 'Checkpoints';
-	return template 'checkpoints.tt', $return;
 };
 
 any ['get', 'post'] => '/api/checkpoints' => sub{
@@ -228,27 +135,6 @@ any ['get'] => '/api/logs' => sub{
 	return encode_json( get_logs(database) );
 };
 
-any ['get', 'post'] => '/checkpoint' => sub {
-	my $checkpoint = param('checkpoint');
-	if($checkpoint =~ m/^\d+$/){
-		redirect "/checkpoint/$checkpoint";
-	}else{
-		redirect "/checkpoints";
-	}
-};
-
-any ['get', 'post'] => '/arrivals/:checkpoint' => sub {
-	my $return = {
-		checkpoint => get_checkpoint_arrivals(database, param('checkpoint')),
-		page => vars->{page},
-	};
-	$return->{page}->{title} = 'Arrivals for checkpoint '.param('checkpoint');
-	$return->{page}->{enable_fancytable} = 1;
-	$return->{page}->{table_is_searchable} = 'false';
-	return template 'arrivals.tt', $return;
-};
-
-
 any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
 	my $checkpoint = param('checkpoint');
 	my $return = {
@@ -256,22 +142,6 @@ any ['get', 'post'] => '/api/checkpoint/:checkpoint' => sub{
 		details => get_checkpoint_details(database, $checkpoint),
 	};
 	return encode_json($return);
-};
-
-any ['get', 'post'] => '/checkpoint/:checkpoint' => sub{
-	my $checkpoint = param('checkpoint');
-
-	my $return = {
-		arrivals => get_checkpoint_arrivals(database, $checkpoint),
-		details => get_checkpoint_details(database, $checkpoint),
-		page => vars->{page},
-	};
-	$return->{page}->{title} = 'Checkpoint '.param('checkpoint');
-	$return->{page}->{enable_fancytable} = 0;
-	$return->{page}->{table_sort_column} = 1;
-	$return->{page}->{table_sort_order} = 'asc';
-
-	return template 'checkpoint.tt', $return;
 };
 
 any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
@@ -282,16 +152,6 @@ any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
 
 any ['get', 'post'] => '/api/entrants' => sub {
 	return encode_json(get_entrants(database));
-};
-
-any ['get', 'post'] => '/entrants' => sub {
-	my $return = {
-		page => vars->{page},
-		entrants => get_entrants(database),
-	};
-	$return->{page}->{enable_fancytable} = 1;
-	$return->{page}->{title} = 'entrants';
-	return template 'entrants.tt', $return;
 };
 
 # # # # # TEAMS
@@ -339,137 +199,19 @@ any ['delete'] => '/api/scratch-teams/:team_number' => sub{
 	return encode_json($result);
 };
 
-any ['get','post'] => '/scratch-teams' => sub {
-
-	my %return;
-
-	if(param('update') or param('add')){
-		my $result;
-		if(param('entrants') eq ''){
-			$result = delete_scratch_team(database, param('team_number'));
-		}else{
-			$result = update_scratch_team(database,
-				team_number => param('team_number'),
-				team_name   => param('team_name'),
-				entrants    => param('entrants'),
-				add         => param('add'),
-			);
-			info("Triggering cron");
-			run_cronjobs(database, _sync_config());
-		}
-		$return{$_} = $result->{$_} for keys %$result;
-	}
-
-	$return{teams} = get_scratch_teams(database);
-	$return{page} = vars->{page},
-	$return{page}->{title} = 'Scratch Teams';
-	return template 'scratch-teams.tt', \%return;
-};
-
 any ['get', 'post'] => '/api/teams' => sub {
 	return encode_json(get_teams(database));
-};
-
-any ['get', 'post'] => '/teams' => sub {
-	my $return = {
-		teams => get_teams(database),
-		page => vars->{page},
-	};
-	$return->{page}->{enable_fancytable} = 1;
-	$return->{page}->{title} = 'Teams';
-	return template 'teams.tt', $return;
-};
-
-any ['get', 'post'] => '/team' => sub {
-	my $team = param('team');
-	if($team =~ m/^-?\d+$/){
-		redirect "/team/$team";
-	}else{
-		redirect "/teams";
-	}
 };
 
 any ['get', 'post'] => '/api/team/:team' => sub {
 	return encode_json(get_team(database, param('team')));
 };
 
-any ['get', 'post'] => '/team/:team' => sub {
-	my $return = {
-		page => vars->{page},
-		team => get_team(database, param('team') ),
-	};
-	$return->{page}->{title} = 'Team ' . $return->{team}->{team_name};
-	return template 'team.tt', $return;
-};
-
 any ['get', 'post'] => '/api/problems' => sub{
 	return encode_json( get_problems(database) );
 };
 
-any ['get', 'post'] => '/problems' => sub {
-	my $return = {
-		page => vars->{page},
-		problems => get_problems(database),
-	};
-	$return->{page}->{title} = 'problems';
-	return template 'problems.tt', $return;
-};
-
 # # # # # UTILITIES
-any ['get','post'] => '/admin' => sub {
-	my $sth = database->prepare("select name, value, notes from config");
-	my %return;
-	if(param('do') and param('do') eq 'crons'){
-		my $output = run_cronjobs(database, _sync_config());
-		$return{'done'} = 'Updated from felltrack: '.$output;
-		$return{page}->{time_since_last_felltrack_update} = '0h0m';
-		$return{page}->{seconds_since_last_felltrack_update} = '1';
-
-	}
-	if(param('do') and param('do') eq 'clear-database'){
-		clear_cache(database);
-		$return{'done'} = 'Cleared database tables';
-	}
-	if(param('update')){
-		my $sth_update = database->prepare("update config set value = ? where name = ?");
-
-		$sth->execute();
-		while (my $row = $sth->fetchrow_hashref()){
-			unless(param($row->{name}) eq $row->{value}){
-				debug("Updating config setting $row->{name} to '".param($row->{name})."' from '$row->{value}'");
-				push(@{$return{changes}}, "Updated $row->{name} to '".param($row->{name})."' from '$row->{value}'");
-				$sth_update->execute( param($row->{name}), $row->{name} );
-			}
-		}
-	}
-	$sth->execute();
-	$return{config} = $sth->fetchall_hashref('name');
-
-	$sth = database->prepare("select name, message,
-	                          date_format(time, \"%H:%i\") as time,
-	                          date_format( timediff(now(), time ), \"%kh%im\") as time_since
-				  from logs order by time desc");
-	$sth->execute();
-	while(my $row = $sth->fetchrow_hashref()){
-		push(@{ $return{logs} }, $row);
-	}
-
-	$return{page} = vars->{page};
-	$return{page}->{title} = 'Admin';
-	return template 'admin.tt', \%return;
-};
-
-any ['get', 'post'] => '/admin/checkpoints' => sub {
-	if(my $upload = request->upload('csv')){
-		import_checkpoints_csv(database, $upload->tempname);
-	}
-
-	my $return;
-	$return->{routes_cps} = get_routes_checkpoints(database);
-
-	$return->{page}->{title} = 'Checkpoint Admin';
-	return template 'admin_checkpoints.tt', $return;
-};
 
 any ['get', 'post'] => '/clear-cache' => sub {
 	clear_cache(database);
@@ -484,9 +226,9 @@ any ['get', 'post'] => '/cron' => sub {
 	return "Cronjobs done, you can now click 'back' to get back to where you were";
 };
 
-# Vue app shell - serves the SPA for '/' and any other non-API,
-# non-still-server-rendered path, so client-side routing survives a hard
-# refresh. Must stay last: every route above needs first-match priority.
+# Vue app shell - serves the SPA for every page (client-side routing then
+# takes over), so a hard refresh on any path still works. Must stay last:
+# every /api/* route above needs first-match priority over this.
 any ['get'] => qr{^(?!/api/).*} => sub {
 	send_file('index.html');
 };
