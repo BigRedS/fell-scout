@@ -35,4 +35,12 @@ ok(
 is($status->{stale_after_seconds}, 600, 'status: stale_after_seconds matches the threshold used elsewhere');
 ok(exists $status->{google_maps_url}, 'status: google_maps_url key is present (even if unset)');
 
+is($status->{incidents_enabled}, 1, 'status: incidents_enabled reflects the config default (on)');
+is($status->{retirements_enabled}, 1, 'status: retirements_enabled reflects the config default (on)');
+
+TestDB->seed_config(enable_incidents => '');
+my $status2 = decode_json( $test->request( GET '/api/status' )->content );
+is($status2->{incidents_enabled}, 0, 'status: incidents_enabled reflects config turned off');
+is($status2->{retirements_enabled}, 1, 'status: retirements_enabled is independent of incidents_enabled');
+
 done_testing();

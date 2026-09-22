@@ -83,4 +83,19 @@ my $id;
 	ok(!exists $incidents->{$id}, 'incident is gone after DELETE');
 }
 
+# --- disabled via config: the API refuses, not just the nav link hiding it ---
+{
+	TestDB->seed_config(enable_incidents => '');
+
+	my $get_res = $test->request( GET '/api/incidents' );
+	is($get_res->code, 403, '[GET /api/incidents] returns 403 when disabled');
+
+	my $post_res = json_request(\&POST, '/api/incidents', { type => 'Medical', description => 'test' });
+	is($post_res->code, 403, '[POST /api/incidents] returns 403 when disabled');
+
+	TestDB->seed_config(enable_incidents => 'on');
+	my $reenabled_res = $test->request( GET '/api/incidents' );
+	ok($reenabled_res->is_success, '[GET /api/incidents] works again once re-enabled');
+}
+
 done_testing();
