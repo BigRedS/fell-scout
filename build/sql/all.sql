@@ -34,7 +34,8 @@ CREATE TABLE `checkpoints` (
   `longitude` varchar(32) DEFAULT NULL,
   `what3words` tinytext DEFAULT NULL,
   `latitude` varchar(32) DEFAULT NULL,
-  `manager` varchar(64) DEFAULT NULL
+  `manager` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`checkpoint_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

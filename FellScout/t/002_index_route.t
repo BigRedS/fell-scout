@@ -17,13 +17,15 @@ use HTTP::Request::Common;
 use Ref::Util qw<is_coderef>;
 
 TestDB->reset;
-TestDB->insert_route('50km', [0, 1, 99]);
-TestDB->insert_team(team_number => 1, route => '50km', last_checkpoint => 1, current_leg => '1-99');
 
 my $app = FellScout->to_app;
 ok( is_coderef($app), 'Got app' );
 
 my $test = Plack::Test->create($app);
+
+# '/' is the Vue SPA shell (served by the catch-all route, via index.html
+# from the frontend build) - no DB-backed page data is rendered server-side
+# here any more, so nothing needs seeding.
 my $res  = $test->request( GET '/' );
 
 ok( $res->is_success, '[GET /] successful' ) or diag($res->content);

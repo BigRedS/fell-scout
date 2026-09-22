@@ -3,11 +3,20 @@ package FellScout::Data;
 use strict;
 use warnings;
 use Exporter 'import';
+use Text::CSV qw/csv/;
 use FellScout::Log qw(info error debug);
 
 our @EXPORT_OK = qw(
+	get_status
 	get_summary
 	get_laterunners
+	get_lateness_thresholds
+	get_routes_map
+	get_config
+	update_config
+	get_logs
+	get_routes_checkpoints
+	import_checkpoints_csv
 	get_legs
 	get_checkpoints
 	get_checkpoint_details
@@ -22,6 +31,165 @@ our @EXPORT_OK = qw(
 	get_scratch_teams
 	to_hh_mm
 );
+
+sub get_status{
+	my $dbh = shift;
+	my ($last_sync_epoch) = $dbh->selectrow_array(
+		"select unix_timestamp(time) from logs where name = 'periodic-jobs'"
+	);
+	return { last_sync_epoch => $last_sync_epoch };
+}
+
+# Ordered checkpoint-list-per-route plus a colour to draw it with, for the
+# Map page's polylines - the colour is simply cycled through a fixed
+# palette in route_name order, same as it always has been.
+sub get_routes_map{
+	my $dbh = shift;
+	my @colours = qw/red blue green yellow orange/;
+	my %routes;
+
+	my $sth = $dbh->prepare('select distinct route_name from routes order by route_name asc');
+	my $sth_cps = $dbh->prepare('select leg_to from routes where route_name = ? order by `index` asc');
+	$sth->execute();
+	while(my $row = $sth->fetchrow_hashref()){
+		my $route_name = $row->{route_name};
+		$routes{$route_name}->{colour} = $colours[ scalar(keys %routes) % scalar(@colours) ];
+		push(@{ $routes{$route_name}->{checkpoints} }, 0);
+		$sth_cps->execute($route_name);
+		while (my $cp = $sth_cps->fetchrow_hashref()){
+			push(@{ $routes{$route_name}->{checkpoints} }, $cp->{leg_to});
+		}
+	}
+	return \%routes;
+}
+
+sub get_routes_checkpoints{
+	my $dbh = shift;
+	my $routes_sth = $dbh->prepare('select distinct route_name from routes');
+	$routes_sth->execute();
+	my $cps_sth = $dbh->prepare('select leg_name from routes where route_name = ? order by `index` asc');
+
+	my %routes_cps;
+	while( my $row = $routes_sth->fetchrow_arrayref() ){
+		my $route = $row->[0];
+		$cps_sth->execute($route);
+		while( my $r = $cps_sth->fetchrow_arrayref() ){
+			my $cp = $r->[0];
+			$cp =~ s/^\d+-//;
+			push(@{$routes_cps{$route}}, $cp);
+		}
+	}
+	return \%routes_cps;
+}
+
+# Takes a path to an uploaded CSV (the caller's job to get it there - a
+# Dancer2 upload's own ->tempname is the normal case, so each request gets
+# its own file rather than every upload racing to write the same shared
+# path). Replaces every row in `checkpoints`, then rebuilds `routes` entirely
+# from the CSV's "[route name] leg distance" columns.
+sub import_checkpoints_csv{
+	my $dbh = shift;
+	my $csv_path = shift;
+
+	my $checkpoints = csv( in => $csv_path, encoding => 'UTF-8', detect_bom => 1 );
+	my $sth = $dbh->prepare(
+		"replace into checkpoints (checkpoint_number, description, manager, mobile, type, os_grid, latitude, longitude, what3words)
+		 values (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	);
+
+	my %routes;
+	my $num_checkpoints = 0;
+	foreach my $row (@$checkpoints){
+		my $cp = $row->{'cp'};
+		next unless $cp and $cp =~ m/\w+/;
+		$cp =~ s/CP//;
+		$cp =~ s/^0//;
+		$cp = 0 if $cp =~ m/Start/i;
+		$cp = 99 if $cp =~ m/Finish/i;
+		$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{latitude}, $row->{longitude}, $row->{what3words});
+		$num_checkpoints++;
+
+		foreach my $field (sort(keys(%{$row}))){
+			if ($field =~ /^(\S+) leg distance/){
+				my $route_name = lc($1);
+				if($row->{$field} =~ m/\d+/){
+					push(@{$routes{$route_name}}, $cp);
+				}
+			}
+		}
+	}
+
+	$dbh->do('delete from routes');
+	my $routes_sth = $dbh->prepare(
+		'insert into routes(`route_name`, `leg_name`, `leg_from`, `leg_to`, `index`) values (?, ?, ?, ?, ?)'
+	);
+	my $num_legs = 0;
+	foreach my $route (keys(%routes)){
+		my @cps = @{$routes{$route}};
+		for my $idx (0 .. $#cps){
+			my $leg_to = $cps[$idx + 1] // '99';
+			my $leg_name = $cps[$idx] . '-' . $leg_to;
+			next if $leg_name eq '99-99';
+			info("$route $leg_name $idx");
+			$routes_sth->execute($route, $leg_name, $cps[$idx], $leg_to, $idx);
+			$num_legs++;
+		}
+	}
+
+	return { checkpoints => $num_checkpoints, routes => scalar(keys(%routes)), legs => $num_legs };
+}
+
+sub get_config{
+	my $dbh = shift;
+	my $sth = $dbh->prepare("select name, value, notes from config");
+	$sth->execute();
+	return $sth->fetchall_hashref('name');
+}
+
+# Applies only the config values that actually changed, matching the old
+# /admin route's own "skip unless different" behaviour - returns a list of
+# human-readable change messages, same wording it used to build inline.
+sub update_config{
+	my $dbh = shift;
+	my $new_values = shift;
+	my $current = get_config($dbh);
+	my $sth_update = $dbh->prepare("update config set value = ? where name = ?");
+	my @changes;
+	foreach my $name (sort keys %$new_values){
+		next unless exists $current->{$name};
+		my $old_value = $current->{$name}->{value};
+		my $new_value = $new_values->{$name};
+		next if $new_value eq $old_value;
+		$sth_update->execute($new_value, $name);
+		push(@changes, "Updated $name to '$new_value' from '$old_value'");
+	}
+	return \@changes;
+}
+
+sub get_logs{
+	my $dbh = shift;
+	my $sth = $dbh->prepare('select name, message,
+	                          date_format(time, "%H:%i") as time,
+	                          date_format( timediff(now(), time ), "%kh%im") as time_since
+	                          from logs order by time desc');
+	$sth->execute();
+	my @logs;
+	while(my $row = $sth->fetchrow_hashref()){
+		push(@logs, $row);
+	}
+	return \@logs;
+}
+
+sub get_lateness_thresholds{
+	my $dbh = shift;
+	my $sth = $dbh->prepare("select name, value from config where name like 'lateness_percent_%'");
+	$sth->execute();
+	my %thresholds;
+	while(my $row = $sth->fetchrow_hashref()){
+		$thresholds{ $row->{name} } = $row->{value};
+	}
+	return \%thresholds;
+}
 
 #TODO: Better name or display for "furthest-back team" (it's actually the checkpoint the teams are at
 sub get_summary {
