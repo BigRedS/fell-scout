@@ -29,6 +29,10 @@ use FellScout::Data qw(
 	delete_scratch_team
 	update_scratch_team
 	get_scratch_teams
+	get_incidents
+	create_incident
+	update_incident
+	delete_incident
 	rows_to_csv
 );
 use FellScout::Sync qw(run_cronjobs);
@@ -172,6 +176,26 @@ any ['get'] => '/api/entrants/export' => sub{
 	response_header 'Content-Type' => 'text/csv';
 	response_header 'Content-Disposition' => 'attachment; filename="entrants.csv"';
 	return rows_to_csv(get_entrants(database));
+};
+
+# # # # # INCIDENTS
+
+any ['get'] => '/api/incidents' => sub{
+	return encode_json( get_incidents(database) );
+};
+
+any ['post'] => '/api/incidents' => sub{
+	my $body = decode_json( request->body || '{}' );
+	return encode_json( create_incident(database, $body) );
+};
+
+any ['put'] => '/api/incidents/:id' => sub{
+	my $body = decode_json( request->body || '{}' );
+	return encode_json( update_incident(database, param('id'), $body) );
+};
+
+any ['delete'] => '/api/incidents/:id' => sub{
+	return encode_json( delete_incident(database, param('id')) );
 };
 
 # # # # # TEAMS
