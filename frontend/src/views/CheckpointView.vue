@@ -4,15 +4,26 @@ import { useRoute } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../leafletIcons'
-import { getCheckpoint } from '../api/client'
+import { getCheckpoint, updateCheckpointStatus } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
+import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
 
 const route = useRoute()
 const checkpoint = ref(null)
 const mapEl = ref(null)
 let leafletMap = null
+
+// Editable draft state for the status form - kept separate from the
+// fetched data (like ScratchTeamsView/AdminView) so a background poll tick
+// can't wipe out an in-progress edit. Seeded once per checkpoint, not once
+// ever, since this component instance is reused when navigating between
+// checkpoints via CheckpointLink.
+const draftStatus = ref('open')
+const draftNotes = ref('')
+const savingStatus = ref(false)
+let statusDraftSeeded = false
 
 async function refresh() {
   checkpoint.value = await getCheckpoint(route.params.checkpoint)
@@ -27,6 +38,7 @@ watch(
       leafletMap.remove()
       leafletMap = null
     }
+    statusDraftSeeded = false
     refresh()
   },
 )
@@ -34,7 +46,13 @@ watch(
 const details = computed(() => checkpoint.value?.details ?? null)
 
 watch(details, (d) => {
-  if (!d || !d.latitude || !d.longitude || leafletMap) return
+  if (!d) return
+  if (!statusDraftSeeded) {
+    draftStatus.value = d.status
+    draftNotes.value = d.status_notes ?? ''
+    statusDraftSeeded = true
+  }
+  if (!d.latitude || !d.longitude || leafletMap) return
   nextTick(() => {
     leafletMap = L.map(mapEl.value).setView([d.latitude, d.longitude], 13)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -44,6 +62,18 @@ watch(details, (d) => {
     L.marker([d.latitude, d.longitude]).addTo(leafletMap)
   })
 })
+
+async function saveStatus() {
+  savingStatus.value = true
+  try {
+    checkpoint.value.details = await updateCheckpointStatus(route.params.checkpoint, {
+      status: draftStatus.value,
+      notes: draftNotes.value,
+    })
+  } finally {
+    savingStatus.value = false
+  }
+}
 
 onUnmounted(() => {
   if (leafletMap) leafletMap.remove()
@@ -63,6 +93,28 @@ function teamGroups(key) {
     <h1>Checkpoint {{ details.checkpoint_number }} Details</h1>
 
     <router-link :to="`/arrivals/${details.checkpoint_number}`">Arrivals Board</router-link>
+
+    <div class="d-flex align-items-center gap-2 flex-wrap my-3">
+      <CheckpointStatusBadge :status="details.status" />
+      <select v-model="draftStatus" class="form-select form-select-sm w-auto">
+        <option value="open">Open</option>
+        <option value="issue">Issue</option>
+        <option value="closed">Closed</option>
+      </select>
+      <input
+        v-model="draftNotes"
+        type="text"
+        class="form-control form-control-sm"
+        style="max-width: 20em"
+        placeholder="Notes (e.g. poor signal, heavy load)"
+      />
+      <button type="button" class="btn btn-primary btn-sm" :disabled="savingStatus" @click="saveStatus">
+        {{ savingStatus ? 'Saving…' : 'Save status' }}
+      </button>
+      <span v-if="details.status_updated_at" class="text-body-secondary small">
+        Last updated {{ details.status_updated_at }}
+      </span>
+    </div>
 
     <table class="table">
       <tbody>

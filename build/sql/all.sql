@@ -35,6 +35,11 @@ CREATE TABLE `checkpoints` (
   `what3words` tinytext DEFAULT NULL,
   `latitude` varchar(32) DEFAULT NULL,
   `manager` varchar(64) DEFAULT NULL,
+  -- Operational status, set by Control during the event - not touched by
+  -- the checkpoints CSV import, which only manages the columns above.
+  `status` varchar(10) NOT NULL DEFAULT 'open',
+  `status_notes` text DEFAULT NULL,
+  `status_updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`checkpoint_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

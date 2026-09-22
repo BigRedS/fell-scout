@@ -42,6 +42,10 @@ export function getArrivals(checkpoint) {
   return getJSON(`/api/arrivals/${checkpoint}`)
 }
 
+export function updateCheckpointStatus(checkpoint, { status, notes }) {
+  return sendJSON('PATCH', `/api/checkpoint/${checkpoint}/status`, { status, notes })
+}
+
 export function getCheckpoints() {
   return getJSON('/api/checkpoints')
 }

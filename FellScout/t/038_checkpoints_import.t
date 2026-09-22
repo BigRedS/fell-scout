@@ -11,6 +11,7 @@ BEGIN {
 }
 
 use FellScout;
+use FellScout::Data qw(update_checkpoint_status);
 use Test::More;
 use Plack::Test;
 use HTTP::Request::Common qw(GET POST);
@@ -82,6 +83,22 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 	# silently duplicate every checkpoint row instead of updating it.
 	my ($cp_row_count) = TestDB->dbh->selectrow_array('select count(*) from checkpoints');
 	is($cp_row_count, 4, 'import: re-importing the same CSV does not duplicate checkpoint rows either');
+}
+
+# --- re-importing must not reset an operational status Control has set ---
+{
+	update_checkpoint_status(TestDB->dbh, 1, 'closed', 'Bridge washed out');
+
+	my $req = POST(
+		'/api/checkpoints/import',
+		Content_Type => 'form-data',
+		Content      => [ csv => [$csv_path, 'checkpoints.csv'] ],
+	);
+	$test->request($req);
+
+	my $cp1 = TestDB->dbh->selectrow_hashref("select * from checkpoints where checkpoint_number = 1");
+	is($cp1->{status}, 'closed', 're-importing the CSV does not reset a checkpoint status Control set');
+	is($cp1->{status_notes}, 'Bridge washed out', '...or the notes that went with it');
 }
 
 # --- a request with no file is a 400, not a crash ---
