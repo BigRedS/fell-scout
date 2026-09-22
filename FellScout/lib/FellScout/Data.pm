@@ -981,12 +981,12 @@ sub get_incidents{
 sub create_incident{
 	my ($dbh, $fields) = @_;
 	my $sth = $dbh->prepare(
-		'insert into incidents (type, description, checkpoint_number, team_number, assigned_to, status)
+		'insert into incidents (type, description, checkpoint_number, team_number, owner, status)
 		 values (?, ?, ?, ?, ?, ?)'
 	);
 	$sth->execute(
 		$fields->{type}, $fields->{description}, $fields->{checkpoint_number} || undef,
-		$fields->{team_number} || undef, $fields->{assigned_to}, $fields->{status} || 'Open',
+		$fields->{team_number} || undef, $fields->{owner}, $fields->{status} || 'Open',
 	);
 	my $id = $dbh->last_insert_id(undef, undef, undef, undef);
 	return $dbh->selectrow_hashref('select * from incidents where id = ?', undef, $id);
@@ -996,11 +996,11 @@ sub update_incident{
 	my ($dbh, $id, $fields) = @_;
 	my $sth = $dbh->prepare(
 		'update incidents set type = ?, description = ?, checkpoint_number = ?, team_number = ?,
-		   assigned_to = ?, status = ? where id = ?'
+		   owner = ?, status = ? where id = ?'
 	);
 	$sth->execute(
 		$fields->{type}, $fields->{description}, $fields->{checkpoint_number} || undef,
-		$fields->{team_number} || undef, $fields->{assigned_to}, $fields->{status}, $id,
+		$fields->{team_number} || undef, $fields->{owner}, $fields->{status}, $id,
 	);
 	return $dbh->selectrow_hashref('select * from incidents where id = ?', undef, $id);
 }
