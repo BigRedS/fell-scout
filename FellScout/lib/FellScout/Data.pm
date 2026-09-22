@@ -30,6 +30,10 @@ our @EXPORT_OK = qw(
 	delete_scratch_team
 	update_scratch_team
 	get_scratch_teams
+	get_incidents
+	create_incident
+	update_incident
+	delete_incident
 	to_hh_mm
 	rows_to_csv
 );
@@ -961,6 +965,46 @@ sub get_scratch_teams{
 		$teams{ $team->{team_number} }->{entrants} = join(' ', @entrants);
 	}
 	return \%teams;
+}
+
+sub get_incidents{
+	my $dbh = shift;
+	my $sth = $dbh->prepare('select * from incidents order by created_at desc');
+	$sth->execute();
+	return $sth->fetchall_hashref('id');
+}
+
+sub create_incident{
+	my ($dbh, $fields) = @_;
+	my $sth = $dbh->prepare(
+		'insert into incidents (type, description, checkpoint_number, team_number, assigned_to, status)
+		 values (?, ?, ?, ?, ?, ?)'
+	);
+	$sth->execute(
+		$fields->{type}, $fields->{description}, $fields->{checkpoint_number} || undef,
+		$fields->{team_number} || undef, $fields->{assigned_to}, $fields->{status} || 'Open',
+	);
+	my $id = $dbh->last_insert_id(undef, undef, undef, undef);
+	return $dbh->selectrow_hashref('select * from incidents where id = ?', undef, $id);
+}
+
+sub update_incident{
+	my ($dbh, $id, $fields) = @_;
+	my $sth = $dbh->prepare(
+		'update incidents set type = ?, description = ?, checkpoint_number = ?, team_number = ?,
+		   assigned_to = ?, status = ? where id = ?'
+	);
+	$sth->execute(
+		$fields->{type}, $fields->{description}, $fields->{checkpoint_number} || undef,
+		$fields->{team_number} || undef, $fields->{assigned_to}, $fields->{status}, $id,
+	);
+	return $dbh->selectrow_hashref('select * from incidents where id = ?', undef, $id);
+}
+
+sub delete_incident{
+	my ($dbh, $id) = @_;
+	$dbh->prepare('delete from incidents where id = ?')->execute($id);
+	return { successes => ["Deleted incident $id"] };
 }
 
 # We have two formats for times. A time is always represented as

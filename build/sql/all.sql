@@ -286,3 +286,23 @@ commit;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
 -- Dump completed on 2025-10-15 22:16:14
+
+--
+-- Table structure for table `incidents`
+--
+-- Added for the pre-event Control-tooling push (2026) - not part of the
+-- original mysqldump above, so no FK to checkpoints/teams, matching this
+-- schema's existing loose-reference convention (e.g. entrants.team).
+
+CREATE TABLE `incidents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) NOT NULL,
+  `description` text DEFAULT NULL,
+  `checkpoint_number` int(11) DEFAULT NULL,
+  `team_number` int(11) DEFAULT NULL,
+  `assigned_to` varchar(64) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Open',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
