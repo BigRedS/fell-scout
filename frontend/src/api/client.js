@@ -46,6 +46,22 @@ export function updateCheckpointStatus(checkpoint, { status, notes }) {
   return sendJSON('PATCH', `/api/checkpoint/${checkpoint}/status`, { status, notes })
 }
 
+export function getIncidents() {
+  return getJSON('/api/incidents')
+}
+
+export function createIncident(fields) {
+  return sendJSON('POST', '/api/incidents', fields)
+}
+
+export function updateIncident(id, fields) {
+  return sendJSON('PUT', `/api/incidents/${id}`, fields)
+}
+
+export function deleteIncident(id) {
+  return sendJSON('DELETE', `/api/incidents/${id}`)
+}
+
 export function getCheckpoints() {
   return getJSON('/api/checkpoints')
 }
