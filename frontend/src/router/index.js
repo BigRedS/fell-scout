@@ -14,6 +14,7 @@ import ScratchTeamsView from '../views/ScratchTeamsView.vue'
 import AdminView from '../views/AdminView.vue'
 import AdminCheckpointsView from '../views/AdminCheckpointsView.vue'
 import IncidentsView from '../views/IncidentsView.vue'
+import RetirementsView from '../views/RetirementsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,6 +108,12 @@ const router = createRouter({
       name: 'incidents',
       component: IncidentsView,
       meta: { title: 'Incidents' },
+    },
+    {
+      path: '/retirements',
+      name: 'retirements',
+      component: RetirementsView,
+      meta: { title: 'Retirements' },
     },
   ],
 })

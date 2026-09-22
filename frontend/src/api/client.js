@@ -62,6 +62,22 @@ export function deleteIncident(id) {
   return sendJSON('DELETE', `/api/incidents/${id}`)
 }
 
+export function getRetirements() {
+  return getJSON('/api/retirements')
+}
+
+export function createRetirement(fields) {
+  return sendJSON('POST', '/api/retirements', fields)
+}
+
+export function updateRetirement(id, fields) {
+  return sendJSON('PUT', `/api/retirements/${id}`, fields)
+}
+
+export function deleteRetirement(id) {
+  return sendJSON('DELETE', `/api/retirements/${id}`)
+}
+
 export function getCheckpoints() {
   return getJSON('/api/checkpoints')
 }

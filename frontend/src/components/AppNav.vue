@@ -63,6 +63,7 @@ const navLinks = [
   { label: 'Legs', to: '/legs' },
   { label: 'Entrants', to: '/entrants' },
   { label: 'Incidents', to: '/incidents' },
+  { label: 'Retirements', to: '/retirements' },
   { label: 'Admin', to: '/admin' },
 ]
 </script>

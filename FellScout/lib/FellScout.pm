@@ -33,6 +33,10 @@ use FellScout::Data qw(
 	create_incident
 	update_incident
 	delete_incident
+	get_retirements
+	create_retirement
+	update_retirement
+	delete_retirement
 	rows_to_csv
 );
 use FellScout::Sync qw(run_cronjobs);
@@ -196,6 +200,26 @@ any ['put'] => '/api/incidents/:id' => sub{
 
 any ['delete'] => '/api/incidents/:id' => sub{
 	return encode_json( delete_incident(database, param('id')) );
+};
+
+# # # # # RETIREMENTS
+
+any ['get'] => '/api/retirements' => sub{
+	return encode_json( get_retirements(database) );
+};
+
+any ['post'] => '/api/retirements' => sub{
+	my $body = decode_json( request->body || '{}' );
+	return encode_json( create_retirement(database, $body) );
+};
+
+any ['put'] => '/api/retirements/:id' => sub{
+	my $body = decode_json( request->body || '{}' );
+	return encode_json( update_retirement(database, param('id'), $body) );
+};
+
+any ['delete'] => '/api/retirements/:id' => sub{
+	return encode_json( delete_retirement(database, param('id')) );
 };
 
 # # # # # TEAMS
