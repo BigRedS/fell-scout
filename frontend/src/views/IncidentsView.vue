@@ -10,6 +10,14 @@ const INCIDENT_TYPES = ['Medical', 'Lost', 'Behavioural', 'Transport', 'Other']
 const STATUSES = ['Open', 'In Progress', 'Resolved']
 
 const incidents = ref(null)
+// Per-row editable owner text, kept separate from fetched data so a
+// background poll tick can't clobber an in-progress edit - same pattern as
+// RetirementsView's vehicle field. Incidents often outlive a single shift,
+// so who owns one needs to change without recreating it - this is free
+// text, not a login/user reference (there's no per-person account system,
+// and deliberately isn't going to be one - "owner" is whoever currently has
+// it, by name, not a picker of registered users).
+const ownerDrafts = ref({})
 
 // The nav already hides the link when this feature's off, but someone can
 // still navigate here directly (bookmark, back button) - check first rather
@@ -27,7 +35,11 @@ async function checkFeatureEnabled() {
 
 async function refresh() {
   if (!(await checkFeatureEnabled())) return
-  incidents.value = await getIncidents()
+  const data = await getIncidents()
+  incidents.value = data
+  for (const id of Object.keys(data)) {
+    if (!(id in ownerDrafts.value)) ownerDrafts.value[id] = data[id].owner ?? ''
+  }
 }
 
 usePolling(refresh, 10000)
@@ -39,7 +51,7 @@ const newIncident = ref({
   description: '',
   checkpoint_number: '',
   team_number: '',
-  assigned_to: '',
+  owner: '',
 })
 
 async function addIncident() {
@@ -48,12 +60,17 @@ async function addIncident() {
     checkpoint_number: newIncident.value.checkpoint_number || null,
     team_number: newIncident.value.team_number || null,
   })
-  newIncident.value = { type: 'Medical', description: '', checkpoint_number: '', team_number: '', assigned_to: '' }
+  newIncident.value = { type: 'Medical', description: '', checkpoint_number: '', team_number: '', owner: '' }
   await refresh()
 }
 
 async function setStatus(row, status) {
   await updateIncident(row.id, { ...row, status })
+  await refresh()
+}
+
+async function saveOwner(row) {
+  await updateIncident(row.id, { ...row, owner: ownerDrafts.value[row.id] })
   await refresh()
 }
 
@@ -68,7 +85,7 @@ const columns = [
   { key: 'description', label: 'Description', value: (row) => row.description },
   { key: 'checkpoint', label: 'Checkpoint', value: (row) => row.checkpoint_number, numeric: true },
   { key: 'team', label: 'Team', value: (row) => row.team_number, numeric: true },
-  { key: 'assigned_to', label: 'Assigned To', value: (row) => row.assigned_to },
+  { key: 'owner', label: 'Owner', value: (row) => row.owner },
   { key: 'status', label: 'Status', value: (row) => row.status },
   { key: 'created_at', label: 'Created', value: (row) => row.created_at },
   { key: 'actions', label: '', value: () => '' },
@@ -103,7 +120,7 @@ const columns = [
         <input v-model="newIncident.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
       </div>
       <div class="col-auto">
-        <input v-model="newIncident.assigned_to" type="text" class="form-control form-control-sm" placeholder="Assigned to" />
+        <input v-model="newIncident.owner" type="text" class="form-control form-control-sm" placeholder="Owner" />
       </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-primary btn-sm">Log incident</button>
@@ -124,6 +141,12 @@ const columns = [
       </template>
       <template #team="{ row }">
         <TeamLink v-if="row.team_number" :team-number="row.team_number" />
+      </template>
+      <template #owner="{ row }">
+        <div class="d-flex gap-1">
+          <input v-model="ownerDrafts[row.id]" type="text" class="form-control form-control-sm" style="width: 10em" />
+          <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveOwner(row)">Save</button>
+        </div>
       </template>
       <template #status="{ row }">
         <select

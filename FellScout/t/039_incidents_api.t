@@ -43,12 +43,13 @@ my $id;
 {
 	my $res = json_request(\&POST, '/api/incidents', {
 		type => 'Medical', description => 'Twisted ankle', checkpoint_number => 3,
-		team_number => 5, assigned_to => 'First Aid Team',
+		team_number => 5, owner => 'First Aid Team',
 	});
 	ok($res->is_success, '[POST /api/incidents] successful') or diag($res->status_line, "\n", $res->content);
 
 	my $incident = decode_json($res->content);
 	is($incident->{type}, 'Medical', 'created incident: type');
+	is($incident->{owner}, 'First Aid Team', 'created incident: owner');
 	is($incident->{status}, 'Open', 'created incident: defaults to Open status');
 	ok($incident->{id}, 'created incident: has an id');
 	$id = $incident->{id};
@@ -66,12 +67,24 @@ my $id;
 {
 	my $res = json_request(\&PUT, "/api/incidents/$id", {
 		type => 'Medical', description => 'Twisted ankle', checkpoint_number => 3,
-		team_number => 5, assigned_to => 'First Aid Team', status => 'Resolved',
+		team_number => 5, owner => 'First Aid Team', status => 'Resolved',
 	});
 	ok($res->is_success, '[PUT /api/incidents/:id] successful') or diag($res->status_line, "\n", $res->content);
 
 	my $incidents = decode_json( $test->request( GET '/api/incidents' )->content );
 	is($incidents->{$id}->{status}, 'Resolved', 'incident status updated');
+}
+
+# --- PUT /api/incidents/:id (owner changes across a shift handover) ---
+{
+	my $res = json_request(\&PUT, "/api/incidents/$id", {
+		type => 'Medical', description => 'Twisted ankle', checkpoint_number => 3,
+		team_number => 5, owner => 'Night Shift Medic', status => 'Resolved',
+	});
+	ok($res->is_success, '[PUT /api/incidents/:id] owner handover successful') or diag($res->status_line, "\n", $res->content);
+
+	my $incidents = decode_json( $test->request( GET '/api/incidents' )->content );
+	is($incidents->{$id}->{owner}, 'Night Shift Medic', 'owner is independently updateable, not just set at creation');
 }
 
 # --- DELETE /api/incidents/:id ---
