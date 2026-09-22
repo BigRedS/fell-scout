@@ -6,12 +6,22 @@ import { ref, computed, unref } from 'vue'
 // numeric? }]. `value(row)` is used for both sorting and searching, so any
 // cell can render something richer (a link, a badge) via a scoped slot in
 // SortableTable.vue while still sorting/searching on the underlying value.
+//
+// `filterableKeys` (optional) names a subset of columns to also get a
+// dropdown filter (exact-match on `value(row)`, stringified) - opt-in, so
+// existing callers that don't pass it are unaffected.
 export function useSortableTable(rows, columns, options = {}) {
-  const { defaultSortColumn = 0, defaultSortOrder = 'asc', searchable = true } = options
+  const {
+    defaultSortColumn = 0,
+    defaultSortOrder = 'asc',
+    searchable = true,
+    filterableKeys = [],
+  } = options
 
   const sortColumn = ref(defaultSortColumn)
   const sortOrder = ref(defaultSortOrder)
   const searchTerm = ref('')
+  const filters = ref({}) // column key -> selected value; '' means "All"
 
   function setSort(index) {
     if (sortColumn.value === index) {
@@ -22,11 +32,35 @@ export function useSortableTable(rows, columns, options = {}) {
     }
   }
 
+  const filterableColumns = computed(() => columns.filter((col) => filterableKeys.includes(col.key)))
+
+  // Options are computed from the full row set, not the already-filtered
+  // one, so picking a value in one dropdown doesn't make other dropdowns'
+  // options disappear.
+  const filterOptions = computed(() => {
+    const options = {}
+    for (const col of filterableColumns.value) {
+      const values = new Set(unref(rows).map((row) => String(col.value(row) ?? '')))
+      options[col.key] = [...values].sort()
+    }
+    return options
+  })
+
+  const filteredByDropdowns = computed(() => {
+    let result = unref(rows)
+    for (const col of filterableColumns.value) {
+      const selected = filters.value[col.key]
+      if (selected) {
+        result = result.filter((row) => String(col.value(row) ?? '') === selected)
+      }
+    }
+    return result
+  })
+
   const filteredRows = computed(() => {
-    const allRows = unref(rows)
-    if (!searchable || !searchTerm.value.trim()) return allRows
+    if (!searchable || !searchTerm.value.trim()) return filteredByDropdowns.value
     const term = searchTerm.value.toLowerCase()
-    return allRows.filter((row) =>
+    return filteredByDropdowns.value.filter((row) =>
       columns.some((col) => String(col.value(row) ?? '').toLowerCase().includes(term)),
     )
   })
@@ -43,5 +77,15 @@ export function useSortableTable(rows, columns, options = {}) {
     })
   })
 
-  return { sortColumn, sortOrder, searchTerm, searchable, setSort, sortedRows }
+  return {
+    sortColumn,
+    sortOrder,
+    searchTerm,
+    searchable,
+    setSort,
+    sortedRows,
+    filters,
+    filterableColumns,
+    filterOptions,
+  }
 }
