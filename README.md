@@ -135,7 +135,14 @@ cd into the repo, then do:
 
     cp .env.example .env
 
-and set a real root db password in .env, then
+and set a real root db password in .env, then build the frontend (the
+Dockerfile just copies `FellScout/` as-is, so `FellScout/public/index.html`
+and `FellScout/public/assets/` need to already exist on disk - they're
+gitignored build output, not checked in):
+
+    cd frontend && npm install && npm run build && cd ..
+
+then
 
     docker-compose build
     docker-compose up
@@ -188,6 +195,13 @@ Now click the `Update from Felltrack` link at the bottom of the page, and have a
 
 ## Dev tips
 
+### Frontend
+
+The Summary page (`/`) is a Vue 3 SPA living in `frontend/`, consuming the
+backend's `/api/*` JSON endpoints; everything else is still server-rendered
+by Dancer2/Template::Toolkit as before. See `frontend/README.md` for the
+dev-server/build workflow.
+
 ### Running the tests
 
     cd FellScout
@@ -199,7 +213,7 @@ from `build/sql/all.sql`
 
 ### Running without Docker Compose
 * Create a database to suit the details in the top of `run.sh` and `build.sh`
-* Put a `progress.csv` downloaded from FellTrack in the root of the repo. Link to `example-progress.csv` to use an anoymised one from 2023.
+* Put a `progress.csv` downloaded from FellTrack in the root of the repo. Link to `example-progress.csv` to use an anonymised one from a real past event (names/team names replaced, everything else - routes, checkpoint times - left as-is).
 * From the root of the repo run `./un.sh` to bring up the webapp on port `5001`.
 * Run (or cron) `./update.sh` to run the process to update from the CSV file to the DB.
 

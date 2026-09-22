@@ -1,0 +1,5 @@
+cp,description,checkpoint manager,mobile,type of checkpoint,what3words,grid reference,latitude,longitude,50km Leg distance,30km Leg distance
+Start,Start Field,Alice,07000000001,tent,three.word.start,SD123456,54.1,-2.1,0,0
+CP1,Checkpoint One,Bob,07000000002,tent,three.word.one,SD123457,54.2,-2.2,5,5
+CP2,Checkpoint Two,Carol,07000000003,building,three.word.two,SD123458,54.3,-2.3,3,
+Finish,Finish Field,Dave,07000000004,tent,three.word.finish,SD123459,54.4,-2.4,4,2
