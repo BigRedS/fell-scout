@@ -20,6 +20,7 @@ perl -I"$REPO_ROOT/FellScout/lib" -I"$REPO_ROOT/FellScout/t/lib" \
 	-MTestDB -MFellScout::Data=import_checkpoints_csv \
 	-e '
 		TestDB->reset;
+		TestDB->seed_config(dev_mode => "on");
 		import_checkpoints_csv(TestDB->dbh, shift);
 	' "$REPO_ROOT/s50-example-checkpoints.csv"
 

@@ -1,6 +1,6 @@
 create database if not exists fellscout;
 use fellscout;
-/*M!999999\- enable the sandbox mode */ 
+/*M!999999\- enable the sandbox mode */
 -- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -212,7 +212,7 @@ CREATE TABLE `teams` (
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
 -- Dump completed on 2025-10-15 22:16:14
-/*M!999999\- enable the sandbox mode */ 
+/*M!999999\- enable the sandbox mode */
 -- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: fellscout-dev
@@ -270,10 +270,11 @@ INSERT INTO `config` VALUES
 ('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
 ('google_maps_url','','address of the route on Google Maps route'),
-('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint'),
+('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint. This is silently overriden by \'dev_mode\''),
 ('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
 ('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
-('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests');
+('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests'),
+('dev_mode','','Set to \'on\' to override the date with today\'s date. This will silently break \'event_start_date\'');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
