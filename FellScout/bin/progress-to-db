@@ -4,6 +4,7 @@ use warnings;
 use Data::Dumper;
 use Text::CSV qw/csv/;
 use Time::Local;
+use Time::Piece;
 use Cwd;
 use DBI;
 use 5.032;
@@ -44,6 +45,11 @@ sub run {
 	# datetime.
 	# Rather than do that, here we just read what the first day is from the db
 	my $start;
+	# dev-mode sets the event-start to the current day always, so the example progress.csv always works
+	# as long as you're not devving between 00:00 and about 06:00
+	if($config->{dev_mode}->{value} and $config->{dev_mode}->{value} eq 'on'){
+		$config->{event_start_date}->{value} = localtime->strftime('%Y-%m-%d');
+	}
 	if($config->{event_start_date}->{value} and $config->{event_start_date}->{value} =~ m/(\d\d\d\d)-(\d\d)-(\d\d)/){
 		my($y,$m,$d) = ($1,$2,$3);
 		$m = $m - 1;
