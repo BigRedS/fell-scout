@@ -155,5 +155,19 @@ sub seed_default_route {
 	ok(defined $entrant, 'future_checkpoint.csv: entrant row still written');
 	is($entrant->{last_checkpoint}, undef, 'future_checkpoint.csv: the future checkpoint was skipped, so no checkpoint is recorded');
 }
+# ---- dev_mode should set the event-start-date to whatever today's date is
+{
+	TestDB->reset;
+	seed_default_route();
+	TestDB->seed_config(event_start_date => '2000-01-01', 'dev_mode' => 'on');
 
+	my ($exit, $output) = run_progress_to_db('normal.csv');
+	is($exit, 0, 'dev_mode: script exits 0') or diag($output);
+
+	my $today = strftime('%Y-%m-%d', localtime);
+	my ($cp_date) = TestDB->dbh->selectrow_array(
+		"select date(last_checkpoint_time) from entrants where code = '1A'"
+	);
+	is($cp_date, $today, 'dev_mode: entrant checkpoint date is overriden to today');
+}
 done_testing();
