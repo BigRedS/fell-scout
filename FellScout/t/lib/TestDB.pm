@@ -16,7 +16,7 @@ use constant {
 };
 
 my @TABLES = qw(
-	checkpoints checkpoints_teams checkpoints_teams_predictions config
+	checkpoints checkpoints_teams checkpoints_teams_predictions
 	entrants legs logs routes
 	scratch_team_entrants scratch_teams teams
 	incidents retirements
@@ -46,6 +46,7 @@ my %BASELINE_CONFIG = (
 	time_shift_events            => '0:00',
 	enable_incidents             => 'on',
 	enable_retirements           => 'on',
+	dev_mode                     => '',
 );
 
 my $dbh;
@@ -102,7 +103,7 @@ sub reset {
 sub seed_config {
 	my ($class, %overrides) = @_;
 	my %config = (%BASELINE_CONFIG, %overrides);
-	my $sth = $class->dbh->prepare("replace into config (name, value) values (?, ?)");
+	my $sth = $class->dbh->prepare("insert into config (name, value) values (?, ?) on duplicate key update value = values(value)");
 	foreach my $name (keys %config) {
 		$sth->execute($name, $config{$name});
 	}
