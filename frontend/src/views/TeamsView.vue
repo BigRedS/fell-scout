@@ -58,7 +58,6 @@ const columns = [
     reasonable estimate to be calculated. Similarly, teams towards the front will have no estimate
     for their next checkpoint if not many other teams have already got there.
   </p>
-  <p>Use the search box to search by any field of the table, and click the column headers to sort the table by that field.</p>
 
   <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
     <form class="d-flex align-items-center gap-2" @submit.prevent="goToTeam">
