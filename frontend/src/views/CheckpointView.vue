@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../leafletIcons'
+import { addFullscreenControl } from '../leafletFullscreen'
 import { getCheckpoint, updateCheckpointStatus } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
@@ -55,6 +56,7 @@ watch(details, (d) => {
   if (!d.latitude || !d.longitude || leafletMap) return
   nextTick(() => {
     leafletMap = L.map(mapEl.value).setView([d.latitude, d.longitude], 13)
+    addFullscreenControl(leafletMap)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -217,7 +219,7 @@ function teamGroups(key) {
 
     <template v-if="details.latitude && details.longitude">
       <h2>Map</h2>
-      <div ref="mapEl" style="height: 300px"></div>
+      <div ref="mapEl" class="map-responsive map-small"></div>
     </template>
   </template>
 </template>

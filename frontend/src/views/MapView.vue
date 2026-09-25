@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../leafletIcons'
+import { addFullscreenControl } from '../leafletFullscreen'
 import { getCheckpoints, getMapRoutes } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
@@ -80,6 +81,7 @@ watch([checkpoints, routes], ([cps, routeMap]) => {
 
   nextTick(() => {
     leafletMap = L.map(mapEl.value).setView(center, 12)
+    addFullscreenControl(leafletMap)
 
     for (const routeName of Object.keys(routeMap)) {
       const points = routeMap[routeName].checkpoints.map(coordsOf).filter((c) => c)
@@ -144,7 +146,7 @@ function goToCheckpoint() {
     <button type="submit" class="btn btn-primary btn-sm">Go</button>
   </form>
 
-  <div ref="mapEl" style="height: 800px"></div>
+  <div ref="mapEl" class="map-responsive"></div>
   <p v-if="checkpoints && !checkpointIdsSorted.map(coordsOf).some((c) => c)" class="text-body-secondary mt-2">
     No checkpoints have coordinates set yet - nothing to draw on the map.
   </p>

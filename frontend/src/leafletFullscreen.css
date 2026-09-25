@@ -1,0 +1,29 @@
+/* The `vh` line is the fallback for browsers without `dvh`; `dvh` tracks the
+   visible viewport on phones, where the URL bar collapsing would otherwise
+   leave a gap or overflow. */
+.map-responsive {
+  height: 75vh;
+  height: 75dvh;
+  min-height: 300px;
+}
+
+.map-responsive.map-small {
+  height: 40vh;
+  height: 40dvh;
+  min-height: 250px;
+  max-height: 500px;
+}
+
+/* Must come after the rules above so it wins over both sizes. z-index sits
+   over the sticky Bootstrap navbar (1020) and Leaflet's own panes/controls
+   (up to 1000). `position` needs !important because Leaflet sets an inline
+   `position: relative` on its container when the map is created, which a
+   plain class rule can't override. */
+.map-responsive.map-fullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: 2000;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+}
