@@ -1,473 +1,473 @@
-Number,Name,Team,Route,Main start,CP01,CP02,CP03,CP04,CP05,CP06,CP07,CP08,CP09,CP10,CP11,CP12,CP13,CP14,CP15,CP16,CP17,CP18,The finish,Waiting time,Complete,Total time,Extra field 1,Extra field 2,Extra field 3
-1A,Gray Yates,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:28,14:13,16:31,18:22,20:01,21:19,22:35,23:22,23:55,00:13,,1,18:13:12,GLN,10th Edmonton,
-1B,Uma Lane,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:27,14:12,16:31,18:22,20:01,21:19,22:35,23:22,23:55,00:13,,1,18:12:50,GLN,10th Edmonton,
-1D,Jesse Dawson,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:28,14:13,16:31,18:22,20:01,21:19,22:35,23:23,23:55,00:13,,1,18:13:04,GLN,10th Edmonton,
-2A,Morgan Yates,Hertfordshire Hobblers,50mile,06:02,06:29,,07:04,08:33,09:31,10:18,11:01,11:33,12:43,13:37,14:14,16:31,18:47,20:09,21:23,22:35,23:13,23:39,23:52,,1,17:49:59,Hertfordshire,Potters Bar & District,
-2B,Parker Irving,Hertfordshire Hobblers,50mile,06:02,06:29,,07:05,08:33,09:31,10:18,11:01,11:32,12:43,13:37,14:14,16:31,18:47,20:10,21:22,22:35,23:13,23:38,23:52,,1,17:49:54,Hertfordshire,Potters Bar & District,
-2C,Logan Turner,Hertfordshire Hobblers,50mile,06:02,06:29,,07:05,08:33,09:31,10:19,11:02,11:33,12:43,13:37,14:14,16:31,18:47,20:09,21:23,22:35,23:13,23:39,23:52,,1,17:50:01,Hertfordshire,Potters Bar & District,
-3A,Parker Holt,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:15,11:13,11:57,12:28,14:24,15:48,16:54,18:00,19:01,19:39,20:07,20:20,,1,14:16:09,Coventry,Trident Phoenix Explorers,
-3B,Yael Zimmer,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:14,11:13,11:56,12:29,14:23,15:48,16:53,17:59,19:01,19:39,20:06,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
-3C,Casey Underwood,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:14,11:13,11:57,12:28,14:24,15:47,16:54,18:00,19:01,19:38,20:07,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
-3D,Toby Underwood,Old guns,50mile,06:04,06:28,,M06:58,08:06,08:48,09:20,09:56,10:14,11:13,11:57,12:28,14:24,15:47,16:53,17:59,19:01,19:39,20:07,20:20,,1,14:16:03,Coventry,Trident Phoenix Explorers,
-3E,Yael Kemp,Old guns,50mile,06:04,06:28,,M06:58,08:06,08:48,09:20,09:56,10:14,11:13,11:56,12:28,14:23,15:46,16:53,17:59,19:01,19:38,20:07,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
-4A,Dana Quincey,Scrambled Legs,50mile,06:34,M06:59,,07:34,M08:55,09:45,10:21,11:08,11:32,12:41,13:33,14:14,17:34,19:48,21:48,23:37,01:34,02:36,03:41,04:10,,1,21:35:54,Bedfordshire,Leagrave Scout Group,
-4C,Dana Irving,Scrambled Legs,50mile,06:34,M06:59,,07:34,M08:55,09:45,10:21,11:08,11:32,12:41,13:32,14:14,17:34,19:48,21:47,23:36,01:34,02:37,03:41,04:10,,1,21:36:06,Bedfordshire,Leagrave Scout Group,
-5A,Jesse Wade,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:46,11:55,12:33,14:58,16:53 R,,,,,,,,,,,0,10:41:24,GLN,Argo Explorers,50MU25
-5B,Jesse Underwood,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:53 R,,,,,,,,,,,0,10:41:12,GLN,Argo Explorers,50MU25
-5C,Val Nash,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:53,,,,,17:23,18:47,19:40,20:10,20:26,,1,14:14:08,GLN,Argo Explorers,50MU25
-5D,Zion Vance,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:54,,,,,17:22,18:47,19:40,20:10,20:26,,1,14:13:58,GLN,Argo Explorers,50MU25
-6A,Riley Jarrett,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:25,12:42,13:38,14:20,17:02,19:25,21:01,22:52 R,,,,,,0,16:42:00,GLNE,Hornchurch district,
-6B,Dana Wade,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:24,12:42,13:39,14:20,17:02,19:25,21:01,22:52 R,,,,,,0,16:42:28,GLNE,Hornchurch district,
-6C,Toby Pratt,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:24,12:42,13:38,14:20,17:01,19:25,21:02,22:52,00:43,01:33,02:17,02:45,,1,20:35:08,GLNE,Hornchurch district,
-7A,Quinn Nash,Marple Network 3,50mile,06:12,06:38,,07:16,08:44,09:33,10:10,11:05,11:31,12:44,13:52,14:42,17:34,19:48,21:50,23:36,01:34,02:38,03:42,04:09,,1,21:57:29,Greater Manchester,1st Marple Network,50MU25
-7B,Casey Pratt,Marple Network 3,50mile,06:12,06:37,,07:16,08:44,09:33,10:10,11:04,11:31,12:44,13:52,14:42,17:34,19:48,21:47,23:36,01:32,02:36,03:41,04:09,,1,21:57:23,Greater Manchester,1st Marple Network,50MU25
-7D,Indigo Gibbs,Marple Network 3,50mile,06:12,06:37,,07:16,08:44,09:32,10:10,11:04,11:31,12:44,13:51,14:42,17:34,19:48,21:47,23:36,01:32,02:36,03:41,04:09,,1,21:57:24,Greater Manchester,1st Marple Network,50MU25
-8A,Noel Evans,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:01,16:22,18:32,20:09,21:31,22:39,23:24,00:06,00:24,,1,18:03:29,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
-8B,Alex Vance,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:00,16:22,18:32,20:09,21:31,22:39,23:24,00:05,00:24,,1,18:03:13,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
-8C,Ellis Carter,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:01,16:23,18:32,20:09,21:32,22:39,23:24,00:06,00:24,,1,18:03:50,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
-8D,Indigo Turner,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:34,13:26,14:02,16:22,18:32,20:09,21:31,22:39,23:24,00:05,00:24,,1,18:03:37,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
-9A,Harper Jarrett,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:45,10:32,11:30,11:56,13:33,14:36,15:19,18:17,20:42,22:29,00:24,02:20,03:33,04:27,04:46,,1,22:30:23,GLMW,Pioneers ESU,
-9B,Gray Sharp,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:20,18:17,20:42,22:28,00:23,02:20,03:33,04:27,04:46,,1,22:30:16,GLMW,Pioneers ESU,
-9C,Logan Vance,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:19,18:17,20:43,22:29 R,,,,,,,0,16:13:06,GLMW,Pioneers ESU,
-9D,Toby Marsh,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:20,18:17,20:43,22:29,00:23,02:20,03:34,04:27,04:46,,1,22:30:05,GLMW,Pioneers ESU,
-10A,Jesse Farley,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:36,10:16,11:01,11:25,12:35,13:25,14:02,16:22,18:13,19:37,21:03,22:16,23:05,23:38,23:56,,1,17:33:28,Devon,1st Plympton,
-10B,Harper Underwood,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:37,10:17,11:01,11:25,12:35,13:25,14:02,16:23,18:13,19:37,21:03,22:17,23:06,23:38,23:56,,1,17:33:25,Devon,1st Plympton,
-10C,Parker Turner,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:37,10:17,11:03,11:25,12:35,13:25,14:05,16:23,18:14,19:37,21:04,22:16,23:06,23:38,23:56,,1,17:33:13,Devon,1st Plympton,
-10D,Morgan Jarrett,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:36,10:17,11:01,11:25,12:35,13:25,14:02,16:22,18:13,19:37,21:03,22:16,23:05,23:37,23:56,,1,17:33:06,Devon,1st Plympton,
-11A,Zion Lane,Marple Network 2,50mile,06:25,06:53,,07:30,M09:05,09:57,10:42,11:34,12:09,13:30,14:35,15:21,19:58 R,,,,,,,,,0,13:32:45,Greater Manchester,1st Marple Network,
-11B,Zion Dawson,Marple Network 2,50mile,06:25,06:52,,07:30,M09:05,09:58,10:42,11:34,12:09,13:30,14:35,15:20,19:57 R,,,,,,,,,0,13:32:24,Greater Manchester,1st Marple Network,
-11C,Indigo Holt,Marple Network 2,50mile,06:25,06:53,,07:30,M09:05,09:57,10:42,11:34,12:09,13:30,14:35,15:21,19:58 R,,,,,,,,,0,13:32:41,Greater Manchester,1st Marple Network,
-11D,Alex Zimmer,Marple Network 2,50mile,06:25,06:53,,07:31,M09:05,09:58,10:42,11:34,12:09,13:30,M14:35,15:32,19:58 R,,,,,,,,,0,13:32:29,Greater Manchester,1st Marple Network,
-12A,Zion Yates,Argo-York,50mile,06:26,06:50,,07:25,M08:55,09:56,10:39,11:28,11:59,13:18,14:10,14:54,17:33,19:53,21:26,23:11,00:43,01:33,02:16,02:44,,1,20:18:31,GLN,Argo Explorers,50MU25
-12B,Morgan Marsh,Argo-York,50mile,06:26,06:49,,07:25,M08:55,09:56,10:39,11:28,12:00,13:17,14:10,14:54,17:33,19:53,21:26,23:12,00:43,01:33,02:16,02:44,,1,20:17:58,GLN,Argo Explorers,50MU25
-12C,Finley Dawson,Argo-York,50mile,06:25,06:50,,07:25,M08:55,09:56,10:39,11:28,12:00,13:18,14:11,14:55,17:33,19:54,21:27,23:11,00:44,01:41,02:20,02:44,,1,20:18:36,GLN,Argo Explorers,50MU25
-12D,Logan Quincey,Argo-York,50mile,06:26,06:50,,07:25,M08:55,09:56,10:39,11:28,11:59,13:18,14:11,14:55,17:33,19:54,21:27,23:11,00:43,01:42,02:20,02:44,,1,20:18:37,GLN,Argo Explorers,50MU25
-12E,Indigo Yates,Argo-York,50mile,06:26,06:50,,07:26,M08:55,09:56,10:39,11:28,11:59,13:17,14:10,14:54,17:33,19:53,21:26,23:11,00:43,01:33,02:16,02:44,,1,20:18:27,GLN,Argo Explorers,50MU25
-13A,Casey Jarrett,HHESU Iceland,50mile,06:27,06:55,,07:32,M08:59,09:54,10:38,11:28,11:57,13:14,14:16,15:05,17:55,20:09,21:48,23:24,00:43,01:33,02:17,02:45,,1,20:17:26,GLN,HHESU Explorers,50MU25
-13B,Ellis Marsh,HHESU Iceland,50mile,06:27,06:55,,07:31,M08:59,09:54,10:38,11:27,11:58,13:14,14:16,15:05,17:54,20:09,21:48,23:24,00:44,01:35,02:17,02:45,,1,20:17:36,GLN,HHESU Explorers,50MU25
-13C,Alex Gibbs,HHESU Iceland,50mile,06:27,06:55,,07:31,M08:59,09:53,10:38,11:28,11:58,13:14,14:16,15:05,17:55,20:10,21:49,23:24,00:44,01:36,02:17,02:44,,1,20:17:20,GLN,HHESU Explorers,50MU25
-13D,Quinn Sharp,HHESU Iceland,50mile,06:27,06:55,,07:33,M08:59,09:54,10:38,11:27,11:57,13:14,14:17,15:05,17:55,20:09 R,,,,,,,,0,13:42:13,GLN,HHESU Explorers,50MU25
-14A,Dana Reyes,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:36,10:59,12:03,12:52,13:31,15:35,17:32,18:43,19:56,21:05,21:48,22:16,22:33,,1,16:05:44,Oxfordshire,Didcot ESU,
-14B,Noel Yates,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:37,10:59,12:03,12:53,13:31,15:35,17:33,18:43,19:56,21:05,21:48,22:17,22:33,,1,16:05:53,Oxfordshire,Didcot ESU,
-14C,Bailey Sharp,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:36,10:59,12:03,12:53,13:32,15:35,17:32,18:43,19:56,21:05,21:48,22:16,22:33,,1,16:05:54,Oxfordshire,Didcot ESU,
-15A,Alex Wade,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:09,10:08,10:50,11:49,12:20,13:44,14:45,15:28,18:41,20:50,22:30,00:13,01:52,02:46,03:26,03:50,,1,21:21:58,GLN,WHESU,50MU25
-15B,Ollie Yates,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:10,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:40,20:49,22:32,00:13,01:52,02:46,03:27,03:50,,1,21:21:57,GLN,WHESU,50MU25
-15C,Yael Nash,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:09,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:40,20:50,22:30,00:13,01:52,02:46,03:26,03:50,,1,21:22:01,GLN,WHESU,50MU25
-15D,Toby Gibbs,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:10,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:54,20:50,22:30,00:13,01:52,02:46,03:26,03:50,,1,21:22:02,GLN,WHESU,50MU25
-16A,Ollie Sharp,22nd Southgate Scouts,50mile,06:30,06:44,,M07:07,08:03,08:42,09:11,09:41,09:54,10:44,11:23,11:49,13:28,14:35,15:25,16:10,16:55,17:21,17:39,17:47,,1,11:17:45,GLN,22nd Southgate,
-16B,Toby Lane,22nd Southgate Scouts,50mile,06:30,06:44,,07:07,08:03,08:42,09:11,09:41,09:55,10:45,11:22,11:49,13:27,14:36,15:25,16:10,16:54,17:22,17:38,17:47,,1,11:17:48,GLN,22nd Southgate,
-16C,Riley Dawson,22nd Southgate Scouts,50mile,06:30,06:44,,07:07,08:03,08:42,09:11,09:41,09:54,10:45,11:22,11:49,13:28,14:35,15:26,16:10,16:54,17:21,17:39,17:48,,1,11:17:51,GLN,22nd Southgate,
-17A,Parker Pratt,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:24,11:06,11:59,12:24,13:32,14:33,15:15,18:06,20:27,22:18 R,,,,,,,0,15:45:05,Greater Manchester,1st Marple Network,
-17C,Yael Carter,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:24,11:06,11:59,12:24,13:32,14:33,15:15,18:05,20:28,22:19 R,,,,,,,0,15:45:31,Greater Manchester,1st Marple Network,
-17D,Dana Underwood,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:25,11:06,11:59,12:24,13:33,14:33,15:15,18:06,20:28,22:18 R,,,,,,,0,15:44:47,Greater Manchester,1st Marple Network,
-18A,Sam Bishop,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:38,13:30,14:05,16:08,18:09,19:20,20:31,21:41,22:27,23:01,23:22,,1,16:47:57,Greater London North,Hatters Explorer Scout Unit in Southgate,
-18B,Quinn Underwood,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:39,13:31,14:06,16:08,18:09,19:20,20:31,21:41,22:27,23:02,23:22,,1,16:47:48,Greater London North,Hatters Explorer Scout Unit in Southgate,
-18C,Uma Underwood,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:37,13:30,14:05,16:08,18:09,19:20,20:31,21:40,22:28,23:01,23:21,,1,16:47:39,Greater London North,Hatters Explorer Scout Unit in Southgate,
-18D,Ellis Reyes,Scouting for gateau,50mile,06:34,M06:59,,07:34,08:55,09:44,10:20,11:12,11:32,12:37,13:29,14:05,16:08,18:08,19:23,20:30,21:40,22:26,23:01,23:22,,1,16:47:40,Greater London North,Hatters Explorer Scout Unit in Southgate,
-18E,Quinn Carter,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:21,11:07,11:32,12:37,13:30,14:05,16:08,18:09,19:20,20:30,21:40,22:27,23:02,23:22,,1,16:47:47,Greater London North,Hatters Explorer Scout Unit in Southgate,
-19A,Logan Nash,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:14,11:09,12:09,12:38,13:56,14:58,15:46,18:52,21:04,22:30,00:00,01:22,02:11,02:46,03:04,,1,20:28:11,GLN,Network (Merlin ESU),50MU25
-19B,Alex Quincey,Merlin away day,50mile,06:36,07:04,,07:47,09:21,10:14,11:09,12:09,12:37,13:56,14:58,15:46,18:51,21:04,22:30,23:59,01:22,02:11,02:46,03:04,,1,20:28:13,GLN,Network (Merlin ESU),50MU25
-19C,Ellis Osei,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:14,11:09,12:09,12:37,13:56,14:58,15:46,18:52,21:04,22:30,23:59,01:22,02:11,02:46,03:04,,1,20:28:16,GLN,Network (Merlin ESU),50MU25
-19D,Ollie Adams,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:15,11:10,12:09,12:38,13:56,14:58,15:46,18:52,21:04,22:30,00:00,01:22,02:11,02:46,03:04,,1,20:28:24,GLN,Network (Merlin ESU),50MU25
-20A,Wren Bishop,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:10,11:02,11:38,12:02,13:34,14:47,15:36,16:23,17:07,17:36,17:53,18:05,,1,11:27:02,GLN,201st Islington,
-20B,Casey Lane,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:10,11:02,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,17:53,18:04,,1,11:26:54,GLN,201st Islington,
-20C,Val Adams,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:09,11:02,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,17:54,18:04,,1,11:26:44,GLN,201st Islington,
-20D,Uma Adams,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:09,11:03,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,17:53,18:05,,1,11:26:52,GLN,201st Islington,
-30A,Harper Turner,The Blister Sisters,50km,06:45,07:13,,07:48,09:10,10:05,10:47,11:48,12:15,13:34,14:41,,,,,15:18,16:39,17:33,18:05,18:22,,1,11:37:19,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-30B,Riley Evans,The Blister Sisters,50km,06:44,07:13,,07:48,09:10,10:05,10:48,11:48,12:16,13:34,14:41,,,,,15:18,16:39,17:33,18:05,18:22,,1,11:37:56,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-30C,Zion Holt,The Blister Sisters,50km,06:44,07:13,,07:48,09:10,10:05,10:48,11:48,12:16,13:35,14:41,,,,,15:18,16:39,17:33,18:05,18:22,,1,11:38:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-31A,Kai Reyes,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:06,17:43,18:42,19:13,19:31,,1,12:43:02,GLN,Argo Explorers,50KU18
-31B,Yael Pratt,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:52,14:24,15:33,,,,,16:07,17:43,18:43,19:13,19:31,,1,12:43:21,GLN,Argo Explorers,50KU18
-31C,Bailey Quincey,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:06,17:43,18:42,19:13,19:31,,1,12:43:10,GLN,Argo Explorers,50KU18
-31D,Kai Yates,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:07,17:43,18:42,19:13,19:31,,1,12:43:18,GLN,Argo Explorers,50KU18
-32A,Yael Evans,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:11,13:25,14:30,16:10,17:29,,,,,18:02,19:57,20:59,21:34,21:55,,1,15:08:00,Girlguiding,Cheshire Forest / London South West / Greater London West,
-32B,Sam Farley,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:11,13:25,14:31,16:10,17:28,,,,,18:01,19:56,20:59,21:34,21:55,,1,15:07:59,Girlguiding,Cheshire Forest / London South West / Greater London West,
-32C,Jesse Gibbs,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:12,13:26,14:31,16:10,17:29,,,,,18:02,19:57 R,,,,,0,13:09:39,Girlguiding,Cheshire Forest / London South West / Greater London West,
-33A,Sam Irving,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:45,11:29,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,17:51,18:07,,1,11:20:31,Cambridgeshire,11th/9th Cambridge,
-33B,Harper Wade,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:42,11:29,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,17:52,18:07,,1,11:20:16,Cambridgeshire,11th/9th Cambridge,
-33C,Alex Reyes,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:43,11:28,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,17:51,18:07,,1,11:20:24,Cambridgeshire,11th/9th Cambridge,
-33D,Casey Dawson,11th/9th Amazon adults,50km,06:47,07:16,,08:00,09:44,10:41,11:28,12:23,12:53,14:17,15:09,,,,,15:31,16:37,17:17,17:51,18:07,,1,11:20:25,Cambridgeshire,11th/9th Cambridge,
-34A,Bailey Nash,1st Aston Clinton Leaders,50km,06:50,07:21,,07:56,09:22,10:10,10:52,11:42,12:03,13:18 R,,,,,,,,,,,,0,6:28:24,Buckinghamshire,1st Aston Cliniton,
-34B,Parker Wade,1st Aston Clinton Leaders,50km,06:50,07:21,,07:56,09:22,10:11,10:52,11:42,12:02,13:18 R,,,,,,,,,,,,0,6:28:15,Buckinghamshire,1st Aston Cliniton,
-34C,Kai Kemp,1st Aston Clinton Leaders,50km,06:50,07:21,,07:55,09:22,10:10,10:52,11:42,12:03,13:18 R,,,,,,,,,,,,0,6:28:19,Buckinghamshire,1st Aston Cliniton,
-35A,Jesse Reyes,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:13,10:48,11:32,12:05,13:16,14:07,,,,,14:28,15:31,16:18,16:40,16:49,,1,9:58:50,Surrey,Woking Explorers,
-35B,Morgan Zimmer,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:15,14:07,,,,,14:27,15:31,16:18,16:40,16:48,,1,9:58:28,Surrey,Woking Explorers,
-35C,Uma Kemp,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:16 R,,,,,,,,,,,,0,6:25:40,Surrey,Woking Explorers,
-35D,Jesse Bishop,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:16,14:07,,,,,14:28,15:31,16:18,16:40,16:49,,1,9:58:41,Surrey,Woking Explorers,
-35E,Sam Sharp,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:15,14:07,,,,,14:28,15:31,16:18,16:40,16:49,,1,9:58:24,Surrey,Woking Explorers,
-37A,Indigo Farley,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:59,14:31,15:37,,,,,16:17,18:05,19:07,19:46,20:05,,1,13:12:13,Berkshire,West Pang Explorer Scout Unit,50KU18
-37B,Ollie Osei,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:58,14:31,15:37,,,,,16:17,18:05,19:07,19:46,20:05,,1,13:12:12,Berkshire,West Pang Explorer Scout Unit,50KU18
-37C,Riley Yates,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:58,14:31,15:37,,,,,16:17,18:05,19:07,19:46,20:05,,1,13:12:21,Berkshire,West Pang Explorer Scout Unit,50KU18
-37D,Indigo Underwood,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:59,14:31,15:37,,,,,16:17,18:05,19:07,19:46,20:05,,1,13:12:17,Berkshire,West Pang Explorer Scout Unit,50KU18
-38A,Noel Sharp,Gurt Wyrm 50,50km,06:56,07:18,,07:47,M09:03,09:55,10:50,11:59,12:26,13:32,14:24,,,,,14:48,15:50,16:28,16:55,17:09,,1,10:13:25,Somerset,Gurt Wyrm ESU,50KU18
-38B,Ellis Irving,Gurt Wyrm 50,50km,06:56,07:18,,07:47,M09:03,09:55,10:50,11:59,12:26,13:32,14:23,,,,,14:48,15:50,16:28,16:56,17:10,,1,10:13:45,Somerset,Gurt Wyrm ESU,50KU18
-38C,Uma Evans,Gurt Wyrm 50,50km,06:56,07:18,,07:48,M09:03,09:55,10:50,11:59,12:26,13:32,14:24,,,,,14:48,15:50,16:28,16:56,17:10,,1,10:13:40,Somerset,Gurt Wyrm ESU,50KU18
-39A,Indigo Reyes,Charlie and his safety team,50km,06:56,07:24,,08:05,09:53,10:53,11:37,12:59,13:32,15:22,16:45,,,,,17:24,19:19,20:12,20:49,21:07,,1,14:11:27,Surrey,Woking Explorers,
-39B,Quinn Pratt,Charlie and his safety team,50km,06:56,07:25,,08:05,09:53,10:53,11:38,13:00,13:32,15:22,16:46,,,,,17:24,19:19,20:12,20:49,21:07,,1,14:11:46,Surrey,Woking Explorers,
-39C,Logan Bishop,Charlie and his safety team,50km,06:56,07:24,,08:05,09:53,10:53,11:38,13:00,13:32,15:22,16:46,,,,,17:25,19:19,20:12,20:49,21:07,,1,14:11:39,Surrey,Woking Explorers,
-40A,Zion Farley,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:24 R,,,,,,,,,,,,,,0,5:24:39,Essex,Fiennes ESU,
-40B,Logan Adams,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:23,13:14,14:37,15:44,,,,,16:11,17:37,18:38,19:07,19:24,,1,12:25:40,Essex,Fiennes ESU,
-40D,Riley Zimmer,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:24,13:14,14:37,15:44,,,,,16:12 R,,,,,,0,9:13:02,Essex,Fiennes ESU,
-41A,Zion Pratt,Pinewood Seahorses C,50km,07:09,07:42,,08:22,10:28,11:37,13:17,14:48,15:31,17:17,18:56,,,,,19:32,21:25,22:29,23:24,23:44,,1,16:35:02,GLSW,Pinewood Seahorses ESU,50KU18
-41B,Finley Adams,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:37,13:16,14:48,15:31,17:17,18:55,,,,,19:31,21:25,22:29,23:23,23:44,,1,16:34:52,GLSW,Pinewood Seahorses ESU,50KU18
-41C,Quinn Marsh,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:38,13:16,14:48,15:31,17:17,18:56,,,,,19:32,21:26 R,,,,,0,14:17:07,GLSW,Pinewood Seahorses ESU,50KU18
-41D,Parker Osei,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:37,13:16,14:48,15:31,17:16,18:55,,,,,19:31,21:25,22:29,23:23,23:44,,1,16:34:51,GLSW,Pinewood Seahorses ESU,50KU18
-41E,Yael Underwood,Pinewood Seahorses C,50km,07:09,07:42,,08:22,10:28,11:37,13:16,14:48,15:31,17:17,18:55,,,,,19:32,21:26,22:29,23:24,23:44,,1,16:34:50,GLSW,Pinewood Seahorses ESU,50KU18
-42A,Casey Yates,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:35,15:48,,,,,16:20,17:39,18:43,19:15,19:32,,1,12:30:10,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-42B,Zion Osei,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:34,15:48,,,,,16:20,17:39,18:42,19:15,19:32,,1,12:29:55,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-42C,Parker Sharp,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:34,15:48,,,,,16:20,17:39,18:43,19:16,19:32,,1,12:30:22,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
-43A,Ollie Evans,TESU 3,50km,07:02,07:32,,08:25,12:17,13:32,15:16,16:12,16:53,18:26 R,,,,,,,,,,,,0,11:24:44,Greater London North,Tottenham ESU,50KU18
-43B,Wren Adams,TESU 3,50km,07:02,07:31,,08:25,12:17,13:31,15:15,16:12,16:53,18:26 R,,,,,,,,,,,,0,11:24:38,Greater London North,Tottenham ESU,50KU18
-43C,Gray Zimmer,TESU 3,50km,07:02,07:32,,08:25,12:16,13:32,15:16 R,,,,,,,,,,,,,,,0,8:14:29,Greater London North,Tottenham ESU,50KU18
-43E,Gray Jarrett,TESU 3,50km,07:02,07:31,,08:25,12:16,13:31,15:15,16:12,16:53,18:26 R,,,,,,,,,,,,0,11:24:37,Greater London North,Tottenham ESU,50KU18
-44A,Noel Farley,Call me a Cab,50km,07:04,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,16:57,17:11,,1,10:06:24,Beds,Leagrave Scout Group,
-44B,Yael Yates,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,16:57,17:11,,1,10:06:29,Beds,Leagrave Scout Group,
-44C,Noel Turner,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:06,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,16:57,17:11,,1,10:06:13,Beds,Leagrave Scout Group,
-44D,Uma Irving,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:30,16:57,17:11,,1,10:06:15,Beds,Leagrave Scout Group,
-44E,Val Gibbs,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,16:57,17:11,,1,10:06:17,Beds,Leagrave Scout Group,
-45A,Val Irving,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:52,16:27,18:02,19:13,,,,,19:41,21:13,22:00,22:33,22:55,,1,15:44:51,Greater London North,Wild Wolf ESU,50KU18
-45B,Quinn Lane,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:52,16:27,18:02,19:13,,,,,19:41,21:13,22:00,22:33,22:54,,1,15:44:43,Greater London North,Wild Wolf ESU,50KU18
-45C,Finley Yates,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:53,16:27,18:02,19:13,,,,,19:41,21:13,M22:00,22:33,22:55,,1,15:44:48,Greater London North,Wild Wolf ESU,50KU18
-46A,Kai Irving,Can you move on,50km,07:15,07:46,,08:53,11:53,13:59,15:08,16:18,17:13,19:09 R,,,,,,,,,,,,0,11:53:42,GLMW,Pioneers ESU,50KU18
-46B,Ellis Holt,Can you move on,50km,07:15,07:47,,08:53,11:53,13:59,15:08,16:18,17:13,19:08,21:38,,,,,22:10,00:07,01:04,01:50,02:28,,1,19:12:33,GLMW,Pioneers ESU,50KU18
-46C,Val Underwood,Can you move on,50km,07:15,07:47,,08:53,11:53,14:00,15:07,16:18,17:13,19:08,21:38,,,,,22:10,00:07,01:04,01:50,02:28,,1,19:13:02,GLMW,Pioneers ESU,50KU18
-46D,Zion Sharp,Can you move on,50km,07:15,07:47,,08:53,11:54,13:59 R,,,,,,,,,,,,,,,,0,6:44:18,GLMW,Pioneers ESU,50KU18
-47A,Harper Dawson,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:18,,,,,18:57,20:37,21:47,22:17,22:35,,1,15:27:06,GLSW,Croham Valley ESU,50KU18
-47B,Noel Nash,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:19 R,,,,,,,,,,,0,11:10:55,GLSW,Croham Valley ESU,50KU18
-47C,Val Lane,Croham Adventurers,50km,07:08,07:44,,08:20,10:12,11:14,12:06,12:55,13:25,16:29,18:19,,,,,18:57,20:37,21:47,22:17,22:35,,1,15:27:00,GLSW,Croham Valley ESU,50KU18
-47D,Alex Jarrett,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:15,12:06,12:55,13:25,16:29,M18:19 R,,,,,,,,,,,0,11:10:57,GLSW,Croham Valley ESU,50KU18
-47E,Jesse Quincey,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:19,,,,,18:57,20:37,21:47,22:17,22:35,,1,15:26:51,GLSW,Croham Valley ESU,50KU18
-48A,Alex Pratt,Slow Horses,50km,07:11,07:36,,08:12,09:55,10:45,11:31,12:17,12:52,14:07,15:11,,,,,15:33,16:53,17:37,18:14,18:28,,1,11:17:27,West Herts,VVV Explorer Scouts,
-48B,Harper Vance,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:35,16:54,17:38,18:14,18:29,,1,11:17:35,West Herts,VVV Explorer Scouts,
-48C,Bailey Reyes,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:33,16:53,17:37,18:14,18:29,,1,11:17:40,West Herts,VVV Explorer Scouts,
-48D,Bailey Yates,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:35,16:53,17:37,18:14,18:28,,1,11:17:27,West Herts,VVV Explorer Scouts,
-48E,Casey Wade,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:34,16:54,17:38,18:14,18:29,,1,11:17:23,West Herts,VVV Explorer Scouts,
-49A,Zion Irving,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:24,12:12,12:32,13:42,14:39,,,,,15:03,16:19,17:12,17:46,18:00,,1,10:49:09,GLN,201st Islington,50KU18
-49B,Yael Lane,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:23,12:12,12:32,13:42,14:38,,,,,15:02,16:19,17:13,17:46,18:00,,1,10:49:07,GLN,201st Islington,50KU18
-49C,Morgan Farley,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:23,12:11,12:32,13:42,14:38,,,,,15:02,16:19,17:12,17:45,18:00,,1,10:48:53,GLN,201st Islington,50KU18
-49D,Jesse Vance,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45 R,,,,,,,,,,,,,,,,0,3:34:32,GLN,201st Islington,50KU18
-49E,Ellis Kemp,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:24,12:11,12:32,13:42,14:38,,,,,15:02,16:19,17:12,17:46,17:59,,1,10:48:44,GLN,201st Islington,50KU18
-50A,Ollie Dawson,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:07,11:08,12:38,13:44,14:17,16:08 R,,,,,,,,,,,,0,8:54:29,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
-50C,Ollie Reyes,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:08,11:08,12:38,13:44,14:17,16:08 R,,,,,,,,,,,,0,8:54:33,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
-50D,Yael Dawson,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:08,11:09,12:38,13:44,14:17,16:08,17:36,,,,,18:16,19:49,20:52,21:49,22:14,,1,15:00:50,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
-51A,Indigo Zimmer,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:12,19:30,,1,12:16:25,GLN,Argo Explorers,50KU18
-51B,Bailey Lane,Argo-Bratislava,50km,07:14,07:39,,M08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:39,17:56,18:41,19:13,19:30,,1,12:16:39,GLN,Argo Explorers,50KU18
-51C,Parker Carter,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:41,19:13,19:30,,1,12:16:38,GLN,Argo Explorers,50KU18
-51D,Harper Quincey,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:12,19:30,,1,12:16:27,GLN,Argo Explorers,50KU18
-51E,Toby Dawson,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:12,19:30,,1,12:16:18,GLN,Argo Explorers,50KU18
-52A,Alex Nash,West Pang Gang 2,50km,07:17,07:55,,08:42,10:22,11:35,13:11,14:25,15:00,16:34,17:50,,,,,18:16,19:56,20:57,21:32,21:52,,1,14:34:57,Berkshire,West Pang Explorer Scout Unit,50KU18
-52B,Wren Carter,West Pang Gang 2,50km,07:17,07:55,,08:41,10:21,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:32,21:52,,1,14:34:49,Berkshire,West Pang Explorer Scout Unit,50KU18
-52C,Bailey Wade,West Pang Gang 2,50km,07:17,07:55,,08:41,10:22,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:32,21:51,,1,14:34:32,Berkshire,West Pang Explorer Scout Unit,50KU18
-52D,Sam Carter,West Pang Gang 2,50km,07:17,07:55,,08:41,10:22,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:32,21:51,,1,14:34:43,Berkshire,West Pang Explorer Scout Unit,50KU18
-53A,Yael Quincey,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:54,15:21,16:34,,,,,17:11,18:33,19:42,20:19,M20:39,,1,13:22:00,GLN,Argo Explorers,50KU18
-53B,Indigo Irving,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:54,15:21,16:34,,,,,17:11,18:33,19:42,20:19,M20:39,,1,13:22:04,GLN,Argo Explorers,50KU18
-53C,Sam Wade,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:55,15:21,16:34,,,,,17:11,18:33,19:42,20:19,M20:39,,1,13:21:57,GLN,Argo Explorers,50KU18
-54A,Yael Vance,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:14,14:37,15:44,,,,,16:12,17:37,18:38,19:08,19:24,,1,12:03:01,Somerset,Gurt Wyrm ESU,
-54B,Kai Marsh,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:14,14:37,15:44,,,,,16:12,17:37,18:38,19:07,19:24,,1,12:02:53,Somerset,Gurt Wyrm ESU,
-54C,Finley Pratt,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:13,14:37,15:44,,,,,16:11,17:37,18:37,19:07,19:24,,1,12:02:58,Somerset,Gurt Wyrm ESU,
-54D,Kai Holt,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:41,13:14,14:37,15:44,,,,,16:11,17:37,18:37,19:07,19:24,,1,12:02:57,Somerset,Gurt Wyrm ESU,
-55A,Toby Evans,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:51,14:54,17:02,,,,,M17:28,18:57,20:03,20:32,M20:56,,1,13:36:55,Greater London North,Red Barons ESU,50KU18
-55B,Uma Bishop,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:02,,,,,M17:28,18:57,20:03,20:32,20:56,,1,13:36:04,Greater London North,Red Barons ESU,50KU18
-55C,Harper Nash,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:51,14:55,17:02,,,,,M17:28,18:57,20:03,20:32,20:56,,1,13:36:04,Greater London North,Red Barons ESU,50KU18
-55D,Dana Pratt,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:02,,,,,M17:28,18:57,20:03,20:32,20:56,,1,13:36:20,Greater London North,Red Barons ESU,50KU18
-55E,Toby Irving,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:03,,,,,M17:28,18:57,20:03,20:32,20:56,,1,13:36:20,Greater London North,Red Barons ESU,50KU18
-56A,Riley Marsh,Golden Plodders,50km,07:27,08:03,,08:42,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:55,20:13,21:00,21:32,21:51,,1,14:24:15,South London,Golden Hind Explorer Scout Unit,50KU18
-56B,Harper Kemp,Golden Plodders,50km,07:26,08:03,,08:43,10:13,11:20,12:27,13:45 R,,,,,,,,,,,,,,0,6:18:42,South London,Golden Hind Explorer Scout Unit,50KU18
-56C,Jesse Carter,Golden Plodders,50km,07:27,08:03,,08:43,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:54,20:14,21:01,21:33,21:51,,1,14:23:57,South London,Golden Hind Explorer Scout Unit,50KU18
-56D,Logan Reyes,Golden Plodders,50km,07:26,08:03,,08:43,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:55,20:13,21:00,21:33,21:50,,1,14:24:06,South London,Golden Hind Explorer Scout Unit,50KU18
-56E,Alex Kemp,Golden Plodders,50km,07:27,08:03,,08:43,10:13,11:20,12:27,13:45,14:34,16:31,17:47,,,,,18:55,20:13,21:00,21:32,21:51,,1,14:23:59,South London,Golden Hind Explorer Scout Unit,50KU18
-57A,Logan Osei,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,16:59,17:12,,1,9:49:24,Greater London North,6th Friern Barnet & 15th Finchley,
-57B,Casey Evans,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,16:59,17:12,,1,9:49:27,Greater London North,6th Friern Barnet & 15th Finchley,
-57C,Jesse Adams,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,16:59,17:12,,1,9:49:15,Greater London North,6th Friern Barnet & 15th Finchley,
-58A,Alex Sharp,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:11,12:07,12:54,13:26,14:56,16:00,,,,,16:31,17:50,18:40,19:17,19:43,,1,12:16:40,GLN,10th Edmonton Scout Group,
-58B,Wren Nash,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:11,12:06,12:54,13:26,14:55,16:00,,,,,16:30,17:50,18:41,19:16,19:43,,1,12:16:44,GLN,10th Edmonton Scout Group,
-58C,Toby Reyes,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:12,12:07,12:54,13:27,14:56,16:00,,,,,16:31,17:51,18:41,19:17,19:43,,1,12:17:07,GLN,10th Edmonton Scout Group,
-58D,Alex Bishop,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:13,12:07,12:54,13:26,14:55,15:59,,,,,16:31,17:50,18:40,19:17,19:43,,1,12:16:51,GLN,10th Edmonton Scout Group,
-58E,Jesse Lane,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:13,12:07,12:54,13:27,14:55,16:00,,,,,16:31,17:50,18:40,19:17,19:43,,1,12:17:05,GLN,10th Edmonton Scout Group,
-59A,Dana Gibbs,Kenley Aces 1,50km,07:26,07:54,,08:28,09:54,10:48,11:33,12:33,13:11,14:32,15:48,,,,,16:22,17:39,18:37,19:14,19:36,,1,12:10:58,GLSW,Kenley Aces,
-59B,Wren Sharp,Kenley Aces 1,50km,07:25,07:54,,08:28,09:53,10:48,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:38,18:36,19:14,19:36,,1,12:10:56,GLSW,Kenley Aces,
-59C,Wren Zimmer,Kenley Aces 1,50km,07:25,07:54,,08:28,09:53,10:47,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:39,18:36,19:14,19:37,,1,12:11:12,GLSW,Kenley Aces,
-59D,Logan Wade,Kenley Aces 1,50km,07:25,07:53,,08:28,09:53,10:48,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:39,18:36,19:14,19:36,,1,12:10:44,GLSW,Kenley Aces,
-60A,Harper Adams,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:37,11:33,12:18,12:44,13:55,14:42,,,,,M15:10,16:14,16:56,17:23,17:35,,1,10:06:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-60B,Wren Wade,KES Leaders,50km,07:29,07:57,,08:31,09:52,10:38,11:33,12:18,12:44,13:56,14:42,,,,,15:10,16:14,16:56,17:24,17:35,,1,10:06:06,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-60C,Harper Lane,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:38,11:33,12:18 R,,,,,,,,,,,,,,0,4:49:16,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-60D,Alex Underwood,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:38,11:33,12:18,12:44,13:55,14:41,,,,,15:10,16:14,16:56,17:23,17:35,,1,10:06:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-61A,Parker Kemp,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:26,16:35,,1,9:06:37,Greater London North,Wild Wolf ESU,50KU18
-61B,Alex Carter,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:26,16:35,,1,9:06:28,Greater London North,Wild Wolf ESU,50KU18
-61C,Yael Sharp,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:26,16:35,,1,9:06:15,Greater London North,Wild Wolf ESU,50KU18
-62A,Logan Carter,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:00,12:51,13:20,14:25,15:21,,,,,16:01,17:14,18:06,18:36,18:54,,1,11:21:56,GLSW,Pinewood Seahorses ESU,50KU18
-62B,Val Zimmer,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:01,12:48,13:20,14:25,15:22,,,,,16:01,17:14,18:06,18:36,18:54,,1,11:21:46,GLSW,Pinewood Seahorses ESU,50KU18
-62C,Kai Underwood,Pinewood Seahorses A,50km,07:32,07:51,,08:20,10:06,11:21,12:01,12:48,13:20,14:25,15:22,,,,,16:01,17:14,18:06,18:36,18:54,,1,11:22:02,GLSW,Pinewood Seahorses ESU,50KU18
-62D,Jesse Evans,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:01,12:48,13:19,14:25,15:22,,,,,16:01,17:14,18:06,18:36,18:53,,1,11:21:34,GLSW,Pinewood Seahorses ESU,50KU18
-62E,Logan Sharp,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21 R,,,,,,,,,,,,,,,,0,3:49:04,GLSW,Pinewood Seahorses ESU,50KU18
-63A,Gray Pratt,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:27,16:14,17:30,,,,,18:20,20:21,21:52,23:08,23:38,,1,16:06:02,Greater London South,Severndroog ESU,50KU18
-63B,Uma Gibbs,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:26,16:14,17:30,,,,,18:20,20:21,21:52,23:08,23:38,,1,16:06:11,Greater London South,Severndroog ESU,50KU18
-63C,Indigo Pratt,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:46,14:27,16:14,17:31,,,,,18:20,20:20,21:51,23:08,23:38,,1,16:05:46,Greater London South,Severndroog ESU,50KU18
-63D,Indigo Dawson,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:46,14:26,16:14,17:30,,,,,18:20,20:20,21:51,23:08,23:38,,1,16:06:32,Greater London South,Severndroog ESU,50KU18
-63E,Zion Kemp,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:27,16:14,17:31,,,,,18:20,20:21,21:52,23:08,23:38,,1,16:06:25,Greater London South,Severndroog ESU,50KU18
-64A,Dana Osei,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:39,16:44,17:25,17:54,18:08,,1,10:32:21,Cambridge,11th/9th Cambridge Amazon scouts,
-64B,Ollie Irving,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,17:54,18:08,,1,10:32:45,Cambridge,11th/9th Cambridge Amazon scouts,
-64C,Kai Quincey,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,17:54,18:08,,1,10:32:23,Cambridge,11th/9th Cambridge Amazon scouts,
-64D,Quinn Yates,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:39,16:44,17:25,17:54,18:07,,1,10:32:27,Cambridge,11th/9th Cambridge Amazon scouts,
-64E,Dana Holt,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,17:54,18:07,,1,10:32:26,Cambridge,11th/9th Cambridge Amazon scouts,
-65B,Val Jarrett,West Pang Gang 3,50km,07:35,08:17,,09:17,12:22,13:41,14:46,16:13,16:41,19:09,21:38,,,,,22:10,00:07,01:04,01:50,02:28,,1,18:53:41,Berkshire,West Pang Explorer Scout Unit,50KU18
-65C,Harper Zimmer,West Pang Gang 3,50km,07:34,08:17,,09:17,12:22,13:41,14:46,16:13,16:41,19:09 R,,,,,,,,,,,,0,11:34:08,Berkshire,West Pang Explorer Scout Unit,50KU18
-65D,Quinn Dawson,West Pang Gang 3,50km,07:35,08:17,,09:17,12:22,13:41,14:47,16:13,16:41,19:08,21:38,,,,,22:10,00:07,01:04,01:50,02:28,,1,18:53:10,Berkshire,West Pang Explorer Scout Unit,50KU18
-66A,Morgan Gibbs,The Four must get heres,50km,07:37,08:11,,08:50,10:25,11:25,12:12,13:19,14:01,16:09,17:35,,,,,18:15,19:49,20:51,21:48,22:14,,1,14:36:50,GLN,Merlin ESU,50KU18
-66B,Quinn Bishop,The Four must get heres,50km,07:38,08:11,,08:50,10:25,11:26,12:12,13:20,14:02,16:09,M17:35,,,,,18:15,19:49,20:52,21:49,22:15,,1,14:37:13,GLN,Merlin ESU,50KU18
-66C,Gray Gibbs,The Four must get heres,50km,07:38,08:11,,08:50,10:25,11:26,12:12,13:19,14:02,16:09,17:36,,,,,18:16,19:50,20:52,21:49,22:15,,1,14:37:19,GLN,Merlin ESU,50KU18
-66D,Quinn Adams,The Four must get heres,50km,07:38,08:11,,M08:50,10:25,11:26,12:12,13:19,14:02,16:10,17:36,,,,,18:15,19:50,20:52,21:49,22:14,,1,14:36:48,GLN,Merlin ESU,50KU18
-67A,Ellis Farley,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:37,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:40,17:54,,1,10:16:18,Cambridgeshire,Hitchhikers ESU,
-67B,Toby Yates,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:36,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:39,17:54,,1,10:16:11,Cambridgeshire,Hitchhikers ESU,
-67C,Wren Underwood,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:36,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:39,17:54,,1,10:16:02,Cambridgeshire,Hitchhikers ESU,
-68A,Riley Reyes,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:58,,,,,16:26,17:39,18:29,19:01,19:17,,1,11:36:12,Cambridgeshire,Whittlesford and Duxford Scout Group,
-68B,Ollie Underwood,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:57,15:57,,,,,16:26,17:39,18:28,19:01,19:17,,1,11:36:23,Cambridgeshire,Whittlesford and Duxford Scout Group,
-68C,Zion Zimmer,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:58,,,,,16:26,17:39,18:28,19:01,19:17,,1,11:36:25,Cambridgeshire,Whittlesford and Duxford Scout Group,
-68D,Finley Turner,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:57,,,,,16:26,17:39,18:28,19:01,19:17,,1,11:36:22,Cambridgeshire,Whittlesford and Duxford Scout Group,
-69A,Bailey Kemp,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:14,20:15,20:50,21:08,,1,13:27:12,GLN,VVesu,50KU18
-69B,Kai Gibbs,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:15,20:15,20:50,21:08,,1,13:27:15,GLN,VVesu,50KU18
-69C,Zion Underwood,scrambled eggs,50km,07:41,08:17,,08:53,10:27,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:15,20:15,20:50,21:08,,1,13:27:05,GLN,VVesu,50KU18
-69D,Dana Lane,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:13,15:50,17:05,,,,,17:35,19:15,20:14,20:50,21:08,,1,13:27:02,GLN,VVesu,50KU18
-69E,Val Kemp,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:13,15:50,17:05,,,,,17:35,19:15,20:15,20:50,21:08,,1,13:27:26,GLN,VVesu,50KU18
-70A,Alex Marsh,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:24,17:39,,1,9:55:28,UK,Network,
-70B,Toby Turner,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:24,17:39,,1,9:55:48,UK,Network,
-70C,Riley Carter,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:24,17:39,,1,9:55:34,UK,Network,
-71A,Jesse Osei,Torbados,50km,07:44,08:11,,08:47,10:11,10:57,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:35,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
-71B,Riley Kemp,Torbados,50km,07:44,08:11,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:22,,,,,15:50,16:54,17:39,18:35,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
-71C,Toby Carter,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:35,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
-71D,Gray Underwood,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:35,18:51,,1,11:07:04,Devon,20th Torbay Scout Group,
-71E,Ollie Zimmer,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:38,13:09,14:27,15:22,,,,,15:50,16:54,17:39,18:35,18:51,,1,11:07:07,Devon,20th Torbay Scout Group,
-72A,Noel Vance,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:22,18:01,19:14,,,,,20:12,21:46,22:50,23:40,23:56,,1,16:09:38,GLSW,7th Purley Scout Group,50KU18
-72B,Alex Irving,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:22,18:01,19:14,,,,,20:12,21:46,22:50,23:40,23:56,,1,16:09:55,GLSW,7th Purley Scout Group,50KU18
-72C,Morgan Adams,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:21,18:00,19:14,,,,,20:12,21:46,22:50,23:40,23:56,,1,16:09:45,GLSW,7th Purley Scout Group,50KU18
-72D,Morgan Sharp,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:21,18:01,19:14,,,,,20:12,21:46 R,,,,,0,13:59:34,GLSW,7th Purley Scout Group,50KU18
-73A,Ellis Turner,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:41,12:31,12:59,14:15,15:18,,,,,15:47,17:04,18:09,18:48,19:00,,1,11:13:09,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-73B,Wren Turner,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:41,12:31,12:59,14:15,15:18,,,,,15:47,17:05,18:08,18:48,19:00,,1,11:13:01,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-73C,Bailey Pratt,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:42,12:32,12:59,14:15,15:18,,,,,15:47,17:05,18:10,18:48,19:00,,1,11:13:10,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
-74A,Gray Nash,LŽo and co,50km,07:50,08:18,,08:54,10:22,11:23,12:05,13:03,13:34,14:48,15:59,,,,,16:35,17:42,18:27,19:02,19:18,,1,11:28:28,Greenwich,46th Greenwich,50KU18
-74B,Indigo Bishop,LŽo and co,50km,07:50,08:18,,08:55,10:22,11:23,12:05,13:03,13:34,14:48,15:58,,,,,16:35,17:42,18:27,19:02,19:18,,1,11:28:30,Greenwich,46th Greenwich,50KU18
-74C,Dana Farley,LŽo and co,50km,07:50,08:18,,08:54,10:22,11:23,12:05,13:03,13:34,14:48,15:59,,,,,16:35,17:42,18:28,19:02,19:19,,1,11:28:51,Greenwich,46th Greenwich,50KU18
-75A,Uma Pratt,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:27,12:12,13:05,13:39,15:08,16:11,,,,,16:39,17:44,18:43,19:15,19:36,,1,11:45:00,GLSW,Kenley Aces,
-75B,Riley Lane,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:27,12:12,13:05,13:39,15:07,16:11,,,,,16:39,17:44,18:42,19:15,19:36,,1,11:44:38,GLSW,Kenley Aces,
-75C,Morgan Dawson,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:26,12:12,13:05,13:38,15:07,16:10,,,,,16:39,17:44,18:42,19:15,19:36,,1,11:44:58,GLSW,Kenley Aces,
-75D,Wren Dawson,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:26,12:12,13:05,13:38,15:07,16:10,,,,,16:39,17:45,18:42,19:15,19:36,,1,11:45:17,GLSW,Kenley Aces,
-76A,Casey Gibbs,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:29 R,,,,,,,,,,,,,,0,5:35:46,Greater London North,Tottenham ESU,
-76B,Gray Irving,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:28,14:06,15:28,17:00,,,,,17:22,18:47,19:40,20:10,20:24,,1,12:31:02,Greater London North,Tottenham ESU,
-76C,Dana Zimmer,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:30,13:28,14:06,15:27,16:51,,,,,17:22,18:47,19:40,20:09,20:24,,1,12:30:53,Greater London North,Tottenham ESU,
-76D,Gray Reyes,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:28,14:06,15:28 R,,,,,,,,,,,,0,7:35:24,Greater London North,Tottenham ESU,
-76E,Dana Kemp,TESU 1,50km,07:53,08:20,,09:02,10:34,11:33,12:30,13:28,14:06,15:27,16:52,,,,,17:22,18:47,19:40,20:10,20:24,,1,12:30:55,Greater London North,Tottenham ESU,
-77A,Finley Bishop,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:50,14:34,,,,,14:57,15:56,missed,16:50,17:06,,0,9:13:40,Greater London North,Wild Wild ESU,50KU18
-77B,Kai Evans,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:49,14:34,,,,,14:58,15:56,missed,16:50,17:06,,0,9:13:45,Greater London North,Wild Wild ESU,50KU18
-77C,Sam Underwood,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:50,14:35,,,,,14:58,15:57,missed,16:49,17:06,,0,9:13:57,Greater London North,Wild Wild ESU,50KU18
-78A,Gray Kemp,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:54,14:44,,,,,15:07,16:16,16:58,17:25,17:39,,1,9:43:24,West Herts,VVV Explorer Scouts,50KU18
-78B,Logan Farley,Joseph's Rockets,50km,07:55,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:53,14:44,,,,,15:07,16:16,16:59,17:24,17:39,,1,9:43:19,West Herts,VVV Explorer Scouts,50KU18
-78C,Zion Nash,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:54,14:44,,,,,15:07,16:16,16:59,17:25,17:39,,1,9:43:28,West Herts,VVV Explorer Scouts,50KU18
-78E,Kai Turner,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:53,14:45,,,,,15:07,16:16,16:59,17:25,17:39,,1,9:43:29,West Herts,VVV Explorer Scouts,50KU18
-79A,Logan Underwood,Trail tacticians,50km,07:56,08:21,,08:53,10:10,10:59,11:34,12:28,12:51,14:03,14:59,,,,,15:26,16:32,17:15,17:44,17:59,,1,10:03:38,GLN,VVesu,
-79B,Bailey Holt,Trail tacticians,50km,07:56,08:21,,08:53,10:11,10:59,11:34,12:28,12:51,14:04,14:59,,,,,15:26,16:32,17:15,17:44,17:59,,1,10:03:34,GLN,VVesu,
-79C,Ollie Farley,Trail tacticians,50km,07:56,08:21,,08:53,10:10,10:58,11:34,12:28,12:51,14:03,14:59,,,,,15:26,16:32,17:15,17:44,17:59,,1,10:03:26,GLN,VVesu,
-80A,Kai Zimmer,Muswell Hillbillies et al,50km,07:59,08:25,,09:03,10:40,11:38,12:30,13:23,14:03,15:30,16:34,,,,,17:17,18:38,19:31,20:11,M20:33,,1,12:33:52,Greater London North,9th Muswell Hill,
-80B,Wren Lane,Muswell Hillbillies et al,50km,07:58,08:26,,09:03,10:40,11:38,12:30,13:23,14:02,15:30,16:35,,,,,17:17,18:38,19:31,20:12,M20:33,,1,12:34:03,Greater London North,9th Muswell Hill,
-80C,Logan Pratt,Muswell Hillbillies et al,50km,07:59,08:25,,09:03,10:40,11:38,12:29,13:23,14:02,15:30,16:35,,,,,17:17,18:38,19:32,20:12,M20:33,,1,12:33:50,Greater London North,9th Muswell Hill,
-80D,Bailey Zimmer,Muswell Hillbillies et al,50km,07:59,08:26,,09:04,10:40,11:39,12:30,13:23,14:02,15:31,16:35,,,,,17:17,18:38,19:32,20:13,M20:33,,1,12:34:01,Greater London North,9th Muswell Hill,
-81A,Riley Adams,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:18,14:56,16:24,17:48,,,,,18:23,20:02,20:58,21:34,21:55,,1,13:55:56,South London Scouts,Lewisham & Greenwich District,
-81B,Jesse Yates,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:23,20:01,20:58,21:33,21:55,,1,13:55:49,South London Scouts,Lewisham & Greenwich District,
-81C,Parker Zimmer,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:30,,09:11,10:57,12:06,13:17,14:18,14:56,16:24,17:48,,,,,18:23,20:01,20:58,21:33,21:55,,1,13:55:22,South London Scouts,Lewisham & Greenwich District,
-81D,Ellis Jarrett,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:30,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:24,20:02,20:58,21:34,21:54,,1,13:55:24,South London Scouts,Lewisham & Greenwich District,
-81E,Val Wade,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:24,20:02,20:58,21:34,21:54,,1,13:55:30,South London Scouts,Lewisham & Greenwich District,
-82A,Alex Evans,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:50,13:09,14:18,15:13,,,,,15:32,16:32,17:08,17:32,17:46,,1,9:44:16,GLN,201st Islington,
-82B,Casey Vance,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:49,13:09,14:18,15:13,,,,,15:32,16:33,17:09,17:32,17:46,,1,9:44:22,GLN,201st Islington,
-82C,Riley Sharp,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:50,13:09,14:18,15:13,,,,,15:32,16:32,17:08,17:33,17:46,,1,9:44:19,GLN,201st Islington,
-83A,Casey Osei,Wolfy Walkers,50km,08:01,08:25,,08:51,09:54,10:30,10:58,11:34,11:52,12:45,13:24,,,,,13:42,14:28,14:49,15:03,15:12,,1,7:10:41,Greater London North,Wild Wolf ESU,
-83B,Alex Holt,Wolfy Walkers,50km,08:01,08:25,,08:52,09:54,10:30,10:58,11:34,11:52,12:45,13:24,,,,,13:42,14:28,14:49,15:03,15:12,,1,7:10:33,Greater London North,Wild Wolf ESU,
-83C,Sam Yates,Wolfy Walkers,50km,08:01,08:25,,08:51,09:54,10:30,10:58,11:34,11:52,12:45,M13:24,,,,,13:42,14:28,14:49,15:03,15:12,,1,7:10:32,Greater London North,Wild Wolf ESU,
-84A,Quinn Turner,BEAST,50km,08:05,08:27,,08:55,10:13,10:54,11:28,12:05,12:26,13:30,14:17,,,,,14:35,15:27,16:02,16:20,16:30,,1,8:25:01,Essex,BEAST SAS,
-84B,Morgan Lane,BEAST,50km,08:05,08:27,,08:55,10:12,10:54,11:28,12:06,12:26,13:30,14:17,,,,,14:35,15:27,16:01,16:20,16:30,,1,8:24:58,Essex,BEAST SAS,
-84C,Toby Nash,BEAST,50km,08:05,08:27,,08:55,10:13,10:54,11:28,12:07,12:26,13:30,14:17,,,,,14:35,15:28,16:01,16:20,16:30,,1,8:25:09,Essex,BEAST SAS,
-84D,Ellis Evans,BEAST,50km,08:05,08:28,,08:55,10:12,10:54,11:28,12:06,12:26,13:30,14:17,,,,,14:35,15:27,16:01,16:20,16:30,,1,8:24:48,Essex,BEAST SAS,
-85A,Parker Underwood,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:39,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:18,15:30,,1,7:24:48,Essex,Genesis ESU,
-85B,Val Marsh,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:40,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:18,15:30,,1,7:24:41,Essex,Genesis ESU,
-85C,Gray Dawson,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:39,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:18,15:30,,1,7:24:49,Essex,Genesis ESU,
-101A,Bailey Bishop,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,13:53,14:08,,1,5:58:37,Somerset,Gurt Wyrm ESU,
-101B,Noel Pratt,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,13:53,14:08,,1,5:58:29,Somerset,Gurt Wyrm ESU,
-101C,Parker Gibbs,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,13:53,14:08,,1,5:58:28,Somerset,Gurt Wyrm ESU,
-101D,Finley Zimmer,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,13:53,14:08,,1,5:58:29,Somerset,Gurt Wyrm ESU,
-102A,Noel Zimmer,Romford Royals,30km,08:09,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:30,14:23,15:18,15:37,,1,7:27:37,GLNE,Mixed Explorer Units,
-102B,Wren Irving,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:30,14:23,15:18,15:37,,1,7:27:12,GLNE,Mixed Explorer Units,
-102C,Riley Gibbs,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:29,14:23,15:17,15:37,,1,7:27:30,GLNE,Mixed Explorer Units,
-102D,Riley Underwood,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:29,14:23,15:17,15:37,,1,7:27:13,GLNE,Mixed Explorer Units,
-102E,Uma Dawson,Romford Royals,30km,08:09,08:34,08:55,,,09:43,10:22,11:26,11:57,,,,,,,,13:29,14:22,15:17,15:37,,1,7:27:30,GLNE,Mixed Explorer Units,
-103A,Ellis Gibbs,Wild Wolf ESU 1,30km,08:13,08:46,09:12,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:34,15:51,,1,7:38:20,Greater London North,Wild Wolf ESU,
-103B,Ellis Lane,Wild Wolf ESU 1,30km,08:12,08:46,09:09,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:34,15:51,,1,7:38:22,Greater London North,Wild Wolf ESU,
-103C,Harper Reyes,Wild Wolf ESU 1,30km,08:13,08:46,09:09,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:34,15:51,,1,7:38:16,Greater London North,Wild Wolf ESU,
-104A,Noel Dawson,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:13,12:51,,,,,,,,14:35,15:27,15:53,16:05,,1,7:52:22,Greater London North,Hatters Explorer Scout Unit in Southgate,
-104B,Parker Nash,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:12,12:51,,,,,,,,14:35,15:27,15:53,16:05,,1,7:52:17,Greater London North,Hatters Explorer Scout Unit in Southgate,
-104C,Kai Vance,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:13,12:51,,,,,,,,14:34,15:27,15:53,16:05,,1,7:52:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
-105A,Uma Carter,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:44,16:52,17:42,18:10,,1,9:53:46,GLN,Merlin ESU,
-105C,Wren Quincey,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:44,16:52,17:42,18:10,,1,9:53:53,GLN,Merlin ESU,
-105D,Ellis Wade,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:45,16:52,17:42,18:10,,1,9:53:53,GLN,Merlin ESU,
-106B,Finley Nash,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:23,17:39,,1,9:22:44,GLN,Argo Explorers,
-106C,Finley Reyes,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:23,17:39,,1,9:22:31,GLN,Argo Explorers,
-106D,Toby Kemp,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:23,17:39,,1,9:22:40,GLN,Argo Explorers,
-106E,Sam Adams,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:35,12:49,13:26,,,,,,,,15:27,16:34,17:23,17:39,,1,9:22:31,GLN,Argo Explorers,
-107A,Finley Sharp,The Three Musketeers and a random,30km,08:19,08:47,09:07,,,10:14,11:33,12:56,13:46,,,,,,,,15:28,16:28,17:01,17:23,,1,9:03:38,GLSW,7th Purley Scout Group,
-107B,Indigo Marsh,The Three Musketeers and a random,30km,08:19,08:47,09:08,,,10:14,11:33,12:55,13:46,,,,,,,,15:28,16:29,17:01,17:23,,1,9:04:06,GLSW,7th Purley Scout Group,
-107C,Casey Farley,The Three Musketeers and a random,30km,08:19,08:47,09:07,,,10:14,11:33,12:55,13:47,,,,,,,,15:28,16:29,17:02,17:23,,1,9:03:52,GLSW,7th Purley Scout Group,
-107D,Noel Adams,The Three Musketeers and a random,30km,08:19,08:47,09:09,,,10:14,11:33,12:56,13:47,,,,,,,,15:28,16:29,17:02,17:23,,1,9:03:56,GLSW,7th Purley Scout Group,
-108A,Zion Jarrett,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:20,15:34,,1,7:15:42,Greater London North,Hatters Explorer Scout Unit in Southgate,
-108B,Ellis Dawson,"You don't have to be mad, but it helps",30km,08:19,08:48,09:09,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:51,15:20,15:34,,1,7:15:28,Greater London North,Hatters Explorer Scout Unit in Southgate,
-108C,Uma Jarrett,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:20,15:34,,1,7:15:42,Greater London North,Hatters Explorer Scout Unit in Southgate,
-108D,Jesse Pratt,"You don't have to be mad, but it helps",30km,08:19,08:49,09:10,,,10:36,11:21,12:12,12:49,,,,,,,,13:59,14:51,15:21,15:35,,1,7:15:49,Greater London North,Hatters Explorer Scout Unit in Southgate,
-108E,Toby Farley,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:21,15:35,,1,7:15:43,Greater London North,Hatters Explorer Scout Unit in Southgate,
-110A,Kai Farley,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:26,,,,,,,,18:13,19:06,20:04,20:28,,1,12:06:42,GLN,HHESU Explorers,
-110B,Ollie Lane,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:26,,,,,,,,18:13,19:06,20:04,20:28,,1,12:06:22,GLN,HHESU Explorers,
-110C,Finley Kemp,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:27,,,,,,,,18:13,19:07,20:04,20:29,,1,12:06:57,GLN,HHESU Explorers,
-110D,Ellis Underwood,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:22,15:44,16:27,,,,,,,,18:13,19:11,20:04,20:29,,1,12:06:58,GLN,HHESU Explorers,
-110E,Morgan Nash,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:27,,,,,,,,18:13,19:10,20:04,20:28,,1,12:06:37,GLN,HHESU Explorers,
-111A,Uma Farley,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:35,11:32,12:38,13:15,,,,,,,,14:39,15:31,16:10,16:24,,1,7:54:33,Warwickshire,Shamrock Explorer Unit,
-111B,Casey Turner,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:32,12:37,13:15,,,,,,,,14:37,15:31,16:09,16:24,,1,7:54:55,Warwickshire,Shamrock Explorer Unit,
-111C,Zion Adams,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:32,12:37,13:15,,,,,,,,14:42,15:31,16:09,16:24,,1,7:54:32,Warwickshire,Shamrock Explorer Unit,
-111D,Harper Gibbs,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:31,12:37,13:15,,,,,,,,14:37,15:31,16:09,16:24,,1,7:54:40,Warwickshire,Shamrock Explorer Unit,
-112A,Morgan Holt,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:23,,,,,,,,14:34,15:20,16:37,16:55,,1,8:30:44,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-112B,Sam Osei,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:21,,,,,,,,14:34,15:20,16:37,16:55,,1,8:30:38,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-112C,Logan Evans,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:21,,,,,,,,14:34,15:20,16:37,16:55,,1,8:30:42,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-112D,Harper Pratt,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:07,09:32,,,10:37,11:31,12:26,13:21,,,,,,,,14:34,15:20,16:37,16:55,,1,8:30:45,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-113A,Dana Marsh,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:15,14:04,15:30,16:21,,,,,,,,18:03,19:07,19:57,20:23,,1,11:49:25,South London,Golden Hind Explorer Scout Unit,
-113B,Alex Turner,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:14,14:03,15:30,16:21,,,,,,,,18:03,19:07,19:57,20:23,,1,11:49:26,South London,Golden Hind Explorer Scout Unit,
-113C,Indigo Wade,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:15,14:04,15:30,16:21,,,,,,,,18:03,19:08,19:57,20:23,,1,11:49:39,South London,Golden Hind Explorer Scout Unit,
-113E,Sam Marsh,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:14,14:04,15:30,16:21,,,,,,,,18:03,19:10,19:57,20:23,,1,11:49:37,South London,Golden Hind Explorer Scout Unit,
-114A,Wren Gibbs,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,M17:32,17:51,,1,9:23:11,GLSW,Pinewood Seahorses ESU,
-114B,Gray Farley,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:32,17:51,,1,9:23:16,GLSW,Pinewood Seahorses ESU,
-114C,Riley Irving,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:32,17:51,,1,9:23:14,GLSW,Pinewood Seahorses ESU,
-114E,Toby Quincey,Pinewood Seahorses B,30km,08:28,09:02,09:26,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:32,17:51,,1,9:23:26,GLSW,Pinewood Seahorses ESU,
-116A,Alex Yates,Mad Hatters,30km,08:31,08:59,09:19,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:06,15:31,,1,7:00:05,Greater London North,Hatters Explorer Scout Unit in Southgate,
-116B,Finley Farley,Mad Hatters,30km,08:31,08:58,09:18,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:06,15:31,,1,7:00:21,Greater London North,Hatters Explorer Scout Unit in Southgate,
-116C,Noel Holt,Mad Hatters,30km,08:31,08:58,09:19,,,10:14,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:06,15:31,,1,7:00:41,Greater London North,Hatters Explorer Scout Unit in Southgate,
-116D,Quinn Zimmer,Mad Hatters,30km,08:31,08:58,09:19,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:06,15:32,,1,7:00:47,Greater London North,Hatters Explorer Scout Unit in Southgate,
-117A,Uma Nash,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:25,11:03,12:09,12:35,,,,,,,,13:39,14:33,15:15,15:29,,1,6:54:45,GLN,1st and 3rd New Barnet Scout Group,
-117B,Yael Osei,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:26,11:03,12:09,12:35,,,,,,,,13:39,14:32,15:14,15:29,,1,6:54:44,GLN,1st and 3rd New Barnet Scout Group,
-117C,Val Yates,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:26,11:03,12:10,12:35,,,,,,,,13:39,14:32,15:14,15:29,,1,6:54:36,GLN,1st and 3rd New Barnet Scout Group,
-118A,Wren Osei,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:43,18:05,18:46,19:07,,1,10:33:09,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-118B,Toby Vance,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:44,18:05,18:45,19:07,,1,10:32:52,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-118C,Casey Nash,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:02,,,,,,,,16:43,18:07,18:46,19:07,,1,10:32:51,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-118D,Finley Holt,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:20,12:29,14:04,15:03,,,,,,,,16:43,18:06,18:46,19:07,,1,10:33:16,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-118E,Sam Gibbs,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:43,18:07,18:47,19:07,,1,10:33:22,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
-119A,Uma Vance,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:08,16:42,16:59,,1,8:20:02,Devon,20th Torbay Scout Group,
-119B,Casey Holt,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:03,16:42,16:59,,1,8:20:09,Devon,20th Torbay Scout Group,
-119C,Sam Zimmer,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:07,16:42,16:59,,1,8:20:01,Devon,20th Torbay Scout Group,
-119D,Jesse Kemp,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:55,11:31,12:27,13:18,,,,,,,,14:48,16:07,16:42,16:59,,1,8:20:11,Devon,20th Torbay Scout Group,
-119E,Toby Wade,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:03,16:42,16:59,,1,8:19:47,Devon,20th Torbay Scout Group,
-120A,Wren Evans,West Pang Gang 4,30km,08:37,09:11,09:54,,,11:01,12:00,13:53,14:36,,,,,,,,16:31,18:19,19:28,19:59,,1,11:22:11,Berkshire,West Pang Explorer Scout Unit,
-120B,Casey Quincey,West Pang Gang 4,30km,08:37,09:11,09:53,,,11:00,12:00,13:52,14:36,,,,,,,,16:31,18:19,19:28,19:59,,1,11:22:05,Berkshire,West Pang Explorer Scout Unit,
-120C,Alex Osei,West Pang Gang 4,30km,08:37,09:11,09:53,,,11:01,12:00,13:53,14:36,,,,,,,,16:31,18:19,19:28,19:59,,1,11:22:12,Berkshire,West Pang Explorer Scout Unit,
-121A,Uma Sharp,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:22,14:35,,1,5:55:19,West Herts,VVV Explorer Scouts,
-121B,Harper Marsh,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:22,14:35,,1,5:55:34,West Herts,VVV Explorer Scouts,
-121D,Riley Bishop,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:22,14:35,,1,5:55:22,West Herts,VVV Explorer Scouts,
-122A,Val Farley,Romford Raiders,30km,08:40,09:10,09:30,,,10:36,11:25,12:31,12:54,,,,,,,,14:19,14:59,15:26,15:39,,1,6:59:20,GLNE,Mixed Explorer Units,
-122B,Finley Evans,Romford Raiders,30km,08:40,09:10,09:30,,,10:37,11:25,12:31,12:55,,,,,,,,14:19,15:00,15:26,15:39,,1,6:59:32,GLNE,Mixed Explorer Units,
-122C,Bailey Vance,Romford Raiders,30km,08:40,09:10,09:30,,,10:41,11:25,12:31,12:54,,,,,,,,14:19,14:59,15:26,15:39,,1,6:59:31,GLNE,Mixed Explorer Units,
-122D,Toby Holt,Romford Raiders,30km,08:40,09:10,09:30,,,10:37,11:25,12:31,12:54,,,,,,,,14:19,15:00,15:26,15:39,,1,6:59:35,GLNE,Mixed Explorer Units,
-123A,Logan Dawson,Crouch Valley Boomwackers,30km,08:43,09:23,09:50,,,10:55,12:28,14:35,15:16,,,,,,,,17:11,18:26,19:06,19:28,,1,10:45:13,Essex,Crouch Valley Explorers,
-123B,Kai Bishop,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:55,12:28,14:35,15:17,,,,,,,,17:11,18:26,19:05,19:28,,1,10:45:25,Essex,Crouch Valley Explorers,
-123C,Sam Turner,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:56,12:29 R,,,,,,,,,,,,,,,0,3:45:48,Essex,Crouch Valley Explorers,
-123D,Kai Sharp,Crouch Valley Boomwackers,30km,08:43,09:23,09:50,,,10:55,12:29,14:35,15:16,,,,,,,,17:11,18:26,19:05,19:28,,1,10:45:24,Essex,Crouch Valley Explorers,
-123E,Casey Bishop,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:55,12:28,14:35,15:17,,,,,,,,17:11,18:26,19:06,19:28,,1,10:45:16,Essex,Crouch Valley Explorers,
-124A,Yael Farley,Romford Rabbits,30km,08:43,09:12,09:47,,,10:50,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:29,17:45,,1,9:02:00,GLNE,Mixed Explorer Units,
-124B,Finley Wade,Romford Rabbits,30km,08:43,09:12,09:47,,,10:50,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:29,17:45,,1,9:01:57,GLNE,Mixed Explorer Units,
-124C,Bailey Underwood,Romford Rabbits,30km,08:43,09:13,09:47,,,10:51,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:29,17:45,,1,9:02:09,GLNE,Mixed Explorer Units,
-124D,Val Osei,Romford Rabbits,30km,08:43,09:13,09:47,,,10:51,13:10,14:04,14:43,,,,,,,,16:01,16:58,17:29,17:45,,1,9:02:07,GLNE,Mixed Explorer Units,
-124E,Sam Quincey,Romford Rabbits,30km,08:43,09:13,09:48,,,10:51,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:29,17:45,,1,9:02:13,GLNE,Mixed Explorer Units,
-125A,Riley Osei,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:16,15:36,,1,6:50:09,Beds,Leagrave Scout Group,
-125B,Riley Nash,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:16,15:36,,1,6:50:14,Beds,Leagrave Scout Group,
-125C,Uma Yates,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:16,15:36,,1,6:50:04,Beds,Leagrave Scout Group,
-125D,Noel Marsh,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:44,15:16,15:36,,1,6:50:10,Beds,Leagrave Scout Group,
-126A,Zion Evans,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:26,15:27,15:59,16:11,,1,7:25:02,Greater London North,Wild Wolf ESU,
-126B,Uma Turner,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:27,15:27,15:59,16:11,,1,7:24:54,Greater London North,Wild Wolf ESU,
-126C,Toby Zimmer,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:27,15:27,15:59,16:11,,1,7:25:02,Greater London North,Wild Wolf ESU,
-127A,Ollie Gibbs,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:24,17:43,,1,8:54:06,Greater London North,Hatters Explorer Scout Unit in Southgate,
-127B,Toby Adams,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:24,17:43,,1,8:54:01,Greater London North,Hatters Explorer Scout Unit in Southgate,
-127C,Logan Irving,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:24,17:43,,1,8:53:59,Greater London North,Hatters Explorer Scout Unit in Southgate,
-128A,Jesse Nash,Skipped Revising for This,30km,08:49,09:13,09:32,,,10:31,11:09,11:56,12:16,,,,,,,,13:25,14:14,14:52,15:08,,1,6:19:26,GLMW,Pioneers ESU,
-128B,Logan Yates,Skipped Revising for This,30km,08:49,09:14,09:32,,,10:31,11:10,11:57,12:16,,,,,,,,13:25,14:14,14:52,15:08,,1,6:19:30,GLMW,Pioneers ESU,
-128C,Ollie Nash,Skipped Revising for This,30km,08:49,09:13,09:32,,,10:31,11:09,11:56,12:16,,,,,,,,13:25,14:14,14:52,15:08,,1,6:19:35,GLMW,Pioneers ESU,
-129A,Parker Evans,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:55,12:00,12:57,13:34,,,,,,,,15:03,15:58,16:31,16:52,,1,8:00:44,Essex,Crouch Valley Explorers,
-129B,Kai Wade,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:31,16:52,,1,8:00:39,Essex,Crouch Valley Explorers,
-129C,Zion Wade,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:35,,,,,,,,15:03,15:58,16:31,16:52,,1,8:00:50,Essex,Crouch Valley Explorers,
-129D,Val Reyes,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:30,16:52,,1,8:00:28,Essex,Crouch Valley Explorers,
-129E,Harper Irving,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:55,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:30,16:52,,1,8:00:14,Essex,Crouch Valley Explorers,
-130A,Quinn Quincey,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:40,14:04,14:50,,,,,,,,16:10,17:15,17:49,18:09,,1,9:17:29,essex,Genesis Explorer scouts,
-130B,Noel Lane,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:39,14:03,14:49,,,,,,,,16:10,17:14,17:47,18:09,,1,9:17:35,essex,Genesis Explorer scouts,
-130C,Noel Bishop,Genesis 1,30km,08:52,09:28,10:13,,,11:24,12:39,14:04,14:49,,,,,,,,16:10,17:12,17:46,18:09,,1,9:17:19,essex,Genesis Explorer scouts,
-130D,Uma Zimmer,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:39,14:03,14:49,,,,,,,,16:11,17:12,17:46,18:09,,1,9:17:15,essex,Genesis Explorer scouts,
-131A,Uma Marsh,Romford Rovers,30km,08:55,09:28,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,18:53,19:11,,1,10:16:30,GLNE,Mixed Explorer Units,
-131B,Finley Quincey,Romford Rovers,30km,08:55,09:28,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,18:53,19:11,,1,10:16:24,GLNE,Mixed Explorer Units,
-131C,Zion Gibbs,Romford Rovers,30km,08:55,09:29,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:09,18:52,19:11,,1,10:16:34,GLNE,Mixed Explorer Units,
-131D,Gray Marsh,Romford Rovers,30km,08:55,09:29,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,18:52,19:12,,1,10:16:45,GLNE,Mixed Explorer Units,
-132A,Noel Quincey,Kenley Aces 2,30km,08:55,09:27,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:14,19:32,,1,10:37:05,GLSW,Kenley Aces,
-132B,Finley Lane,Kenley Aces 2,30km,08:55,09:28,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:14,19:32,,1,10:37:08,GLSW,Kenley Aces,
-132C,Logan Marsh,Kenley Aces 2,30km,08:55,09:28,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:14,19:32,,1,10:37:25,GLSW,Kenley Aces,
-132E,Val Carter,Kenley Aces 2,30km,08:55,09:27,10:00,,,11:26,12:50,15:19,16:09,,,,,,,,17:40,18:37,19:14,19:32,,1,10:37:06,GLSW,Kenley Aces,
-133A,Parker Vance,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:03,16:17,,1,7:19:53,West Herts,VVV Explorer Scouts,
-133B,Ollie Quincey,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56 R,,,,,,,,,,,,,,0,3:58:26,West Herts,VVV Explorer Scouts,
-133C,Indigo Vance,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:03,16:17,,1,7:19:53,West Herts,VVV Explorer Scouts,
-133D,Riley Holt,This Is The Way,30km,08:58,09:35,09:56,,,11:14,12:06,12:56,13:18,,,,,,,,14:39,15:30,16:03,16:17,,1,7:19:49,West Herts,VVV Explorer Scouts,
-133E,Toby Sharp,This Is The Way,30km,08:57,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:03,16:17,,1,7:19:54,West Herts,VVV Explorer Scouts,
-134A,Indigo Evans,Phoenix Flyers 3,30km,08:58,09:22,09:38,,,10:27,11:02,11:44,12:09,,,,,,,,13:03,13:44,14:07,14:17,,1,5:19:22,GLN,201st Islington,
-134B,Noel Jarrett,Phoenix Flyers 3,30km,08:58,09:22,09:38,,,10:28,11:02,11:44,12:09,,,,,,,,13:04,13:44,14:07,14:17,,1,5:19:28,GLN,201st Islington,
-134C,Yael Wade,Phoenix Flyers 3,30km,08:58,09:22,09:39,,,10:28,11:02,11:45,12:09,,,,,,,,13:04,13:44,14:07,14:17,,1,5:19:24,GLN,201st Islington,
-134D,Uma Quincey,Phoenix Flyers 3,30km,08:58,09:22,09:39,,,10:27,11:02,11:44,12:09,,,,,,,,13:03,13:44,14:07,14:17,,1,5:19:23,GLN,201st Islington,
-135A,Dana Yates,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:41,16:29,,,,,,,,18:12 R,,,,,0,9:11:03,Essex,Crouch Valley Explorers,
-135B,Finley Marsh,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:41,16:28,,,,,,,,18:12,20:27,21:13,21:36,,1,12:35:21,Essex,Crouch Valley Explorers,
-135C,Morgan Kemp,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:42,16:29,,,,,,,,18:12,20:27,21:13,21:36,,1,12:35:24,Essex,Crouch Valley Explorers,
-135D,Sam Jarrett,Crouch Valley Rocks,30km,09:01,09:50,10:18,,,12:51,14:03,15:41,16:29,,,,,,,,18:12,20:27,21:12,21:36,,1,12:35:30,Essex,Crouch Valley Explorers,
-135E,Noel Wade,Crouch Valley Rocks,30km,09:01,09:50,10:18,,,12:52,14:03,15:41,16:28,,,,,,,,18:12,20:27,21:13,21:37,,1,12:35:30,Essex,Crouch Valley Explorers,
-136A,Ellis Pratt,Paka pigeon haters,30km,09:01,09:40,10:07,,,11:24,12:38,14:05,14:48,,,,,,,,16:33,18:05,18:51,19:10,,1,10:09:54,GLMW,Pioneers ESU,
-136B,Gray Carter,Paka pigeon haters,30km,09:01,09:40,10:06,,,11:23,12:38,14:05,14:48,,,,,,,,16:33,18:06,18:52,19:10,,1,10:09:47,GLMW,Pioneers ESU,
-136C,Parker Marsh,Paka pigeon haters,30km,09:01,09:40,10:07,,,11:27,12:40,14:05,14:48,,,,,,,,16:34,18:06,18:53,19:11,,1,10:10:25,GLMW,Pioneers ESU,
-136D,Gray Wade,Paka pigeon haters,30km,09:00,09:40,10:06,,,11:23,12:39,14:05,14:48,,,,,,,,16:33,17:56,18:51,19:10,,1,10:09:48,GLMW,Pioneers ESU,
-136E,Morgan Evans,Paka pigeon haters,30km,09:01,09:40,10:06,,,11:25,12:39,14:06,14:50,,,,,,,,16:34,17:56,18:52,19:11,,1,10:09:55,GLMW,Pioneers ESU,
-137A,Morgan Carter,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,16:55,17:10,,1,8:06:01,Devon,20th Torbay Scout Group,
-137B,Wren Kemp,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:56,12:55,13:31,,,,,,,,14:51,15:57,16:55,17:10,,1,8:05:57,Devon,20th Torbay Scout Group,
-137C,Quinn Osei,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:56,12:55,13:32,,,,,,,,14:51,15:57,16:55,17:10,,1,8:05:59,Devon,20th Torbay Scout Group,
-137D,Casey Marsh,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,16:55,17:10,,1,8:06:04,Devon,20th Torbay Scout Group,
-137E,Logan Zimmer,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,16:55,17:10,,1,8:06:08,Devon,20th Torbay Scout Group,
-138A,Alex Dawson,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:04,12:58,14:07,,,,,,,,15:34,16:36,17:23,17:36,,1,8:32:13,Greater London North,Hatters Explorer Scout Unit in Southgate,
-138B,Quinn Wade,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:04,12:59,14:07,,,,,,,,15:34,16:36,17:23,17:36,,1,8:32:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
-138C,Bailey Farley,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:03,12:58,14:07,,,,,,,,15:34,16:36,17:23,17:36,,1,8:32:19,Greater London North,Hatters Explorer Scout Unit in Southgate,
-139A,Wren Yates,Kenley Aces 3,30km,09:07,09:39,10:14,,,11:24,12:40,14:03,14:50,,,,,,,,16:10,17:15,17:49,18:09,,1,9:02:39,GLSW,Kenley Aces,
-139B,Quinn Gibbs,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:28,12:32,13:50,14:26,,,,,,,,15:45,17:13,17:50,18:11,,1,9:03:46,GLSW,Kenley Aces,
-139C,Riley Farley,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:29,12:32,13:50,14:26,,,,,,,,15:45,17:13,17:50,18:10,,1,9:03:43,GLSW,Kenley Aces,
-139D,Harper Evans,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:28,12:32,13:50,14:25,,,,,,,,15:45,17:13,17:50,18:11,,1,9:03:52,GLSW,Kenley Aces,
-139E,Finley Jarrett,Kenley Aces 3,30km,09:07,09:38,10:13,,,11:28,12:32,13:50,14:25,,,,,,,,15:45,17:13,17:50,18:11,,1,9:03:49,GLSW,Kenley Aces,
-140A,Riley Wade,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,16:44,17:01,,1,7:53:48,GLN,201st Islington,
-140B,Casey Carter,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,16:44,17:01,,1,7:53:46,GLN,201st Islington,
-140C,Bailey Marsh,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,16:44,17:01,,1,7:54:03,GLN,201st Islington,
-141A,Morgan Underwood,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:41,16:34,17:17,17:34,,1,8:24:00,essex,Genesis Explorer scouts,
-141B,Kai Nash,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:42,16:35,17:17,17:34,,1,8:23:51,essex,Genesis Explorer scouts,
-141C,Ollie Holt,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:42,16:34,17:18,17:34,,1,8:24:27,essex,Genesis Explorer scouts,
-142A,Dana Sharp,Romford Renegades,30km,09:10,09:42,10:05,,,10:56,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:27,18:48,,1,9:38:10,GLNE,Mixed Explorer Units,
-142B,Noel Irving,Romford Renegades,30km,09:10,09:42,10:05,,,10:57,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:27,18:48,,1,9:38:12,GLNE,Mixed Explorer Units,
-142C,Kai Dawson,Romford Renegades,30km,09:10,09:41,10:05,,,10:56,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:27,18:48,,1,9:38:12,GLNE,Mixed Explorer Units,
-142D,Dana Adams,Romford Renegades,30km,09:10,09:41,10:05,,,10:57,11:34,13:16,14:46,,,,,,,,16:29,17:53,18:27,18:48,,1,9:37:59,GLNE,Mixed Explorer Units,
-143A,Parker Dawson,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:32,14:15,,,,,,,,15:44,17:01,17:35,17:51,,1,8:38:28,Greater London North,Tottenham ESU,
-143B,Zion Quincey,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:32,14:15,,,,,,,,15:44,17:01,17:35,17:51,,1,8:38:41,Greater London North,Tottenham ESU,
-143C,Gray Vance,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:27,13:32,14:15,,,,,,,,15:44,17:01,17:35,17:52,,1,8:39:10,Greater London North,Tottenham ESU,
-143D,Casey Irving,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:31,14:15,,,,,,,,15:44,17:01,17:35,17:52,,1,8:38:50,Greater London North,Tottenham ESU,
-143E,Zion Carter,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:31,14:15,,,,,,,,15:44,17:01,17:35,17:52,,1,8:39:22,Greater London North,Tottenham ESU,
-145A,Finley Gibbs,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:33,15:50,,1,6:34:05,Greater London North,Wild Wolf ESU,
-145B,Dana Evans,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:33,15:50,,1,6:34:04,Greater London North,Wild Wolf ESU,
-145C,Morgan Irving,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:33,15:50,,1,6:34:05,Greater London North,Wild Wolf ESU,
-145D,Riley Pratt,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:33,15:50,,1,6:34:10,Greater London North,Wild Wolf ESU,
-146A,Finley Carter,Too easy,30km,09:16,09:41,09:59,,,11:00,11:32,12:17,12:39,,,,,,,,13:34,14:05,14:29,14:42,,1,5:26:03,Greater London North,Hatters Explorer Scout Unit in Southgate,
-146B,Morgan Vance,Too easy,30km,09:16,09:41,09:59,,,11:00,11:31,12:16,12:39,,,,,,,,13:34,14:05,14:29,14:42,,1,5:26:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
-146C,Parker Yates,Too easy,30km,09:16,09:41,09:59,,,11:00,11:32,12:17,12:39,,,,,,,,13:35,14:05,14:29,14:42,,1,5:26:24,Greater London North,Hatters Explorer Scout Unit in Southgate,
-147A,Casey Kemp,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,15:57,16:08,,1,6:48:32,GLNE,Zenith ESU,
-147B,Sam Pratt,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:45,13:23,,,,,,,,14:36,15:22,15:56,16:08,,1,6:48:57,GLNE,Zenith ESU,
-147C,Gray Turner,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:45,13:23,,,,,,,,14:36,15:22,15:57,16:08,,1,6:48:30,GLNE,Zenith ESU,
-147D,Yael Marsh,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,15:56,16:07,,1,6:48:31,GLNE,Zenith ESU,
-147E,Morgan Quincey,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,15:56,16:07,,1,6:48:29,GLNE,Zenith ESU,
-148A,Morgan Reyes,Romford Ramblers,30km,09:19,09:43,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:35,14:50,,1,5:30:51,GLNE,Mixed Explorer Units,
-148B,Yael Reyes,Romford Ramblers,30km,09:19,09:43,10:00,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:34,14:50,,1,5:31:01,GLNE,Mixed Explorer Units,
-148C,Morgan Pratt,Romford Ramblers,30km,09:19,09:43,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:35,14:50,,1,5:30:48,GLNE,Mixed Explorer Units,
-148D,Wren Marsh,Romford Ramblers,30km,09:19,09:44,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:35,14:50,,1,5:30:58,GLNE,Mixed Explorer Units,
-148E,Kai Jarrett,Romford Ramblers,30km,09:18,09:43,10:00,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:34,14:49,,1,5:31:00,GLNE,Mixed Explorer Units,
+Number,Name,Team,Route,Main start,CP01,CP02,CP03,CP04,CP05,CP06,CP07,CP08,CP09,CP10,CP11,CP12,CP13,CP14,CP15,CP16,CP17,The finish,Waiting time,Complete,Total time,Extra field 1,Extra field 2,Extra field 3
+1A,Gray Yates,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:28,14:13,16:31,18:22,20:01,21:19,22:35,23:22,00:13,,1,18:13:12,GLN,10th Edmonton,
+1B,Uma Lane,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:27,14:12,16:31,18:22,20:01,21:19,22:35,23:22,00:13,,1,18:12:50,GLN,10th Edmonton,
+1D,Jesse Dawson,As if 50km wasn't bad enough,50mile,06:00,06:28,,07:05,08:40,09:30,10:10,10:56,11:26,12:39,13:28,14:13,16:31,18:22,20:01,21:19,22:35,23:23,00:13,,1,18:13:04,GLN,10th Edmonton,
+2A,Morgan Yates,Hertfordshire Hobblers,50mile,06:02,06:29,,07:04,08:33,09:31,10:18,11:01,11:33,12:43,13:37,14:14,16:31,18:47,20:09,21:23,22:35,23:13,23:52,,1,17:49:59,Hertfordshire,Potters Bar & District,
+2B,Parker Irving,Hertfordshire Hobblers,50mile,06:02,06:29,,07:05,08:33,09:31,10:18,11:01,11:32,12:43,13:37,14:14,16:31,18:47,20:10,21:22,22:35,23:13,23:52,,1,17:49:54,Hertfordshire,Potters Bar & District,
+2C,Logan Turner,Hertfordshire Hobblers,50mile,06:02,06:29,,07:05,08:33,09:31,10:19,11:02,11:33,12:43,13:37,14:14,16:31,18:47,20:09,21:23,22:35,23:13,23:52,,1,17:50:01,Hertfordshire,Potters Bar & District,
+3A,Parker Holt,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:15,11:13,11:57,12:28,14:24,15:48,16:54,18:00,19:01,19:39,20:20,,1,14:16:09,Coventry,Trident Phoenix Explorers,
+3B,Yael Zimmer,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:14,11:13,11:56,12:29,14:23,15:48,16:53,17:59,19:01,19:39,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
+3C,Casey Underwood,Old guns,50mile,06:04,06:28,,M06:58,08:07,08:48,09:20,09:56,10:14,11:13,11:57,12:28,14:24,15:47,16:54,18:00,19:01,19:38,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
+3D,Toby Underwood,Old guns,50mile,06:04,06:28,,M06:58,08:06,08:48,09:20,09:56,10:14,11:13,11:57,12:28,14:24,15:47,16:53,17:59,19:01,19:39,20:20,,1,14:16:03,Coventry,Trident Phoenix Explorers,
+3E,Yael Kemp,Old guns,50mile,06:04,06:28,,M06:58,08:06,08:48,09:20,09:56,10:14,11:13,11:56,12:28,14:23,15:46,16:53,17:59,19:01,19:38,20:20,,1,14:16:26,Coventry,Trident Phoenix Explorers,
+4A,Dana Quincey,Scrambled Legs,50mile,06:34,M06:59,,07:34,M08:55,09:45,10:21,11:08,11:32,12:41,13:33,14:14,17:34,19:48,21:48,23:37,01:34,02:36,04:10,,1,21:35:54,Bedfordshire,Leagrave Scout Group,
+4C,Dana Irving,Scrambled Legs,50mile,06:34,M06:59,,07:34,M08:55,09:45,10:21,11:08,11:32,12:41,13:32,14:14,17:34,19:48,21:47,23:36,01:34,02:37,04:10,,1,21:36:06,Bedfordshire,Leagrave Scout Group,
+5A,Jesse Wade,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:46,11:55,12:33,14:58,16:53 R,,,,,,,,,,0,10:41:24,GLN,Argo Explorers,50MU25
+5B,Jesse Underwood,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:53 R,,,,,,,,,,0,10:41:12,GLN,Argo Explorers,50MU25
+5C,Val Nash,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:53,,,,,17:23,18:47,19:40,20:26,,1,14:14:08,GLN,Argo Explorers,50MU25
+5D,Zion Vance,Argo-Poole,50km,06:12,06:49,,07:29,M08:56,09:57,10:45,11:54,12:33,14:59,16:54,,,,,17:22,18:47,19:40,20:26,,1,14:13:58,GLN,Argo Explorers,50MU25
+6A,Riley Jarrett,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:25,12:42,13:38,14:20,17:02,19:25,21:01,22:52 R,,,,,0,16:42:00,GLNE,Hornchurch district,
+6B,Dana Wade,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:24,12:42,13:39,14:20,17:02,19:25,21:01,22:52 R,,,,,0,16:42:28,GLNE,Hornchurch district,
+6C,Toby Pratt,2 mature and 1 mild cheddar,50mile,06:10,06:34,,07:23,08:49,09:37,10:17,11:02,11:24,12:42,13:38,14:20,17:01,19:25,21:02,22:52,00:43,01:33,02:45,,1,20:35:08,GLNE,Hornchurch district,
+7A,Quinn Nash,Marple Network 3,50mile,06:12,06:38,,07:16,08:44,09:33,10:10,11:05,11:31,12:44,13:52,14:42,17:34,19:48,21:50,23:36,01:34,02:38,04:09,,1,21:57:29,Greater Manchester,1st Marple Network,50MU25
+7B,Casey Pratt,Marple Network 3,50mile,06:12,06:37,,07:16,08:44,09:33,10:10,11:04,11:31,12:44,13:52,14:42,17:34,19:48,21:47,23:36,01:32,02:36,04:09,,1,21:57:23,Greater Manchester,1st Marple Network,50MU25
+7D,Indigo Gibbs,Marple Network 3,50mile,06:12,06:37,,07:16,08:44,09:32,10:10,11:04,11:31,12:44,13:51,14:42,17:34,19:48,21:47,23:36,01:32,02:36,04:09,,1,21:57:24,Greater Manchester,1st Marple Network,50MU25
+8A,Noel Evans,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:01,16:22,18:32,20:09,21:31,22:39,23:24,00:24,,1,18:03:29,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
+8B,Alex Vance,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:00,16:22,18:32,20:09,21:31,22:39,23:24,00:24,,1,18:03:13,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
+8C,Ellis Carter,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:33,13:26,14:01,16:23,18:32,20:09,21:32,22:39,23:24,00:24,,1,18:03:50,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
+8D,Indigo Turner,No Skin & Blisters,50mile,M06:21,06:50,,07:24,08:50,09:38,10:22,11:07,11:27,12:34,13:26,14:02,16:22,18:32,20:09,21:31,22:39,23:24,00:24,,1,18:03:37,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50MU25
+9A,Harper Jarrett,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:45,10:32,11:30,11:56,13:33,14:36,15:19,18:17,20:42,22:29,00:24,02:20,03:33,04:46,,1,22:30:23,GLMW,Pioneers ESU,
+9B,Gray Sharp,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:20,18:17,20:42,22:28,00:23,02:20,03:33,04:46,,1,22:30:16,GLMW,Pioneers ESU,
+9C,Logan Vance,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:19,18:17,20:43,22:29 R,,,,,,0,16:13:06,GLMW,Pioneers ESU,
+9D,Toby Marsh,Powerpuff Girls,50mile,06:16,06:45,,07:22,08:54,09:46,10:32,11:30,11:56,13:33,14:36,15:20,18:17,20:43,22:29,00:23,02:20,03:34,04:46,,1,22:30:05,GLMW,Pioneers ESU,
+10A,Jesse Farley,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:36,10:16,11:01,11:25,12:35,13:25,14:02,16:22,18:13,19:37,21:03,22:16,23:05,23:56,,1,17:33:28,Devon,1st Plympton,
+10B,Harper Underwood,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:37,10:17,11:01,11:25,12:35,13:25,14:02,16:23,18:13,19:37,21:03,22:17,23:06,23:56,,1,17:33:25,Devon,1st Plympton,
+10C,Parker Turner,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:37,10:17,11:03,11:25,12:35,13:25,14:05,16:23,18:14,19:37,21:04,22:16,23:06,23:56,,1,17:33:13,Devon,1st Plympton,
+10D,Morgan Jarrett,Walking in 1st Plympton Wonderland,50mile,06:23,06:54,,07:31,08:51,09:36,10:17,11:01,11:25,12:35,13:25,14:02,16:22,18:13,19:37,21:03,22:16,23:05,23:56,,1,17:33:06,Devon,1st Plympton,
+11A,Zion Lane,Marple Network 2,50mile,06:25,06:53,,07:30,M09:05,09:57,10:42,11:34,12:09,13:30,14:35,15:21,19:58 R,,,,,,,,0,13:32:45,Greater Manchester,1st Marple Network,
+11B,Zion Dawson,Marple Network 2,50mile,06:25,06:52,,07:30,M09:05,09:58,10:42,11:34,12:09,13:30,14:35,15:20,19:57 R,,,,,,,,0,13:32:24,Greater Manchester,1st Marple Network,
+11C,Indigo Holt,Marple Network 2,50mile,06:25,06:53,,07:30,M09:05,09:57,10:42,11:34,12:09,13:30,14:35,15:21,19:58 R,,,,,,,,0,13:32:41,Greater Manchester,1st Marple Network,
+11D,Alex Zimmer,Marple Network 2,50mile,06:25,06:53,,07:31,M09:05,09:58,10:42,11:34,12:09,13:30,M14:35,15:32,19:58 R,,,,,,,,0,13:32:29,Greater Manchester,1st Marple Network,
+12A,Zion Yates,Argo-York,50mile,06:26,06:50,,07:25,M08:55,09:56,10:39,11:28,11:59,13:18,14:10,14:54,17:33,19:53,21:26,23:11,00:43,01:33,02:44,,1,20:18:31,GLN,Argo Explorers,50MU25
+12B,Morgan Marsh,Argo-York,50mile,06:26,06:49,,07:25,M08:55,09:56,10:39,11:28,12:00,13:17,14:10,14:54,17:33,19:53,21:26,23:12,00:43,01:33,02:44,,1,20:17:58,GLN,Argo Explorers,50MU25
+12C,Finley Dawson,Argo-York,50mile,06:25,06:50,,07:25,M08:55,09:56,10:39,11:28,12:00,13:18,14:11,14:55,17:33,19:54,21:27,23:11,00:44,01:41,02:44,,1,20:18:36,GLN,Argo Explorers,50MU25
+12D,Logan Quincey,Argo-York,50mile,06:26,06:50,,07:25,M08:55,09:56,10:39,11:28,11:59,13:18,14:11,14:55,17:33,19:54,21:27,23:11,00:43,01:42,02:44,,1,20:18:37,GLN,Argo Explorers,50MU25
+12E,Indigo Yates,Argo-York,50mile,06:26,06:50,,07:26,M08:55,09:56,10:39,11:28,11:59,13:17,14:10,14:54,17:33,19:53,21:26,23:11,00:43,01:33,02:44,,1,20:18:27,GLN,Argo Explorers,50MU25
+13A,Casey Jarrett,HHESU Iceland,50mile,06:27,06:55,,07:32,M08:59,09:54,10:38,11:28,11:57,13:14,14:16,15:05,17:55,20:09,21:48,23:24,00:43,01:33,02:45,,1,20:17:26,GLN,HHESU Explorers,50MU25
+13B,Ellis Marsh,HHESU Iceland,50mile,06:27,06:55,,07:31,M08:59,09:54,10:38,11:27,11:58,13:14,14:16,15:05,17:54,20:09,21:48,23:24,00:44,01:35,02:45,,1,20:17:36,GLN,HHESU Explorers,50MU25
+13C,Alex Gibbs,HHESU Iceland,50mile,06:27,06:55,,07:31,M08:59,09:53,10:38,11:28,11:58,13:14,14:16,15:05,17:55,20:10,21:49,23:24,00:44,01:36,02:44,,1,20:17:20,GLN,HHESU Explorers,50MU25
+13D,Quinn Sharp,HHESU Iceland,50mile,06:27,06:55,,07:33,M08:59,09:54,10:38,11:27,11:57,13:14,14:17,15:05,17:55,20:09 R,,,,,,,0,13:42:13,GLN,HHESU Explorers,50MU25
+14A,Dana Reyes,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:36,10:59,12:03,12:52,13:31,15:35,17:32,18:43,19:56,21:05,21:48,22:33,,1,16:05:44,Oxfordshire,Didcot ESU,
+14B,Noel Yates,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:37,10:59,12:03,12:53,13:31,15:35,17:33,18:43,19:56,21:05,21:48,22:33,,1,16:05:53,Oxfordshire,Didcot ESU,
+14C,Bailey Sharp,Ten Gallon Dixie,50mile,06:27,06:49,,07:19,08:32,09:22,09:57,10:36,10:59,12:03,12:53,13:32,15:35,17:32,18:43,19:56,21:05,21:48,22:33,,1,16:05:54,Oxfordshire,Didcot ESU,
+15A,Alex Wade,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:09,10:08,10:50,11:49,12:20,13:44,14:45,15:28,18:41,20:50,22:30,00:13,01:52,02:46,03:50,,1,21:21:58,GLN,WHESU,50MU25
+15B,Ollie Yates,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:10,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:40,20:49,22:32,00:13,01:52,02:46,03:50,,1,21:21:57,GLN,WHESU,50MU25
+15C,Yael Nash,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:09,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:40,20:50,22:30,00:13,01:52,02:46,03:50,,1,21:22:01,GLN,WHESU,50MU25
+15D,Toby Gibbs,The Brave & Bold Return,50mile,06:28,06:53,,07:26,09:10,10:08,10:50,11:49,12:20,13:45,14:45,15:28,18:54,20:50,22:30,00:13,01:52,02:46,03:50,,1,21:22:02,GLN,WHESU,50MU25
+16A,Ollie Sharp,22nd Southgate Scouts,50mile,06:30,06:44,,M07:07,08:03,08:42,09:11,09:41,09:54,10:44,11:23,11:49,13:28,14:35,15:25,16:10,16:55,17:21,17:47,,1,11:17:45,GLN,22nd Southgate,
+16B,Toby Lane,22nd Southgate Scouts,50mile,06:30,06:44,,07:07,08:03,08:42,09:11,09:41,09:55,10:45,11:22,11:49,13:27,14:36,15:25,16:10,16:54,17:22,17:47,,1,11:17:48,GLN,22nd Southgate,
+16C,Riley Dawson,22nd Southgate Scouts,50mile,06:30,06:44,,07:07,08:03,08:42,09:11,09:41,09:54,10:45,11:22,11:49,13:28,14:35,15:26,16:10,16:54,17:21,17:48,,1,11:17:51,GLN,22nd Southgate,
+17A,Parker Pratt,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:24,11:06,11:59,12:24,13:32,14:33,15:15,18:06,20:27,22:18 R,,,,,,0,15:45:05,Greater Manchester,1st Marple Network,
+17C,Yael Carter,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:24,11:06,11:59,12:24,13:32,14:33,15:15,18:05,20:28,22:19 R,,,,,,0,15:45:31,Greater Manchester,1st Marple Network,
+17D,Dana Underwood,Marple Network 1,50mile,06:33,07:02,,07:49,09:32,10:25,11:06,11:59,12:24,13:33,14:33,15:15,18:06,20:28,22:18 R,,,,,,0,15:44:47,Greater Manchester,1st Marple Network,
+18A,Sam Bishop,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:38,13:30,14:05,16:08,18:09,19:20,20:31,21:41,22:27,23:22,,1,16:47:57,Greater London North,Hatters Explorer Scout Unit in Southgate,
+18B,Quinn Underwood,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:39,13:31,14:06,16:08,18:09,19:20,20:31,21:41,22:27,23:22,,1,16:47:48,Greater London North,Hatters Explorer Scout Unit in Southgate,
+18C,Uma Underwood,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:20,11:07,11:32,12:37,13:30,14:05,16:08,18:09,19:20,20:31,21:40,22:28,23:21,,1,16:47:39,Greater London North,Hatters Explorer Scout Unit in Southgate,
+18D,Ellis Reyes,Scouting for gateau,50mile,06:34,M06:59,,07:34,08:55,09:44,10:20,11:12,11:32,12:37,13:29,14:05,16:08,18:08,19:23,20:30,21:40,22:26,23:22,,1,16:47:40,Greater London North,Hatters Explorer Scout Unit in Southgate,
+18E,Quinn Carter,Scouting for gateau,50mile,06:34,M06:59,,07:34,M08:55,09:44,10:21,11:07,11:32,12:37,13:30,14:05,16:08,18:09,19:20,20:30,21:40,22:27,23:22,,1,16:47:47,Greater London North,Hatters Explorer Scout Unit in Southgate,
+19A,Logan Nash,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:14,11:09,12:09,12:38,13:56,14:58,15:46,18:52,21:04,22:30,00:00,01:22,02:11,03:04,,1,20:28:11,GLN,Network (Merlin ESU),50MU25
+19B,Alex Quincey,Merlin away day,50mile,06:36,07:04,,07:47,09:21,10:14,11:09,12:09,12:37,13:56,14:58,15:46,18:51,21:04,22:30,23:59,01:22,02:11,03:04,,1,20:28:13,GLN,Network (Merlin ESU),50MU25
+19C,Ellis Osei,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:14,11:09,12:09,12:37,13:56,14:58,15:46,18:52,21:04,22:30,23:59,01:22,02:11,03:04,,1,20:28:16,GLN,Network (Merlin ESU),50MU25
+19D,Ollie Adams,Merlin away day,50mile,06:36,07:05,,07:47,09:21,10:15,11:10,12:09,12:38,13:56,14:58,15:46,18:52,21:04,22:30,00:00,01:22,02:11,03:04,,1,20:28:24,GLN,Network (Merlin ESU),50MU25
+20A,Wren Bishop,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:10,11:02,11:38,12:02,13:34,14:47,15:36,16:23,17:07,17:36,18:05,,1,11:27:02,GLN,201st Islington,
+20B,Casey Lane,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:10,11:02,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,18:04,,1,11:26:54,GLN,201st Islington,
+20C,Val Adams,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:09,11:02,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,18:04,,1,11:26:44,GLN,201st Islington,
+20D,Uma Adams,Phoenix Flyers,50mile,06:38,06:55,,07:21,08:23,08:58,09:24,09:56,10:09,11:03,11:38,12:02,13:34,14:46,15:36,16:23,17:07,17:36,18:05,,1,11:26:52,GLN,201st Islington,
+30A,Harper Turner,The Blister Sisters,50km,06:45,07:13,,07:48,09:10,10:05,10:47,11:48,12:15,13:34,14:41,,,,,15:18,16:39,17:33,18:22,,1,11:37:19,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+30B,Riley Evans,The Blister Sisters,50km,06:44,07:13,,07:48,09:10,10:05,10:48,11:48,12:16,13:34,14:41,,,,,15:18,16:39,17:33,18:22,,1,11:37:56,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+30C,Zion Holt,The Blister Sisters,50km,06:44,07:13,,07:48,09:10,10:05,10:48,11:48,12:16,13:35,14:41,,,,,15:18,16:39,17:33,18:22,,1,11:38:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+31A,Kai Reyes,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:06,17:43,18:42,19:31,,1,12:43:02,GLN,Argo Explorers,50KU18
+31B,Yael Pratt,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:52,14:24,15:33,,,,,16:07,17:43,18:43,19:31,,1,12:43:21,GLN,Argo Explorers,50KU18
+31C,Bailey Quincey,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:06,17:43,18:42,19:31,,1,12:43:10,GLN,Argo Explorers,50KU18
+31D,Kai Yates,Argo-Slovakia,50km,06:48,07:17,,07:55,09:35,10:36,11:23,12:19,12:51,14:23,15:32,,,,,16:07,17:43,18:42,19:31,,1,12:43:18,GLN,Argo Explorers,50KU18
+32A,Yael Evans,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:11,13:25,14:30,16:10,17:29,,,,,18:02,19:57,20:59,21:55,,1,15:08:00,Girlguiding,Cheshire Forest / London South West / Greater London West,
+32B,Sam Farley,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:11,13:25,14:31,16:10,17:28,,,,,18:01,19:56,20:59,21:55,,1,15:07:59,Girlguiding,Cheshire Forest / London South West / Greater London West,
+32C,Jesse Gibbs,The Competent Deputies,50km,06:47,07:21,,08:04,09:55,11:04,12:12,13:26,14:31,16:10,17:29,,,,,18:02,19:57 R,,,,0,13:09:39,Girlguiding,Cheshire Forest / London South West / Greater London West,
+33A,Sam Irving,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:45,11:29,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,18:07,,1,11:20:31,Cambridgeshire,11th/9th Cambridge,
+33B,Harper Wade,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:42,11:29,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,18:07,,1,11:20:16,Cambridgeshire,11th/9th Cambridge,
+33C,Alex Reyes,11th/9th Amazon adults,50km,06:47,07:16,,07:58,09:44,10:43,11:28,12:23,12:53,14:17,15:10,,,,,15:31,16:37,17:17,18:07,,1,11:20:24,Cambridgeshire,11th/9th Cambridge,
+33D,Casey Dawson,11th/9th Amazon adults,50km,06:47,07:16,,08:00,09:44,10:41,11:28,12:23,12:53,14:17,15:09,,,,,15:31,16:37,17:17,18:07,,1,11:20:25,Cambridgeshire,11th/9th Cambridge,
+34A,Bailey Nash,1st Aston Clinton Leaders,50km,06:50,07:21,,07:56,09:22,10:10,10:52,11:42,12:03,13:18 R,,,,,,,,,,,0,6:28:24,Buckinghamshire,1st Aston Cliniton,
+34B,Parker Wade,1st Aston Clinton Leaders,50km,06:50,07:21,,07:56,09:22,10:11,10:52,11:42,12:02,13:18 R,,,,,,,,,,,0,6:28:15,Buckinghamshire,1st Aston Cliniton,
+34C,Kai Kemp,1st Aston Clinton Leaders,50km,06:50,07:21,,07:55,09:22,10:10,10:52,11:42,12:03,13:18 R,,,,,,,,,,,0,6:28:19,Buckinghamshire,1st Aston Cliniton,
+35A,Jesse Reyes,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:13,10:48,11:32,12:05,13:16,14:07,,,,,14:28,15:31,16:18,16:49,,1,9:58:50,Surrey,Woking Explorers,
+35B,Morgan Zimmer,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:15,14:07,,,,,14:27,15:31,16:18,16:48,,1,9:58:28,Surrey,Woking Explorers,
+35C,Uma Kemp,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:16 R,,,,,,,,,,,0,6:25:40,Surrey,Woking Explorers,
+35D,Jesse Bishop,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:16,14:07,,,,,14:28,15:31,16:18,16:49,,1,9:58:41,Surrey,Woking Explorers,
+35E,Sam Sharp,Two Eds are better than one,50km,06:50,07:18,,07:53,09:21,10:12,10:48,11:32,12:05,13:15,14:07,,,,,14:28,15:31,16:18,16:49,,1,9:58:24,Surrey,Woking Explorers,
+37A,Indigo Farley,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:59,14:31,15:37,,,,,16:17,18:05,19:07,20:05,,1,13:12:13,Berkshire,West Pang Explorer Scout Unit,50KU18
+37B,Ollie Osei,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:58,14:31,15:37,,,,,16:17,18:05,19:07,20:05,,1,13:12:12,Berkshire,West Pang Explorer Scout Unit,50KU18
+37C,Riley Yates,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:58,14:31,15:37,,,,,16:17,18:05,19:07,20:05,,1,13:12:21,Berkshire,West Pang Explorer Scout Unit,50KU18
+37D,Indigo Underwood,West Pang Gang 1,50km,06:53,07:23,,08:00,10:04,10:56,11:33,12:28,12:59,14:31,15:37,,,,,16:17,18:05,19:07,20:05,,1,13:12:17,Berkshire,West Pang Explorer Scout Unit,50KU18
+38A,Noel Sharp,Gurt Wyrm 50,50km,06:56,07:18,,07:47,M09:03,09:55,10:50,11:59,12:26,13:32,14:24,,,,,14:48,15:50,16:28,17:09,,1,10:13:25,Somerset,Gurt Wyrm ESU,50KU18
+38B,Ellis Irving,Gurt Wyrm 50,50km,06:56,07:18,,07:47,M09:03,09:55,10:50,11:59,12:26,13:32,14:23,,,,,14:48,15:50,16:28,17:10,,1,10:13:45,Somerset,Gurt Wyrm ESU,50KU18
+38C,Uma Evans,Gurt Wyrm 50,50km,06:56,07:18,,07:48,M09:03,09:55,10:50,11:59,12:26,13:32,14:24,,,,,14:48,15:50,16:28,17:10,,1,10:13:40,Somerset,Gurt Wyrm ESU,50KU18
+39A,Indigo Reyes,Charlie and his safety team,50km,06:56,07:24,,08:05,09:53,10:53,11:37,12:59,13:32,15:22,16:45,,,,,17:24,19:19,20:12,21:07,,1,14:11:27,Surrey,Woking Explorers,
+39B,Quinn Pratt,Charlie and his safety team,50km,06:56,07:25,,08:05,09:53,10:53,11:38,13:00,13:32,15:22,16:46,,,,,17:24,19:19,20:12,21:07,,1,14:11:46,Surrey,Woking Explorers,
+39C,Logan Bishop,Charlie and his safety team,50km,06:56,07:24,,08:05,09:53,10:53,11:38,13:00,13:32,15:22,16:46,,,,,17:25,19:19,20:12,21:07,,1,14:11:39,Surrey,Woking Explorers,
+40A,Zion Farley,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:24 R,,,,,,,,,,,,,0,5:24:39,Essex,Fiennes ESU,
+40B,Logan Adams,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:23,13:14,14:37,15:44,,,,,16:11,17:37,18:38,19:24,,1,12:25:40,Essex,Fiennes ESU,
+40D,Riley Zimmer,Return of the Phalanges,50km,06:59,07:26,,08:10,09:45,10:44,11:27,12:24,13:14,14:37,15:44,,,,,16:12 R,,,,,0,9:13:02,Essex,Fiennes ESU,
+41A,Zion Pratt,Pinewood Seahorses C,50km,07:09,07:42,,08:22,10:28,11:37,13:17,14:48,15:31,17:17,18:56,,,,,19:32,21:25,22:29,23:44,,1,16:35:02,GLSW,Pinewood Seahorses ESU,50KU18
+41B,Finley Adams,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:37,13:16,14:48,15:31,17:17,18:55,,,,,19:31,21:25,22:29,23:44,,1,16:34:52,GLSW,Pinewood Seahorses ESU,50KU18
+41C,Quinn Marsh,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:38,13:16,14:48,15:31,17:17,18:56,,,,,19:32,21:26 R,,,,0,14:17:07,GLSW,Pinewood Seahorses ESU,50KU18
+41D,Parker Osei,Pinewood Seahorses C,50km,07:09,07:42,,08:23,10:28,11:37,13:16,14:48,15:31,17:16,18:55,,,,,19:31,21:25,22:29,23:44,,1,16:34:51,GLSW,Pinewood Seahorses ESU,50KU18
+41E,Yael Underwood,Pinewood Seahorses C,50km,07:09,07:42,,08:22,10:28,11:37,13:16,14:48,15:31,17:17,18:55,,,,,19:32,21:26,22:29,23:44,,1,16:34:50,GLSW,Pinewood Seahorses ESU,50KU18
+42A,Casey Yates,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:35,15:48,,,,,16:20,17:39,18:43,19:32,,1,12:30:10,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+42B,Zion Osei,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:34,15:48,,,,,16:20,17:39,18:42,19:32,,1,12:29:55,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+42C,Parker Sharp,Pebble,50km,07:02,07:38,,08:19,09:56,10:47,11:36,12:42,13:16,14:34,15:48,,,,,16:20,17:39,18:43,19:32,,1,12:30:22,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",50KU18
+43A,Ollie Evans,TESU 3,50km,07:02,07:32,,08:25,12:17,13:32,15:16,16:12,16:53,18:26 R,,,,,,,,,,,0,11:24:44,Greater London North,Tottenham ESU,50KU18
+43B,Wren Adams,TESU 3,50km,07:02,07:31,,08:25,12:17,13:31,15:15,16:12,16:53,18:26 R,,,,,,,,,,,0,11:24:38,Greater London North,Tottenham ESU,50KU18
+43C,Gray Zimmer,TESU 3,50km,07:02,07:32,,08:25,12:16,13:32,15:16 R,,,,,,,,,,,,,,0,8:14:29,Greater London North,Tottenham ESU,50KU18
+43E,Gray Jarrett,TESU 3,50km,07:02,07:31,,08:25,12:16,13:31,15:15,16:12,16:53,18:26 R,,,,,,,,,,,0,11:24:37,Greater London North,Tottenham ESU,50KU18
+44A,Noel Farley,Call me a Cab,50km,07:04,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,17:11,,1,10:06:24,Beds,Leagrave Scout Group,
+44B,Yael Yates,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,17:11,,1,10:06:29,Beds,Leagrave Scout Group,
+44C,Noel Turner,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:06,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,17:11,,1,10:06:13,Beds,Leagrave Scout Group,
+44D,Uma Irving,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:30,17:11,,1,10:06:15,Beds,Leagrave Scout Group,
+44E,Val Gibbs,Call me a Cab,50km,07:05,07:30,,08:06,09:33,10:26,11:05,11:55,12:23,13:35,14:26,,,,,14:46,15:53,16:29,17:11,,1,10:06:17,Beds,Leagrave Scout Group,
+45A,Val Irving,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:52,16:27,18:02,19:13,,,,,19:41,21:13,22:00,22:55,,1,15:44:51,Greater London North,Wild Wolf ESU,50KU18
+45B,Quinn Lane,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:52,16:27,18:02,19:13,,,,,19:41,21:13,22:00,22:54,,1,15:44:43,Greater London North,Wild Wolf ESU,50KU18
+45C,Finley Yates,WWESU Wild Walkers,50km,07:10,08:04,,08:46,10:43,13:43,14:37,15:53,16:27,18:02,19:13,,,,,19:41,21:13,M22:00,22:55,,1,15:44:48,Greater London North,Wild Wolf ESU,50KU18
+46A,Kai Irving,Can you move on,50km,07:15,07:46,,08:53,11:53,13:59,15:08,16:18,17:13,19:09 R,,,,,,,,,,,0,11:53:42,GLMW,Pioneers ESU,50KU18
+46B,Ellis Holt,Can you move on,50km,07:15,07:47,,08:53,11:53,13:59,15:08,16:18,17:13,19:08,21:38,,,,,22:10,00:07,01:04,02:28,,1,19:12:33,GLMW,Pioneers ESU,50KU18
+46C,Val Underwood,Can you move on,50km,07:15,07:47,,08:53,11:53,14:00,15:07,16:18,17:13,19:08,21:38,,,,,22:10,00:07,01:04,02:28,,1,19:13:02,GLMW,Pioneers ESU,50KU18
+46D,Zion Sharp,Can you move on,50km,07:15,07:47,,08:53,11:54,13:59 R,,,,,,,,,,,,,,,0,6:44:18,GLMW,Pioneers ESU,50KU18
+47A,Harper Dawson,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:18,,,,,18:57,20:37,21:47,22:35,,1,15:27:06,GLSW,Croham Valley ESU,50KU18
+47B,Noel Nash,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:19 R,,,,,,,,,,0,11:10:55,GLSW,Croham Valley ESU,50KU18
+47C,Val Lane,Croham Adventurers,50km,07:08,07:44,,08:20,10:12,11:14,12:06,12:55,13:25,16:29,18:19,,,,,18:57,20:37,21:47,22:35,,1,15:27:00,GLSW,Croham Valley ESU,50KU18
+47D,Alex Jarrett,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:15,12:06,12:55,13:25,16:29,M18:19 R,,,,,,,,,,0,11:10:57,GLSW,Croham Valley ESU,50KU18
+47E,Jesse Quincey,Croham Adventurers,50km,07:08,07:44,,08:19,10:12,11:14,12:06,12:55,13:25,16:29,18:19,,,,,18:57,20:37,21:47,22:35,,1,15:26:51,GLSW,Croham Valley ESU,50KU18
+48A,Alex Pratt,Slow Horses,50km,07:11,07:36,,08:12,09:55,10:45,11:31,12:17,12:52,14:07,15:11,,,,,15:33,16:53,17:37,18:28,,1,11:17:27,West Herts,VVV Explorer Scouts,
+48B,Harper Vance,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:35,16:54,17:38,18:29,,1,11:17:35,West Herts,VVV Explorer Scouts,
+48C,Bailey Reyes,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:33,16:53,17:37,18:29,,1,11:17:40,West Herts,VVV Explorer Scouts,
+48D,Bailey Yates,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:35,16:53,17:37,18:28,,1,11:17:27,West Herts,VVV Explorer Scouts,
+48E,Casey Wade,Slow Horses,50km,07:11,07:37,,08:12,09:55,10:45,11:31,12:17,12:53,14:07,15:12,,,,,15:34,16:54,17:38,18:29,,1,11:17:23,West Herts,VVV Explorer Scouts,
+49A,Zion Irving,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:24,12:12,12:32,13:42,14:39,,,,,15:03,16:19,17:12,18:00,,1,10:49:09,GLN,201st Islington,50KU18
+49B,Yael Lane,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:23,12:12,12:32,13:42,14:38,,,,,15:02,16:19,17:13,18:00,,1,10:49:07,GLN,201st Islington,50KU18
+49C,Morgan Farley,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:23,12:11,12:32,13:42,14:38,,,,,15:02,16:19,17:12,18:00,,1,10:48:53,GLN,201st Islington,50KU18
+49D,Jesse Vance,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45 R,,,,,,,,,,,,,,,0,3:34:32,GLN,201st Islington,50KU18
+49E,Ellis Kemp,Phoenix Flyers - Young Leaders,50km,07:11,07:37,,08:15,09:53,10:45,11:24,12:11,12:32,13:42,14:38,,,,,15:02,16:19,17:12,17:59,,1,10:48:44,GLN,201st Islington,50KU18
+50A,Ollie Dawson,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:07,11:08,12:38,13:44,14:17,16:08 R,,,,,,,,,,,0,8:54:29,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
+50C,Ollie Reyes,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:08,11:08,12:38,13:44,14:17,16:08 R,,,,,,,,,,,0,8:54:33,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
+50D,Yael Dawson,Milton Keynes Explorer Scouts,50km,07:14,M07:46,,08:24,10:08,11:09,12:38,13:44,14:17,16:08,17:36,,,,,18:16,19:49,20:52,22:14,,1,15:00:50,Buckinghamshire,Milton Keynes District Explorer Scouts,50KU18
+51A,Indigo Zimmer,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:30,,1,12:16:25,GLN,Argo Explorers,50KU18
+51B,Bailey Lane,Argo-Bratislava,50km,07:14,07:39,,M08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:39,17:56,18:41,19:30,,1,12:16:39,GLN,Argo Explorers,50KU18
+51C,Parker Carter,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:41,19:30,,1,12:16:38,GLN,Argo Explorers,50KU18
+51D,Harper Quincey,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:30,,1,12:16:27,GLN,Argo Explorers,50KU18
+51E,Toby Dawson,Argo-Bratislava,50km,07:14,07:39,,08:27,10:06,11:11,12:07,12:58,13:39,14:57,16:07,,,,,16:38,17:56,18:40,19:30,,1,12:16:18,GLN,Argo Explorers,50KU18
+52A,Alex Nash,West Pang Gang 2,50km,07:17,07:55,,08:42,10:22,11:35,13:11,14:25,15:00,16:34,17:50,,,,,18:16,19:56,20:57,21:52,,1,14:34:57,Berkshire,West Pang Explorer Scout Unit,50KU18
+52B,Wren Carter,West Pang Gang 2,50km,07:17,07:55,,08:41,10:21,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:52,,1,14:34:49,Berkshire,West Pang Explorer Scout Unit,50KU18
+52C,Bailey Wade,West Pang Gang 2,50km,07:17,07:55,,08:41,10:22,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:51,,1,14:34:32,Berkshire,West Pang Explorer Scout Unit,50KU18
+52D,Sam Carter,West Pang Gang 2,50km,07:17,07:55,,08:41,10:22,11:35,13:11,14:24,15:00,16:34,17:49,,,,,18:16,19:56,20:56,21:51,,1,14:34:43,Berkshire,West Pang Explorer Scout Unit,50KU18
+53A,Yael Quincey,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:54,15:21,16:34,,,,,17:11,18:33,19:42,M20:39,,1,13:22:00,GLN,Argo Explorers,50KU18
+53B,Indigo Irving,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:54,15:21,16:34,,,,,17:11,18:33,19:42,M20:39,,1,13:22:04,GLN,Argo Explorers,50KU18
+53C,Sam Wade,Argo-Vienna,50km,07:17,07:47,,08:25,10:05,11:08,11:59,13:18,13:55,15:21,16:34,,,,,17:11,18:33,19:42,M20:39,,1,13:21:57,GLN,Argo Explorers,50KU18
+54A,Yael Vance,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:14,14:37,15:44,,,,,16:12,17:37,18:38,19:24,,1,12:03:01,Somerset,Gurt Wyrm ESU,
+54B,Kai Marsh,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:14,14:37,15:44,,,,,16:12,17:37,18:38,19:24,,1,12:02:53,Somerset,Gurt Wyrm ESU,
+54C,Finley Pratt,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:42,13:13,14:37,15:44,,,,,16:11,17:37,18:37,19:24,,1,12:02:58,Somerset,Gurt Wyrm ESU,
+54D,Kai Holt,Leisurely Hares,50km,07:21,07:48,,08:24,09:56,10:48,11:36,12:41,13:14,14:37,15:44,,,,,16:11,17:37,18:37,19:24,,1,12:02:57,Somerset,Gurt Wyrm ESU,
+55A,Toby Evans,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:51,14:54,17:02,,,,,M17:28,18:57,20:03,M20:56,,1,13:36:55,Greater London North,Red Barons ESU,50KU18
+55B,Uma Bishop,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:02,,,,,M17:28,18:57,20:03,20:56,,1,13:36:04,Greater London North,Red Barons ESU,50KU18
+55C,Harper Nash,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:51,14:55,17:02,,,,,M17:28,18:57,20:03,20:56,,1,13:36:04,Greater London North,Red Barons ESU,50KU18
+55D,Dana Pratt,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:02,,,,,M17:28,18:57,20:03,20:56,,1,13:36:20,Greater London North,Red Barons ESU,50KU18
+55E,Toby Irving,Red Barons ESU 50km,50km,07:20,07:47,,08:20,09:52,10:42,11:26,12:20,12:52,14:55,17:03,,,,,M17:28,18:57,20:03,20:56,,1,13:36:20,Greater London North,Red Barons ESU,50KU18
+56A,Riley Marsh,Golden Plodders,50km,07:27,08:03,,08:42,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:55,20:13,21:00,21:51,,1,14:24:15,South London,Golden Hind Explorer Scout Unit,50KU18
+56B,Harper Kemp,Golden Plodders,50km,07:26,08:03,,08:43,10:13,11:20,12:27,13:45 R,,,,,,,,,,,,,0,6:18:42,South London,Golden Hind Explorer Scout Unit,50KU18
+56C,Jesse Carter,Golden Plodders,50km,07:27,08:03,,08:43,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:54,20:14,21:01,21:51,,1,14:23:57,South London,Golden Hind Explorer Scout Unit,50KU18
+56D,Logan Reyes,Golden Plodders,50km,07:26,08:03,,08:43,10:13,11:20,12:27,13:45,14:35,16:31,17:47,,,,,18:55,20:13,21:00,21:50,,1,14:24:06,South London,Golden Hind Explorer Scout Unit,50KU18
+56E,Alex Kemp,Golden Plodders,50km,07:27,08:03,,08:43,10:13,11:20,12:27,13:45,14:34,16:31,17:47,,,,,18:55,20:13,21:00,21:51,,1,14:23:59,South London,Golden Hind Explorer Scout Unit,50KU18
+57A,Logan Osei,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,17:12,,1,9:49:24,Greater London North,6th Friern Barnet & 15th Finchley,
+57B,Casey Evans,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,17:12,,1,9:49:27,Greater London North,6th Friern Barnet & 15th Finchley,
+57C,Jesse Adams,The Sixth Sense,50km,07:23,07:49,,08:26,09:56,10:43,11:21,12:09,12:28,13:38,14:29,,,,,14:57,15:58,16:35,17:12,,1,9:49:15,Greater London North,6th Friern Barnet & 15th Finchley,
+58A,Alex Sharp,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:11,12:07,12:54,13:26,14:56,16:00,,,,,16:31,17:50,18:40,19:43,,1,12:16:40,GLN,10th Edmonton Scout Group,
+58B,Wren Nash,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:11,12:06,12:54,13:26,14:55,16:00,,,,,16:30,17:50,18:41,19:43,,1,12:16:44,GLN,10th Edmonton Scout Group,
+58C,Toby Reyes,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:12,12:07,12:54,13:27,14:56,16:00,,,,,16:31,17:51,18:41,19:43,,1,12:17:07,GLN,10th Edmonton Scout Group,
+58D,Alex Bishop,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:13,12:07,12:54,13:26,14:55,15:59,,,,,16:31,17:50,18:40,19:43,,1,12:16:51,GLN,10th Edmonton Scout Group,
+58E,Jesse Lane,Back Sack & Sudocrem Crack,50km,07:26,07:54,,08:32,10:14,11:13,12:07,12:54,13:27,14:55,16:00,,,,,16:31,17:50,18:40,19:43,,1,12:17:05,GLN,10th Edmonton Scout Group,
+59A,Dana Gibbs,Kenley Aces 1,50km,07:26,07:54,,08:28,09:54,10:48,11:33,12:33,13:11,14:32,15:48,,,,,16:22,17:39,18:37,19:36,,1,12:10:58,GLSW,Kenley Aces,
+59B,Wren Sharp,Kenley Aces 1,50km,07:25,07:54,,08:28,09:53,10:48,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:38,18:36,19:36,,1,12:10:56,GLSW,Kenley Aces,
+59C,Wren Zimmer,Kenley Aces 1,50km,07:25,07:54,,08:28,09:53,10:47,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:39,18:36,19:37,,1,12:11:12,GLSW,Kenley Aces,
+59D,Logan Wade,Kenley Aces 1,50km,07:25,07:53,,08:28,09:53,10:48,11:32,12:33,13:11,14:32,15:47,,,,,16:22,17:39,18:36,19:36,,1,12:10:44,GLSW,Kenley Aces,
+60A,Harper Adams,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:37,11:33,12:18,12:44,13:55,14:42,,,,,M15:10,16:14,16:56,17:35,,1,10:06:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+60B,Wren Wade,KES Leaders,50km,07:29,07:57,,08:31,09:52,10:38,11:33,12:18,12:44,13:56,14:42,,,,,15:10,16:14,16:56,17:35,,1,10:06:06,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+60C,Harper Lane,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:38,11:33,12:18 R,,,,,,,,,,,,,0,4:49:16,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+60D,Alex Underwood,KES Leaders,50km,07:29,07:57,,08:32,09:52,10:38,11:33,12:18,12:44,13:55,14:41,,,,,15:10,16:14,16:56,17:35,,1,10:06:11,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+61A,Parker Kemp,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:35,,1,9:06:37,Greater London North,Wild Wolf ESU,50KU18
+61B,Alex Carter,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:35,,1,9:06:28,Greater London North,Wild Wolf ESU,50KU18
+61C,Yael Sharp,This Way??,50km,07:29,08:03,,08:31,09:45,10:28,10:59,11:41,12:01,13:22,14:06,,,,,14:26,15:28,16:03,16:35,,1,9:06:15,Greater London North,Wild Wolf ESU,50KU18
+62A,Logan Carter,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:00,12:51,13:20,14:25,15:21,,,,,16:01,17:14,18:06,18:54,,1,11:21:56,GLSW,Pinewood Seahorses ESU,50KU18
+62B,Val Zimmer,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:01,12:48,13:20,14:25,15:22,,,,,16:01,17:14,18:06,18:54,,1,11:21:46,GLSW,Pinewood Seahorses ESU,50KU18
+62C,Kai Underwood,Pinewood Seahorses A,50km,07:32,07:51,,08:20,10:06,11:21,12:01,12:48,13:20,14:25,15:22,,,,,16:01,17:14,18:06,18:54,,1,11:22:02,GLSW,Pinewood Seahorses ESU,50KU18
+62D,Jesse Evans,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21,12:01,12:48,13:19,14:25,15:22,,,,,16:01,17:14,18:06,18:53,,1,11:21:34,GLSW,Pinewood Seahorses ESU,50KU18
+62E,Logan Sharp,Pinewood Seahorses A,50km,07:32,07:51,,08:21,10:06,11:21 R,,,,,,,,,,,,,,,0,3:49:04,GLSW,Pinewood Seahorses ESU,50KU18
+63A,Gray Pratt,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:27,16:14,17:30,,,,,18:20,20:21,21:52,23:38,,1,16:06:02,Greater London South,Severndroog ESU,50KU18
+63B,Uma Gibbs,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:26,16:14,17:30,,,,,18:20,20:21,21:52,23:38,,1,16:06:11,Greater London South,Severndroog ESU,50KU18
+63C,Indigo Pratt,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:46,14:27,16:14,17:31,,,,,18:20,20:20,21:51,23:38,,1,16:05:46,Greater London South,Severndroog ESU,50KU18
+63D,Indigo Dawson,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:46,14:26,16:14,17:30,,,,,18:20,20:20,21:51,23:38,,1,16:06:32,Greater London South,Severndroog ESU,50KU18
+63E,Zion Kemp,Severndroog ESU,50km,07:32,08:05,,08:44,10:20,11:28,12:38,13:47,14:27,16:14,17:31,,,,,18:20,20:21,21:52,23:38,,1,16:06:25,Greater London South,Severndroog ESU,50KU18
+64A,Dana Osei,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:39,16:44,17:25,18:08,,1,10:32:21,Cambridge,11th/9th Cambridge Amazon scouts,
+64B,Ollie Irving,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,18:08,,1,10:32:45,Cambridge,11th/9th Cambridge Amazon scouts,
+64C,Kai Quincey,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,18:08,,1,10:32:23,Cambridge,11th/9th Cambridge Amazon scouts,
+64D,Quinn Yates,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:39,16:44,17:25,18:07,,1,10:32:27,Cambridge,11th/9th Cambridge Amazon scouts,
+64E,Dana Holt,11th/9th Amazon Adults 2,50km,07:35,08:03,,08:42,10:12,11:01,11:46,12:34,13:04,14:15,15:17,,,,,15:38,16:43,17:25,18:07,,1,10:32:26,Cambridge,11th/9th Cambridge Amazon scouts,
+65B,Val Jarrett,West Pang Gang 3,50km,07:35,08:17,,09:17,12:22,13:41,14:46,16:13,16:41,19:09,21:38,,,,,22:10,00:07,01:04,02:28,,1,18:53:41,Berkshire,West Pang Explorer Scout Unit,50KU18
+65C,Harper Zimmer,West Pang Gang 3,50km,07:34,08:17,,09:17,12:22,13:41,14:46,16:13,16:41,19:09 R,,,,,,,,,,,0,11:34:08,Berkshire,West Pang Explorer Scout Unit,50KU18
+65D,Quinn Dawson,West Pang Gang 3,50km,07:35,08:17,,09:17,12:22,13:41,14:47,16:13,16:41,19:08,21:38,,,,,22:10,00:07,01:04,02:28,,1,18:53:10,Berkshire,West Pang Explorer Scout Unit,50KU18
+66A,Morgan Gibbs,The Four must get heres,50km,07:37,08:11,,08:50,10:25,11:25,12:12,13:19,14:01,16:09,17:35,,,,,18:15,19:49,20:51,22:14,,1,14:36:50,GLN,Merlin ESU,50KU18
+66B,Quinn Bishop,The Four must get heres,50km,07:38,08:11,,08:50,10:25,11:26,12:12,13:20,14:02,16:09,M17:35,,,,,18:15,19:49,20:52,22:15,,1,14:37:13,GLN,Merlin ESU,50KU18
+66C,Gray Gibbs,The Four must get heres,50km,07:38,08:11,,08:50,10:25,11:26,12:12,13:19,14:02,16:09,17:36,,,,,18:16,19:50,20:52,22:15,,1,14:37:19,GLN,Merlin ESU,50KU18
+66D,Quinn Adams,The Four must get heres,50km,07:38,08:11,,M08:50,10:25,11:26,12:12,13:19,14:02,16:10,17:36,,,,,18:15,19:50,20:52,22:14,,1,14:36:48,GLN,Merlin ESU,50KU18
+67A,Ellis Farley,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:37,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:54,,1,10:16:18,Cambridgeshire,Hitchhikers ESU,
+67B,Toby Yates,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:36,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:54,,1,10:16:11,Cambridgeshire,Hitchhikers ESU,
+67C,Wren Underwood,CLVU Return- one last time!,50km,07:38,08:04,,08:40,10:06,10:57,11:36,12:22,12:48,14:06,15:06,,,,,15:28,16:34,17:12,17:54,,1,10:16:02,Cambridgeshire,Hitchhikers ESU,
+68A,Riley Reyes,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:58,,,,,16:26,17:39,18:29,19:17,,1,11:36:12,Cambridgeshire,Whittlesford and Duxford Scout Group,
+68B,Ollie Underwood,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:57,15:57,,,,,16:26,17:39,18:28,19:17,,1,11:36:23,Cambridgeshire,Whittlesford and Duxford Scout Group,
+68C,Zion Zimmer,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:58,,,,,16:26,17:39,18:28,19:17,,1,11:36:25,Cambridgeshire,Whittlesford and Duxford Scout Group,
+68D,Finley Turner,Akela's Angels,50km,07:41,08:13,,08:51,10:25,11:20,12:10,13:03,13:36,14:58,15:57,,,,,16:26,17:39,18:28,19:17,,1,11:36:22,Cambridgeshire,Whittlesford and Duxford Scout Group,
+69A,Bailey Kemp,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:14,20:15,21:08,,1,13:27:12,GLN,VVesu,50KU18
+69B,Kai Gibbs,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:15,20:15,21:08,,1,13:27:15,GLN,VVesu,50KU18
+69C,Zion Underwood,scrambled eggs,50km,07:41,08:17,,08:53,10:27,11:29,12:08,13:04,14:14,15:50,17:05,,,,,17:35,19:15,20:15,21:08,,1,13:27:05,GLN,VVesu,50KU18
+69D,Dana Lane,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:13,15:50,17:05,,,,,17:35,19:15,20:14,21:08,,1,13:27:02,GLN,VVesu,50KU18
+69E,Val Kemp,scrambled eggs,50km,07:41,08:17,,08:54,10:26,11:29,12:08,13:04,14:13,15:50,17:05,,,,,17:35,19:15,20:15,21:08,,1,13:27:26,GLN,VVesu,50KU18
+70A,Alex Marsh,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:39,,1,9:55:28,UK,Network,
+70B,Toby Turner,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:39,,1,9:55:48,UK,Network,
+70C,Riley Carter,It's Scone not Scone,50km,07:44,08:08,,08:42,10:01,10:46,11:27,12:08,12:30,13:40,14:29,,,,,14:52,16:01,16:49,17:39,,1,9:55:34,UK,Network,
+71A,Jesse Osei,Torbados,50km,07:44,08:11,,08:47,10:11,10:57,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
+71B,Riley Kemp,Torbados,50km,07:44,08:11,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:22,,,,,15:50,16:54,17:39,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
+71C,Toby Carter,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:51,,1,11:07:12,Devon,20th Torbay Scout Group,
+71D,Gray Underwood,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:39,13:09,14:28,15:23,,,,,15:50,16:54,17:39,18:51,,1,11:07:04,Devon,20th Torbay Scout Group,
+71E,Ollie Zimmer,Torbados,50km,07:44,08:12,,08:47,10:11,10:58,11:41,12:38,13:09,14:27,15:22,,,,,15:50,16:54,17:39,18:51,,1,11:07:07,Devon,20th Torbay Scout Group,
+72A,Noel Vance,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:22,18:01,19:14,,,,,20:12,21:46,22:50,23:56,,1,16:09:38,GLSW,7th Purley Scout Group,50KU18
+72B,Alex Irving,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:22,18:01,19:14,,,,,20:12,21:46,22:50,23:56,,1,16:09:55,GLSW,7th Purley Scout Group,50KU18
+72C,Morgan Adams,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:21,18:00,19:14,,,,,20:12,21:46,22:50,23:56,,1,16:09:45,GLSW,7th Purley Scout Group,50KU18
+72D,Morgan Sharp,The Walking Dead,50km,07:47,08:18,,09:00,11:25,12:49,13:55,15:18,16:21,18:01,19:14,,,,,20:12,21:46 R,,,,0,13:59:34,GLSW,7th Purley Scout Group,50KU18
+73A,Ellis Turner,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:41,12:31,12:59,14:15,15:18,,,,,15:47,17:04,18:09,19:00,,1,11:13:09,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+73B,Wren Turner,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:41,12:31,12:59,14:15,15:18,,,,,15:47,17:05,18:08,19:00,,1,11:13:01,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+73C,Bailey Pratt,Trawler & his cathes,50km,07:47,08:12,,08:45,10:13,11:00,11:42,12:32,12:59,14:15,15:18,,,,,15:47,17:05,18:10,19:00,,1,11:13:10,Hertfordshire,"Kinsbourne Explorer Scouts, Harpenden",
+74A,Gray Nash,LŽo and co,50km,07:50,08:18,,08:54,10:22,11:23,12:05,13:03,13:34,14:48,15:59,,,,,16:35,17:42,18:27,19:18,,1,11:28:28,Greenwich,46th Greenwich,50KU18
+74B,Indigo Bishop,LŽo and co,50km,07:50,08:18,,08:55,10:22,11:23,12:05,13:03,13:34,14:48,15:58,,,,,16:35,17:42,18:27,19:18,,1,11:28:30,Greenwich,46th Greenwich,50KU18
+74C,Dana Farley,LŽo and co,50km,07:50,08:18,,08:54,10:22,11:23,12:05,13:03,13:34,14:48,15:59,,,,,16:35,17:42,18:28,19:19,,1,11:28:51,Greenwich,46th Greenwich,50KU18
+75A,Uma Pratt,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:27,12:12,13:05,13:39,15:08,16:11,,,,,16:39,17:44,18:43,19:36,,1,11:45:00,GLSW,Kenley Aces,
+75B,Riley Lane,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:27,12:12,13:05,13:39,15:07,16:11,,,,,16:39,17:44,18:42,19:36,,1,11:44:38,GLSW,Kenley Aces,
+75C,Morgan Dawson,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:26,12:12,13:05,13:38,15:07,16:10,,,,,16:39,17:44,18:42,19:36,,1,11:44:58,GLSW,Kenley Aces,
+75D,Wren Dawson,Kenley Aces Past Glories,50km,07:51,08:17,,08:54,10:28,11:26,12:12,13:05,13:38,15:07,16:10,,,,,16:39,17:45,18:42,19:36,,1,11:45:17,GLSW,Kenley Aces,
+76A,Casey Gibbs,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:29 R,,,,,,,,,,,,,0,5:35:46,Greater London North,Tottenham ESU,
+76B,Gray Irving,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:28,14:06,15:28,17:00,,,,,17:22,18:47,19:40,20:24,,1,12:31:02,Greater London North,Tottenham ESU,
+76C,Dana Zimmer,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:30,13:28,14:06,15:27,16:51,,,,,17:22,18:47,19:40,20:24,,1,12:30:53,Greater London North,Tottenham ESU,
+76D,Gray Reyes,TESU 1,50km,07:53,08:20,,09:02,10:34,11:32,12:31,13:28,14:06,15:28 R,,,,,,,,,,,0,7:35:24,Greater London North,Tottenham ESU,
+76E,Dana Kemp,TESU 1,50km,07:53,08:20,,09:02,10:34,11:33,12:30,13:28,14:06,15:27,16:52,,,,,17:22,18:47,19:40,20:24,,1,12:30:55,Greater London North,Tottenham ESU,
+77A,Finley Bishop,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:50,14:34,,,,,14:57,15:56,missed,17:06,,0,9:13:40,Greater London North,Wild Wild ESU,50KU18
+77B,Kai Evans,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:49,14:34,,,,,14:58,15:56,missed,17:06,,0,9:13:45,Greater London North,Wild Wild ESU,50KU18
+77C,Sam Underwood,Cirque du Sore Legs,50km,07:53,08:20,,08:52,10:07,10:58,11:33,12:20,12:45,13:50,14:35,,,,,14:58,15:57,missed,17:06,,0,9:13:57,Greater London North,Wild Wild ESU,50KU18
+78A,Gray Kemp,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:54,14:44,,,,,15:07,16:16,16:58,17:39,,1,9:43:24,West Herts,VVV Explorer Scouts,50KU18
+78B,Logan Farley,Joseph's Rockets,50km,07:55,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:53,14:44,,,,,15:07,16:16,16:59,17:39,,1,9:43:19,West Herts,VVV Explorer Scouts,50KU18
+78C,Zion Nash,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:54,14:44,,,,,15:07,16:16,16:59,17:39,,1,9:43:28,West Herts,VVV Explorer Scouts,50KU18
+78E,Kai Turner,Joseph's Rockets,50km,07:56,08:19,,08:53,10:15,11:00,11:36,12:16,12:39,13:53,14:45,,,,,15:07,16:16,16:59,17:39,,1,9:43:29,West Herts,VVV Explorer Scouts,50KU18
+79A,Logan Underwood,Trail tacticians,50km,07:56,08:21,,08:53,10:10,10:59,11:34,12:28,12:51,14:03,14:59,,,,,15:26,16:32,17:15,17:59,,1,10:03:38,GLN,VVesu,
+79B,Bailey Holt,Trail tacticians,50km,07:56,08:21,,08:53,10:11,10:59,11:34,12:28,12:51,14:04,14:59,,,,,15:26,16:32,17:15,17:59,,1,10:03:34,GLN,VVesu,
+79C,Ollie Farley,Trail tacticians,50km,07:56,08:21,,08:53,10:10,10:58,11:34,12:28,12:51,14:03,14:59,,,,,15:26,16:32,17:15,17:59,,1,10:03:26,GLN,VVesu,
+80A,Kai Zimmer,Muswell Hillbillies et al,50km,07:59,08:25,,09:03,10:40,11:38,12:30,13:23,14:03,15:30,16:34,,,,,17:17,18:38,19:31,M20:33,,1,12:33:52,Greater London North,9th Muswell Hill,
+80B,Wren Lane,Muswell Hillbillies et al,50km,07:58,08:26,,09:03,10:40,11:38,12:30,13:23,14:02,15:30,16:35,,,,,17:17,18:38,19:31,M20:33,,1,12:34:03,Greater London North,9th Muswell Hill,
+80C,Logan Pratt,Muswell Hillbillies et al,50km,07:59,08:25,,09:03,10:40,11:38,12:29,13:23,14:02,15:30,16:35,,,,,17:17,18:38,19:32,M20:33,,1,12:33:50,Greater London North,9th Muswell Hill,
+80D,Bailey Zimmer,Muswell Hillbillies et al,50km,07:59,08:26,,09:04,10:40,11:39,12:30,13:23,14:02,15:31,16:35,,,,,17:17,18:38,19:32,M20:33,,1,12:34:01,Greater London North,9th Muswell Hill,
+81A,Riley Adams,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:18,14:56,16:24,17:48,,,,,18:23,20:02,20:58,21:55,,1,13:55:56,South London Scouts,Lewisham & Greenwich District,
+81B,Jesse Yates,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:23,20:01,20:58,21:55,,1,13:55:49,South London Scouts,Lewisham & Greenwich District,
+81C,Parker Zimmer,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:30,,09:11,10:57,12:06,13:17,14:18,14:56,16:24,17:48,,,,,18:23,20:01,20:58,21:55,,1,13:55:22,South London Scouts,Lewisham & Greenwich District,
+81D,Ellis Jarrett,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:30,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:24,20:02,20:58,21:54,,1,13:55:24,South London Scouts,Lewisham & Greenwich District,
+81E,Val Wade,Lewisham & Greenwich Explorer Leaders,50km,07:59,08:31,,09:11,10:57,12:06,13:17,14:19,14:56,16:25,17:49,,,,,18:24,20:02,20:58,21:54,,1,13:55:30,South London Scouts,Lewisham & Greenwich District,
+82A,Alex Evans,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:50,13:09,14:18,15:13,,,,,15:32,16:32,17:08,17:46,,1,9:44:16,GLN,201st Islington,
+82B,Casey Vance,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:49,13:09,14:18,15:13,,,,,15:32,16:33,17:09,17:46,,1,9:44:22,GLN,201st Islington,
+82C,Riley Sharp,Phoenix Flyers Too,50km,08:02,08:29,,09:05,10:26,11:14,12:07,12:50,13:09,14:18,15:13,,,,,15:32,16:32,17:08,17:46,,1,9:44:19,GLN,201st Islington,
+83A,Casey Osei,Wolfy Walkers,50km,08:01,08:25,,08:51,09:54,10:30,10:58,11:34,11:52,12:45,13:24,,,,,13:42,14:28,14:49,15:12,,1,7:10:41,Greater London North,Wild Wolf ESU,
+83B,Alex Holt,Wolfy Walkers,50km,08:01,08:25,,08:52,09:54,10:30,10:58,11:34,11:52,12:45,13:24,,,,,13:42,14:28,14:49,15:12,,1,7:10:33,Greater London North,Wild Wolf ESU,
+83C,Sam Yates,Wolfy Walkers,50km,08:01,08:25,,08:51,09:54,10:30,10:58,11:34,11:52,12:45,M13:24,,,,,13:42,14:28,14:49,15:12,,1,7:10:32,Greater London North,Wild Wolf ESU,
+84A,Quinn Turner,BEAST,50km,08:05,08:27,,08:55,10:13,10:54,11:28,12:05,12:26,13:30,14:17,,,,,14:35,15:27,16:02,16:30,,1,8:25:01,Essex,BEAST SAS,
+84B,Morgan Lane,BEAST,50km,08:05,08:27,,08:55,10:12,10:54,11:28,12:06,12:26,13:30,14:17,,,,,14:35,15:27,16:01,16:30,,1,8:24:58,Essex,BEAST SAS,
+84C,Toby Nash,BEAST,50km,08:05,08:27,,08:55,10:13,10:54,11:28,12:07,12:26,13:30,14:17,,,,,14:35,15:28,16:01,16:30,,1,8:25:09,Essex,BEAST SAS,
+84D,Ellis Evans,BEAST,50km,08:05,08:28,,08:55,10:12,10:54,11:28,12:06,12:26,13:30,14:17,,,,,14:35,15:27,16:01,16:30,,1,8:24:48,Essex,BEAST SAS,
+85A,Parker Underwood,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:39,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:30,,1,7:24:48,Essex,Genesis ESU,
+85B,Val Marsh,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:40,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:30,,1,7:24:41,Essex,Genesis ESU,
+85C,Gray Dawson,Genesis Leaders,50km,08:05,08:27,,08:54,10:01,10:39,11:12,11:45,12:01,12:56,13:31,,,,,13:47,14:28,14:54,15:30,,1,7:24:49,Essex,Genesis ESU,
+101A,Bailey Bishop,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,14:08,,1,5:58:37,Somerset,Gurt Wyrm ESU,
+101B,Noel Pratt,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,14:08,,1,5:58:29,Somerset,Gurt Wyrm ESU,
+101C,Parker Gibbs,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,14:08,,1,5:58:28,Somerset,Gurt Wyrm ESU,
+101D,Finley Zimmer,Gurt Wyrm 30,30km,08:10,08:34,08:52,,,09:42,10:21,11:08,11:27,,,,,,,,12:33,13:20,14:08,,1,5:58:29,Somerset,Gurt Wyrm ESU,
+102A,Noel Zimmer,Romford Royals,30km,08:09,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:30,14:23,15:37,,1,7:27:37,GLNE,Mixed Explorer Units,
+102B,Wren Irving,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:30,14:23,15:37,,1,7:27:12,GLNE,Mixed Explorer Units,
+102C,Riley Gibbs,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:29,14:23,15:37,,1,7:27:30,GLNE,Mixed Explorer Units,
+102D,Riley Underwood,Romford Royals,30km,08:10,08:34,08:55,,,09:42,10:22,11:26,11:57,,,,,,,,13:29,14:23,15:37,,1,7:27:13,GLNE,Mixed Explorer Units,
+102E,Uma Dawson,Romford Royals,30km,08:09,08:34,08:55,,,09:43,10:22,11:26,11:57,,,,,,,,13:29,14:22,15:37,,1,7:27:30,GLNE,Mixed Explorer Units,
+103A,Ellis Gibbs,Wild Wolf ESU 1,30km,08:13,08:46,09:12,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:51,,1,7:38:20,Greater London North,Wild Wolf ESU,
+103B,Ellis Lane,Wild Wolf ESU 1,30km,08:12,08:46,09:09,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:51,,1,7:38:22,Greater London North,Wild Wolf ESU,
+103C,Harper Reyes,Wild Wolf ESU 1,30km,08:13,08:46,09:09,,,10:33,11:21,12:20,12:52,,,,,,,,14:15,15:01,15:51,,1,7:38:16,Greater London North,Wild Wolf ESU,
+104A,Noel Dawson,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:13,12:51,,,,,,,,14:35,15:27,16:05,,1,7:52:22,Greater London North,Hatters Explorer Scout Unit in Southgate,
+104B,Parker Nash,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:12,12:51,,,,,,,,14:35,15:27,16:05,,1,7:52:17,Greater London North,Hatters Explorer Scout Unit in Southgate,
+104C,Kai Vance,"3km, right?",30km,08:13,08:44,09:10,,,10:11,11:12,12:13,12:51,,,,,,,,14:34,15:27,16:05,,1,7:52:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
+105A,Uma Carter,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:44,16:52,18:10,,1,9:53:46,GLN,Merlin ESU,
+105C,Wren Quincey,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:44,16:52,18:10,,1,9:53:53,GLN,Merlin ESU,
+105D,Ellis Wade,Merlin B,30km,08:16,08:55,09:30,,,11:07,12:01,13:20,14:02,,,,,,,,15:45,16:52,18:10,,1,9:53:53,GLN,Merlin ESU,
+106B,Finley Nash,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:39,,1,9:22:44,GLN,Argo Explorers,
+106C,Finley Reyes,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:39,,1,9:22:31,GLN,Argo Explorers,
+106D,Toby Kemp,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:34,12:49,13:26,,,,,,,,15:27,16:34,17:39,,1,9:22:40,GLN,Argo Explorers,
+106E,Sam Adams,Argo-Tolmers,30km,08:16,09:01,09:25,,,10:38,11:35,12:49,13:26,,,,,,,,15:27,16:34,17:39,,1,9:22:31,GLN,Argo Explorers,
+107A,Finley Sharp,The Three Musketeers and a random,30km,08:19,08:47,09:07,,,10:14,11:33,12:56,13:46,,,,,,,,15:28,16:28,17:23,,1,9:03:38,GLSW,7th Purley Scout Group,
+107B,Indigo Marsh,The Three Musketeers and a random,30km,08:19,08:47,09:08,,,10:14,11:33,12:55,13:46,,,,,,,,15:28,16:29,17:23,,1,9:04:06,GLSW,7th Purley Scout Group,
+107C,Casey Farley,The Three Musketeers and a random,30km,08:19,08:47,09:07,,,10:14,11:33,12:55,13:47,,,,,,,,15:28,16:29,17:23,,1,9:03:52,GLSW,7th Purley Scout Group,
+107D,Noel Adams,The Three Musketeers and a random,30km,08:19,08:47,09:09,,,10:14,11:33,12:56,13:47,,,,,,,,15:28,16:29,17:23,,1,9:03:56,GLSW,7th Purley Scout Group,
+108A,Zion Jarrett,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:34,,1,7:15:42,Greater London North,Hatters Explorer Scout Unit in Southgate,
+108B,Ellis Dawson,"You don't have to be mad, but it helps",30km,08:19,08:48,09:09,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:51,15:34,,1,7:15:28,Greater London North,Hatters Explorer Scout Unit in Southgate,
+108C,Uma Jarrett,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:34,,1,7:15:42,Greater London North,Hatters Explorer Scout Unit in Southgate,
+108D,Jesse Pratt,"You don't have to be mad, but it helps",30km,08:19,08:49,09:10,,,10:36,11:21,12:12,12:49,,,,,,,,13:59,14:51,15:35,,1,7:15:49,Greater London North,Hatters Explorer Scout Unit in Southgate,
+108E,Toby Farley,"You don't have to be mad, but it helps",30km,08:19,08:48,09:10,,,10:35,11:20,12:12,12:49,,,,,,,,13:59,14:50,15:35,,1,7:15:43,Greater London North,Hatters Explorer Scout Unit in Southgate,
+110A,Kai Farley,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:26,,,,,,,,18:13,19:06,20:28,,1,12:06:42,GLN,HHESU Explorers,
+110B,Ollie Lane,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:26,,,,,,,,18:13,19:06,20:28,,1,12:06:22,GLN,HHESU Explorers,
+110C,Finley Kemp,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:27,,,,,,,,18:13,19:07,20:29,,1,12:06:57,GLN,HHESU Explorers,
+110D,Ellis Underwood,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:22,15:44,16:27,,,,,,,,18:13,19:11,20:29,,1,12:06:58,GLN,HHESU Explorers,
+110E,Morgan Nash,HHESU Scotland,30km,08:22,08:58,09:25,,,11:07,13:20,15:43,16:27,,,,,,,,18:13,19:10,20:28,,1,12:06:37,GLN,HHESU Explorers,
+111A,Uma Farley,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:35,11:32,12:38,13:15,,,,,,,,14:39,15:31,16:24,,1,7:54:33,Warwickshire,Shamrock Explorer Unit,
+111B,Casey Turner,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:32,12:37,13:15,,,,,,,,14:37,15:31,16:24,,1,7:54:55,Warwickshire,Shamrock Explorer Unit,
+111C,Zion Adams,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:32,12:37,13:15,,,,,,,,14:42,15:31,16:24,,1,7:54:32,Warwickshire,Shamrock Explorer Unit,
+111D,Harper Gibbs,Shamrock Explorers,30km,08:29,09:06,09:33,,,10:34,11:31,12:37,13:15,,,,,,,,14:37,15:31,16:24,,1,7:54:40,Warwickshire,Shamrock Explorer Unit,
+112A,Morgan Holt,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:23,,,,,,,,14:34,15:20,16:55,,1,8:30:44,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+112B,Sam Osei,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:21,,,,,,,,14:34,15:20,16:55,,1,8:30:38,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+112C,Logan Evans,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:08,09:32,,,10:37,11:31,12:27,13:21,,,,,,,,14:34,15:20,16:55,,1,8:30:42,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+112D,Harper Pratt,Discovery Explorer Scouts 1 (Lewisham),30km,08:25,09:07,09:32,,,10:37,11:31,12:26,13:21,,,,,,,,14:34,15:20,16:55,,1,8:30:45,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+113A,Dana Marsh,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:15,14:04,15:30,16:21,,,,,,,,18:03,19:07,20:23,,1,11:49:25,South London,Golden Hind Explorer Scout Unit,
+113B,Alex Turner,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:14,14:03,15:30,16:21,,,,,,,,18:03,19:07,20:23,,1,11:49:26,South London,Golden Hind Explorer Scout Unit,
+113C,Indigo Wade,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:15,14:04,15:30,16:21,,,,,,,,18:03,19:08,20:23,,1,11:49:39,South London,Golden Hind Explorer Scout Unit,
+113E,Sam Marsh,Golden Hind Explorer Scout Unit B Team,30km,08:33,09:11,10:28,,,12:14,14:04,15:30,16:21,,,,,,,,18:03,19:10,20:23,,1,11:49:37,South London,Golden Hind Explorer Scout Unit,
+114A,Wren Gibbs,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:51,,1,9:23:11,GLSW,Pinewood Seahorses ESU,
+114B,Gray Farley,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:51,,1,9:23:16,GLSW,Pinewood Seahorses ESU,
+114C,Riley Irving,Pinewood Seahorses B,30km,08:28,09:02,09:25,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:51,,1,9:23:14,GLSW,Pinewood Seahorses ESU,
+114E,Toby Quincey,Pinewood Seahorses B,30km,08:28,09:02,09:26,,,10:32,11:27,13:00,13:45,,,,,,,,15:38,16:47,17:51,,1,9:23:26,GLSW,Pinewood Seahorses ESU,
+116A,Alex Yates,Mad Hatters,30km,08:31,08:59,09:19,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:31,,1,7:00:05,Greater London North,Hatters Explorer Scout Unit in Southgate,
+116B,Finley Farley,Mad Hatters,30km,08:31,08:58,09:18,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:31,,1,7:00:21,Greater London North,Hatters Explorer Scout Unit in Southgate,
+116C,Noel Holt,Mad Hatters,30km,08:31,08:58,09:19,,,10:14,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:31,,1,7:00:41,Greater London North,Hatters Explorer Scout Unit in Southgate,
+116D,Quinn Zimmer,Mad Hatters,30km,08:31,08:58,09:19,,,10:13,10:59,11:48,12:17,,,,,,,,13:29,14:22,15:32,,1,7:00:47,Greater London North,Hatters Explorer Scout Unit in Southgate,
+117A,Uma Nash,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:25,11:03,12:09,12:35,,,,,,,,13:39,14:33,15:29,,1,6:54:45,GLN,1st and 3rd New Barnet Scout Group,
+117B,Yael Osei,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:26,11:03,12:09,12:35,,,,,,,,13:39,14:32,15:29,,1,6:54:44,GLN,1st and 3rd New Barnet Scout Group,
+117C,Val Yates,Where's the next checkpoint?,30km,08:34,09:05,09:24,,,10:26,11:03,12:10,12:35,,,,,,,,13:39,14:32,15:29,,1,6:54:36,GLN,1st and 3rd New Barnet Scout Group,
+118A,Wren Osei,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:43,18:05,19:07,,1,10:33:09,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+118B,Toby Vance,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:44,18:05,19:07,,1,10:32:52,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+118C,Casey Nash,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:02,,,,,,,,16:43,18:07,19:07,,1,10:32:51,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+118D,Finley Holt,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:20,12:29,14:04,15:03,,,,,,,,16:43,18:06,19:07,,1,10:33:16,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+118E,Sam Gibbs,Discovery Explorer Scouts 2 (Lewisham),30km,08:34,09:12,09:52,,,11:19,12:29,14:04,15:03,,,,,,,,16:43,18:07,19:07,,1,10:33:22,South London Scouts,Discovery Explorer Scout Unit (Lewisham),
+119A,Uma Vance,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:08,16:59,,1,8:20:02,Devon,20th Torbay Scout Group,
+119B,Casey Holt,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:03,16:59,,1,8:20:09,Devon,20th Torbay Scout Group,
+119C,Sam Zimmer,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:07,16:59,,1,8:20:01,Devon,20th Torbay Scout Group,
+119D,Jesse Kemp,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:55,11:31,12:27,13:18,,,,,,,,14:48,16:07,16:59,,1,8:20:11,Devon,20th Torbay Scout Group,
+119E,Toby Wade,Tor-keen  Mud Skippers,30km,08:39,09:16,09:42,,,10:54,11:31,12:27,13:18,,,,,,,,14:48,16:03,16:59,,1,8:19:47,Devon,20th Torbay Scout Group,
+120A,Wren Evans,West Pang Gang 4,30km,08:37,09:11,09:54,,,11:01,12:00,13:53,14:36,,,,,,,,16:31,18:19,19:59,,1,11:22:11,Berkshire,West Pang Explorer Scout Unit,
+120B,Casey Quincey,West Pang Gang 4,30km,08:37,09:11,09:53,,,11:00,12:00,13:52,14:36,,,,,,,,16:31,18:19,19:59,,1,11:22:05,Berkshire,West Pang Explorer Scout Unit,
+120C,Alex Osei,West Pang Gang 4,30km,08:37,09:11,09:53,,,11:01,12:00,13:53,14:36,,,,,,,,16:31,18:19,19:59,,1,11:22:12,Berkshire,West Pang Explorer Scout Unit,
+121A,Uma Sharp,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:35,,1,5:55:19,West Herts,VVV Explorer Scouts,
+121B,Harper Marsh,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:35,,1,5:55:34,West Herts,VVV Explorer Scouts,
+121D,Riley Bishop,Triple Thunder Rides Again,30km,08:40,09:05,09:24,,,10:24,11:01,11:41,12:02,,,,,,,,13:12,13:55,14:35,,1,5:55:22,West Herts,VVV Explorer Scouts,
+122A,Val Farley,Romford Raiders,30km,08:40,09:10,09:30,,,10:36,11:25,12:31,12:54,,,,,,,,14:19,14:59,15:39,,1,6:59:20,GLNE,Mixed Explorer Units,
+122B,Finley Evans,Romford Raiders,30km,08:40,09:10,09:30,,,10:37,11:25,12:31,12:55,,,,,,,,14:19,15:00,15:39,,1,6:59:32,GLNE,Mixed Explorer Units,
+122C,Bailey Vance,Romford Raiders,30km,08:40,09:10,09:30,,,10:41,11:25,12:31,12:54,,,,,,,,14:19,14:59,15:39,,1,6:59:31,GLNE,Mixed Explorer Units,
+122D,Toby Holt,Romford Raiders,30km,08:40,09:10,09:30,,,10:37,11:25,12:31,12:54,,,,,,,,14:19,15:00,15:39,,1,6:59:35,GLNE,Mixed Explorer Units,
+123A,Logan Dawson,Crouch Valley Boomwackers,30km,08:43,09:23,09:50,,,10:55,12:28,14:35,15:16,,,,,,,,17:11,18:26,19:28,,1,10:45:13,Essex,Crouch Valley Explorers,
+123B,Kai Bishop,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:55,12:28,14:35,15:17,,,,,,,,17:11,18:26,19:28,,1,10:45:25,Essex,Crouch Valley Explorers,
+123C,Sam Turner,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:56,12:29 R,,,,,,,,,,,,,,0,3:45:48,Essex,Crouch Valley Explorers,
+123D,Kai Sharp,Crouch Valley Boomwackers,30km,08:43,09:23,09:50,,,10:55,12:29,14:35,15:16,,,,,,,,17:11,18:26,19:28,,1,10:45:24,Essex,Crouch Valley Explorers,
+123E,Casey Bishop,Crouch Valley Boomwackers,30km,08:43,09:23,09:49,,,10:55,12:28,14:35,15:17,,,,,,,,17:11,18:26,19:28,,1,10:45:16,Essex,Crouch Valley Explorers,
+124A,Yael Farley,Romford Rabbits,30km,08:43,09:12,09:47,,,10:50,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:45,,1,9:02:00,GLNE,Mixed Explorer Units,
+124B,Finley Wade,Romford Rabbits,30km,08:43,09:12,09:47,,,10:50,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:45,,1,9:01:57,GLNE,Mixed Explorer Units,
+124C,Bailey Underwood,Romford Rabbits,30km,08:43,09:13,09:47,,,10:51,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:45,,1,9:02:09,GLNE,Mixed Explorer Units,
+124D,Val Osei,Romford Rabbits,30km,08:43,09:13,09:47,,,10:51,13:10,14:04,14:43,,,,,,,,16:01,16:58,17:45,,1,9:02:07,GLNE,Mixed Explorer Units,
+124E,Sam Quincey,Romford Rabbits,30km,08:43,09:13,09:48,,,10:51,13:10,14:05,14:43,,,,,,,,16:02,16:58,17:45,,1,9:02:13,GLNE,Mixed Explorer Units,
+125A,Riley Osei,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:36,,1,6:50:09,Beds,Leagrave Scout Group,
+125B,Riley Nash,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:36,,1,6:50:14,Beds,Leagrave Scout Group,
+125C,Uma Yates,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:45,15:36,,1,6:50:04,Beds,Leagrave Scout Group,
+125D,Noel Marsh,UBER Said NO,30km,08:46,09:13,09:35,,,10:36,11:19,12:10,12:37,,,,,,,,13:47,14:44,15:36,,1,6:50:10,Beds,Leagrave Scout Group,
+126A,Zion Evans,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:26,15:27,16:11,,1,7:25:02,Greater London North,Wild Wolf ESU,
+126B,Uma Turner,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:27,15:27,16:11,,1,7:24:54,Greater London North,Wild Wolf ESU,
+126C,Toby Zimmer,Alex x Hiking,30km,08:46,09:18,09:51,,,10:58,11:46,12:43,13:14,,,,,,,,14:27,15:27,16:11,,1,7:25:02,Greater London North,Wild Wolf ESU,
+127A,Ollie Gibbs,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:43,,1,8:54:06,Greater London North,Hatters Explorer Scout Unit in Southgate,
+127B,Toby Adams,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:43,,1,8:54:01,Greater London North,Hatters Explorer Scout Unit in Southgate,
+127C,Logan Irving,March Hares,30km,08:49,09:15,10:15,,,11:13,12:03,12:56,14:08,,,,,,,,15:36,16:36,17:43,,1,8:53:59,Greater London North,Hatters Explorer Scout Unit in Southgate,
+128A,Jesse Nash,Skipped Revising for This,30km,08:49,09:13,09:32,,,10:31,11:09,11:56,12:16,,,,,,,,13:25,14:14,15:08,,1,6:19:26,GLMW,Pioneers ESU,
+128B,Logan Yates,Skipped Revising for This,30km,08:49,09:14,09:32,,,10:31,11:10,11:57,12:16,,,,,,,,13:25,14:14,15:08,,1,6:19:30,GLMW,Pioneers ESU,
+128C,Ollie Nash,Skipped Revising for This,30km,08:49,09:13,09:32,,,10:31,11:09,11:56,12:16,,,,,,,,13:25,14:14,15:08,,1,6:19:35,GLMW,Pioneers ESU,
+129A,Parker Evans,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:55,12:00,12:57,13:34,,,,,,,,15:03,15:58,16:52,,1,8:00:44,Essex,Crouch Valley Explorers,
+129B,Kai Wade,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:52,,1,8:00:39,Essex,Crouch Valley Explorers,
+129C,Zion Wade,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:35,,,,,,,,15:03,15:58,16:52,,1,8:00:50,Essex,Crouch Valley Explorers,
+129D,Val Reyes,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:56,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:52,,1,8:00:28,Essex,Crouch Valley Explorers,
+129E,Harper Irving,Crouch Valley Challengers,30km,08:52,09:19,09:53,,,10:55,12:00,12:57,13:34,,,,,,,,15:02,15:58,16:52,,1,8:00:14,Essex,Crouch Valley Explorers,
+130A,Quinn Quincey,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:40,14:04,14:50,,,,,,,,16:10,17:15,18:09,,1,9:17:29,essex,Genesis Explorer scouts,
+130B,Noel Lane,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:39,14:03,14:49,,,,,,,,16:10,17:14,18:09,,1,9:17:35,essex,Genesis Explorer scouts,
+130C,Noel Bishop,Genesis 1,30km,08:52,09:28,10:13,,,11:24,12:39,14:04,14:49,,,,,,,,16:10,17:12,18:09,,1,9:17:19,essex,Genesis Explorer scouts,
+130D,Uma Zimmer,Genesis 1,30km,08:52,09:28,10:14,,,11:24,12:39,14:03,14:49,,,,,,,,16:11,17:12,18:09,,1,9:17:15,essex,Genesis Explorer scouts,
+131A,Uma Marsh,Romford Rovers,30km,08:55,09:28,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,19:11,,1,10:16:30,GLNE,Mixed Explorer Units,
+131B,Finley Quincey,Romford Rovers,30km,08:55,09:28,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,19:11,,1,10:16:24,GLNE,Mixed Explorer Units,
+131C,Zion Gibbs,Romford Rovers,30km,08:55,09:29,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:09,19:11,,1,10:16:34,GLNE,Mixed Explorer Units,
+131D,Gray Marsh,Romford Rovers,30km,08:55,09:29,10:01,,,11:08,12:12,13:41,14:41,,,,,,,,16:31,18:10,19:12,,1,10:16:45,GLNE,Mixed Explorer Units,
+132A,Noel Quincey,Kenley Aces 2,30km,08:55,09:27,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:32,,1,10:37:05,GLSW,Kenley Aces,
+132B,Finley Lane,Kenley Aces 2,30km,08:55,09:28,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:32,,1,10:37:08,GLSW,Kenley Aces,
+132C,Logan Marsh,Kenley Aces 2,30km,08:55,09:28,10:00,,,11:26,12:51,15:19,16:09,,,,,,,,17:40,18:37,19:32,,1,10:37:25,GLSW,Kenley Aces,
+132E,Val Carter,Kenley Aces 2,30km,08:55,09:27,10:00,,,11:26,12:50,15:19,16:09,,,,,,,,17:40,18:37,19:32,,1,10:37:06,GLSW,Kenley Aces,
+133A,Parker Vance,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:17,,1,7:19:53,West Herts,VVV Explorer Scouts,
+133B,Ollie Quincey,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56 R,,,,,,,,,,,,,0,3:58:26,West Herts,VVV Explorer Scouts,
+133C,Indigo Vance,This Is The Way,30km,08:58,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:17,,1,7:19:53,West Herts,VVV Explorer Scouts,
+133D,Riley Holt,This Is The Way,30km,08:58,09:35,09:56,,,11:14,12:06,12:56,13:18,,,,,,,,14:39,15:30,16:17,,1,7:19:49,West Herts,VVV Explorer Scouts,
+133E,Toby Sharp,This Is The Way,30km,08:57,09:35,09:56,,,11:13,12:06,12:56,13:17,,,,,,,,14:39,15:30,16:17,,1,7:19:54,West Herts,VVV Explorer Scouts,
+134A,Indigo Evans,Phoenix Flyers 3,30km,08:58,09:22,09:38,,,10:27,11:02,11:44,12:09,,,,,,,,13:03,13:44,14:17,,1,5:19:22,GLN,201st Islington,
+134B,Noel Jarrett,Phoenix Flyers 3,30km,08:58,09:22,09:38,,,10:28,11:02,11:44,12:09,,,,,,,,13:04,13:44,14:17,,1,5:19:28,GLN,201st Islington,
+134C,Yael Wade,Phoenix Flyers 3,30km,08:58,09:22,09:39,,,10:28,11:02,11:45,12:09,,,,,,,,13:04,13:44,14:17,,1,5:19:24,GLN,201st Islington,
+134D,Uma Quincey,Phoenix Flyers 3,30km,08:58,09:22,09:39,,,10:27,11:02,11:44,12:09,,,,,,,,13:03,13:44,14:17,,1,5:19:23,GLN,201st Islington,
+135A,Dana Yates,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:41,16:29,,,,,,,,18:12 R,,,,0,9:11:03,Essex,Crouch Valley Explorers,
+135B,Finley Marsh,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:41,16:28,,,,,,,,18:12,20:27,21:36,,1,12:35:21,Essex,Crouch Valley Explorers,
+135C,Morgan Kemp,Crouch Valley Rocks,30km,09:01,09:49,10:18,,,12:51,14:03,15:42,16:29,,,,,,,,18:12,20:27,21:36,,1,12:35:24,Essex,Crouch Valley Explorers,
+135D,Sam Jarrett,Crouch Valley Rocks,30km,09:01,09:50,10:18,,,12:51,14:03,15:41,16:29,,,,,,,,18:12,20:27,21:36,,1,12:35:30,Essex,Crouch Valley Explorers,
+135E,Noel Wade,Crouch Valley Rocks,30km,09:01,09:50,10:18,,,12:52,14:03,15:41,16:28,,,,,,,,18:12,20:27,21:37,,1,12:35:30,Essex,Crouch Valley Explorers,
+136A,Ellis Pratt,Paka pigeon haters,30km,09:01,09:40,10:07,,,11:24,12:38,14:05,14:48,,,,,,,,16:33,18:05,19:10,,1,10:09:54,GLMW,Pioneers ESU,
+136B,Gray Carter,Paka pigeon haters,30km,09:01,09:40,10:06,,,11:23,12:38,14:05,14:48,,,,,,,,16:33,18:06,19:10,,1,10:09:47,GLMW,Pioneers ESU,
+136C,Parker Marsh,Paka pigeon haters,30km,09:01,09:40,10:07,,,11:27,12:40,14:05,14:48,,,,,,,,16:34,18:06,19:11,,1,10:10:25,GLMW,Pioneers ESU,
+136D,Gray Wade,Paka pigeon haters,30km,09:00,09:40,10:06,,,11:23,12:39,14:05,14:48,,,,,,,,16:33,17:56,19:10,,1,10:09:48,GLMW,Pioneers ESU,
+136E,Morgan Evans,Paka pigeon haters,30km,09:01,09:40,10:06,,,11:25,12:39,14:06,14:50,,,,,,,,16:34,17:56,19:11,,1,10:09:55,GLMW,Pioneers ESU,
+137A,Morgan Carter,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,17:10,,1,8:06:01,Devon,20th Torbay Scout Group,
+137B,Wren Kemp,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:56,12:55,13:31,,,,,,,,14:51,15:57,17:10,,1,8:05:57,Devon,20th Torbay Scout Group,
+137C,Quinn Osei,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:56,12:55,13:32,,,,,,,,14:51,15:57,17:10,,1,8:05:59,Devon,20th Torbay Scout Group,
+137D,Casey Marsh,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,17:10,,1,8:06:04,Devon,20th Torbay Scout Group,
+137E,Logan Zimmer,Walkie Torquay,30km,09:04,09:33,10:01,,,11:02,11:57,12:55,13:32,,,,,,,,14:51,15:57,17:10,,1,8:06:08,Devon,20th Torbay Scout Group,
+138A,Alex Dawson,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:04,12:58,14:07,,,,,,,,15:34,16:36,17:36,,1,8:32:13,Greater London North,Hatters Explorer Scout Unit in Southgate,
+138B,Quinn Wade,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:04,12:59,14:07,,,,,,,,15:34,16:36,17:36,,1,8:32:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
+138C,Bailey Farley,3 left feet,30km,09:04,09:35,10:05,,,11:01,12:03,12:58,14:07,,,,,,,,15:34,16:36,17:36,,1,8:32:19,Greater London North,Hatters Explorer Scout Unit in Southgate,
+139A,Wren Yates,Kenley Aces 3,30km,09:07,09:39,10:14,,,11:24,12:40,14:03,14:50,,,,,,,,16:10,17:15,18:09,,1,9:02:39,GLSW,Kenley Aces,
+139B,Quinn Gibbs,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:28,12:32,13:50,14:26,,,,,,,,15:45,17:13,18:11,,1,9:03:46,GLSW,Kenley Aces,
+139C,Riley Farley,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:29,12:32,13:50,14:26,,,,,,,,15:45,17:13,18:10,,1,9:03:43,GLSW,Kenley Aces,
+139D,Harper Evans,Kenley Aces 3,30km,09:07,09:39,10:13,,,11:28,12:32,13:50,14:25,,,,,,,,15:45,17:13,18:11,,1,9:03:52,GLSW,Kenley Aces,
+139E,Finley Jarrett,Kenley Aces 3,30km,09:07,09:38,10:13,,,11:28,12:32,13:50,14:25,,,,,,,,15:45,17:13,18:11,,1,9:03:49,GLSW,Kenley Aces,
+140A,Riley Wade,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,17:01,,1,7:53:48,GLN,201st Islington,
+140B,Casey Carter,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,17:01,,1,7:53:46,GLN,201st Islington,
+140C,Bailey Marsh,Phoenix Flyers 4,30km,09:07,09:32,09:59,,,11:05,12:02,12:50,13:38,,,,,,,,15:19,16:08,17:01,,1,7:54:03,GLN,201st Islington,
+141A,Morgan Underwood,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:41,16:34,17:34,,1,8:24:00,essex,Genesis Explorer scouts,
+141B,Kai Nash,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:42,16:35,17:34,,1,8:23:51,essex,Genesis Explorer scouts,
+141C,Ollie Holt,Genesis 2,30km,09:10,09:46,10:10,,,11:39,12:29,13:45,14:24,,,,,,,,15:42,16:34,17:34,,1,8:24:27,essex,Genesis Explorer scouts,
+142A,Dana Sharp,Romford Renegades,30km,09:10,09:42,10:05,,,10:56,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:48,,1,9:38:10,GLNE,Mixed Explorer Units,
+142B,Noel Irving,Romford Renegades,30km,09:10,09:42,10:05,,,10:57,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:48,,1,9:38:12,GLNE,Mixed Explorer Units,
+142C,Kai Dawson,Romford Renegades,30km,09:10,09:41,10:05,,,10:56,11:34,13:16,14:46,,,,,,,,16:30,17:53,18:48,,1,9:38:12,GLNE,Mixed Explorer Units,
+142D,Dana Adams,Romford Renegades,30km,09:10,09:41,10:05,,,10:57,11:34,13:16,14:46,,,,,,,,16:29,17:53,18:48,,1,9:37:59,GLNE,Mixed Explorer Units,
+143A,Parker Dawson,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:32,14:15,,,,,,,,15:44,17:01,17:51,,1,8:38:28,Greater London North,Tottenham ESU,
+143B,Zion Quincey,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:32,14:15,,,,,,,,15:44,17:01,17:51,,1,8:38:41,Greater London North,Tottenham ESU,
+143C,Gray Vance,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:27,13:32,14:15,,,,,,,,15:44,17:01,17:52,,1,8:39:10,Greater London North,Tottenham ESU,
+143D,Casey Irving,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:31,14:15,,,,,,,,15:44,17:01,17:52,,1,8:38:50,Greater London North,Tottenham ESU,
+143E,Zion Carter,TESU 2,30km,09:13,09:45,10:19,,,11:25,12:28,13:31,14:15,,,,,,,,15:44,17:01,17:52,,1,8:39:22,Greater London North,Tottenham ESU,
+145A,Finley Gibbs,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:50,,1,6:34:05,Greater London North,Wild Wolf ESU,
+145B,Dana Evans,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:50,,1,6:34:04,Greater London North,Wild Wolf ESU,
+145C,Morgan Irving,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:50,,1,6:34:05,Greater London North,Wild Wolf ESU,
+145D,Riley Pratt,Alex x Men 2,30km,09:16,09:53,10:14,,,11:06,12:03,12:50,13:13,,,,,,,,14:15,15:00,15:50,,1,6:34:10,Greater London North,Wild Wolf ESU,
+146A,Finley Carter,Too easy,30km,09:16,09:41,09:59,,,11:00,11:32,12:17,12:39,,,,,,,,13:34,14:05,14:42,,1,5:26:03,Greater London North,Hatters Explorer Scout Unit in Southgate,
+146B,Morgan Vance,Too easy,30km,09:16,09:41,09:59,,,11:00,11:31,12:16,12:39,,,,,,,,13:34,14:05,14:42,,1,5:26:18,Greater London North,Hatters Explorer Scout Unit in Southgate,
+146C,Parker Yates,Too easy,30km,09:16,09:41,09:59,,,11:00,11:32,12:17,12:39,,,,,,,,13:35,14:05,14:42,,1,5:26:24,Greater London North,Hatters Explorer Scout Unit in Southgate,
+147A,Casey Kemp,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,16:08,,1,6:48:32,GLNE,Zenith ESU,
+147B,Sam Pratt,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:45,13:23,,,,,,,,14:36,15:22,16:08,,1,6:48:57,GLNE,Zenith ESU,
+147C,Gray Turner,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:45,13:23,,,,,,,,14:36,15:22,16:08,,1,6:48:30,GLNE,Zenith ESU,
+147D,Yael Marsh,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,16:07,,1,6:48:31,GLNE,Zenith ESU,
+147E,Morgan Quincey,Zenith ESU,30km,09:19,09:44,10:06,,,10:57,11:35,12:44,13:23,,,,,,,,14:36,15:22,16:07,,1,6:48:29,GLNE,Zenith ESU,
+148A,Morgan Reyes,Romford Ramblers,30km,09:19,09:43,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:50,,1,5:30:51,GLNE,Mixed Explorer Units,
+148B,Yael Reyes,Romford Ramblers,30km,09:19,09:43,10:00,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:50,,1,5:31:01,GLNE,Mixed Explorer Units,
+148C,Morgan Pratt,Romford Ramblers,30km,09:19,09:43,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:50,,1,5:30:48,GLNE,Mixed Explorer Units,
+148D,Wren Marsh,Romford Ramblers,30km,09:19,09:44,10:01,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:50,,1,5:30:58,GLNE,Mixed Explorer Units,
+148E,Kai Jarrett,Romford Ramblers,30km,09:18,09:43,10:00,,,10:44,11:19,12:05,12:29,,,,,,,,13:35,14:08,14:49,,1,5:31:00,GLNE,Mixed Explorer Units,
