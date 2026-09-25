@@ -1,43 +1,20 @@
-cp,description,checkpoint manager,mobile,type of checkpoint,what3words,grid reference,open,Close,50mile Leg distance,50km Leg distance,30km Leg distance
-Start,Tring School,Central Control,Central Control,"A Big Scary Building
-",///leafing.destined.glance,SP 928 119,07:45,09:24,0,0,0
-CP01,Junction of Hastoe lane and footpath by road bridge,Alan Baker,07700 900000,"Vehicle
-",///sleepless.punch.smelter,SP 9242 1076,08:00,10:05,1.6,1.6,1.6
-CP02,Grass triangle opposite Hastoe Farm,Barbara Cole,07700 900001,"Vehicle / tent (S)
-",///however.complies.poodle,SP 9175 0936,08:20,10:45,,,1.7
-CP03,Footpath junction in woods,Colin Drake,07700 900002,"Tent (M)
-",///melts.hairpin.palms,SP 9303 0797,08:45,11:00,1.9,1.9,
-CP04,Cholesbury Village Hall,Diane Ellis,07700 900003,"Village Hall
-",///scouts.skim.qualify,SP 9301 0711,09:00,11:30,1.2,1.2,
-CP05,East side of Horseblock Road bend,Edward Foster,07700 900004,"Vehicle / tent (M)
-",///brambles.replaying.saloons,SP 9435 0692,09:15,12:05,1.5,1.5,1.5
-CP06,Wiggington Sports field,Fiona Grant,07700 900005,"Vehicle / tent (M)
-",///processes.partners.rotation,SP 9368 0996,09:55,13:25,3.4,3.4,3.4
-CP07,The Iron Hall in Tring Station village,George Hart,07700 900006,"Village Hall
-",///armed.frock.growth,SP 9492 1215,10:40,14:55,3.7,3.7,3.7
-CP08,Junction of canal and footpath,Helen Irwin,07700 900007,"Vehicle / tent (S)
-",///stylists.opens.flasks,SP 9391 1290,11:05,15:45,2,2,2
-CP09,Junction of Hastoe lane and footpath by road bridge,Alan Baker,07700 900000,"Vehicle
-",///sleepless.punch.smelter,SP 9242 1076,08:00,10:05,1.6,1.6,
-CP10,Grass triangle opposite Hastoe Farm,Barbara Cole,07700 900001,"Vehicle / tent (S)
-",///however.complies.poodle,SP 9175 0936,08:20,10:45,1.7,1.7,
-CP11,Footpath junction in woods,Colin Drake,07700 900002,"Tent (M)
-",///melts.hairpin.palms,SP 9303 0797,08:45,11:00,1.9,,
-CP12,Cholesbury Village Hall,Diane Ellis,07700 900003,"Village Hall
-",///scouts.skim.qualify,SP 9301 0711,09:00,11:30,1.2,,
-CP13,East side of Horseblock Road bend,Edward Foster,07700 900004,"Vehicle / tent (M)
-",///brambles.replaying.saloons,SP 9435 0692,09:15,12:05,1.5,,
-CP14,Wiggington Sports field,Fiona Grant,07700 900005,"Vehicle / tent (M)
-",///processes.partners.rotation,SP 9368 0996,09:55,13:25,3.4,,
-CP15,The Iron Hall in Tring Station village,George Hart,07700 900006,"Village Hall
-",///armed.frock.growth,SP 9492 1215,10:40,14:55,3.7,3.7,
-CP16,Junction of canal and footpath,Helen Irwin,07700 900007,"Vehicle / tent (S)
-",///stylists.opens.flasks,SP 9391 1290,11:05,15:45,2,2,2
-CP17,Wiggington Sports field,Fiona Grant,07700 900005,"Vehicle / tent (M)
-",///processes.partners.rotation,SP 9368 0996,09:55,13:25,3.4,3.4,3.4
-CP18,The Iron Hall in Tring Station village,George Hart,07700 900006,"Village Hall
-",///armed.frock.growth,SP 9492 1215,10:40,14:55,3.7,3.7,3.7
-CP19,Junction of canal and footpath,Helen Irwin,07700 900007,"Vehicle / tent (S)
-",///stylists.opens.flasks,SP 9391 1290,11:05,15:45,,,
-Finish,Tring School,Ian Jarvis,07700 900008,"A Big Scary Building
-",///leafing.destined.glance,SP 928 119,11:25,16:20,1.6,1.6,1.6
+cp,description,checkpoint manager,mobile,type of checkpoint,what3words,grid reference,latitude,longitude,50mile leg distance,50mile leg km,50km leg distance,50km leg km,30km leg distance,30km leg km
+Start,Princes Risborough School,Central Control,Central Control,A Big Scary Building,///grades.waddle.derailed,SP 8100 0300,51.719886,-0.82883162,0,0,0,0,0,0
+CP01,Horsenden,Alan Baker,07700 900000,vehicle,///headrest.salt.sped,SP 7930 0295,51.719679,-0.85344708,2.1,2.1,2.1,2.1,2.1,2.1
+CP02,Church End,Barbara Cole,07700 900001,vehicle,///earmarked.sweep.strain,SP 7760 0200,51.711376,-0.87826254,2.8,4.9,2.8,4.9,2.8,4.9
+CP03,Wigan's Lane,Colin Drake,07700 900002,vehicle,///calculate.lied.highs,SP 7845 0050,51.697774,-0.86629975,2,6.9,2,6.9,2,6.9
+CP04,Lee Road / Ridgeway,Diane Ellis,07700 900003,vehicle,///palms.hops.confining,SP 8010 0030,51.695744,-0.84247683,2.3,9.2,,,2.3,9.2
+CP05,Bledlow Ridge,Edward Foster,07700 900004,village hall,///compound.fraction.parked,SU 7970 9780,51.673327,-0.84883296,3.8,13,3.4,10.3,3.8,13
+CP06,Cadmore End,Fiona Grant,07700 900005,village hall,///broom.fondest.majors,SU 7840 9260,51.626764,-0.86879263,6.8,19.8,6.8,17.1,,
+CP07,Hambleden,George Hart,07700 900006,tent(L),///sprains.fonts.funds,SU 7840 8660,51.572827,-0.87013176,6.7,26.5,6.7,23.8,,
+CP08,Southend Common,Helen Irwin,07700 900007,vehicle / tent(L),///snowy.iron.gear,SU 7525 8980,51.602023,-0.91489036,,,5.3,29.1,,
+CP09,Hambleden lock,Ian Jarvis,07700 900008,vehicle / tent(L),///flippers.against.downhill,SU 7820 8510,51.55937,-0.87335031,2.1,28.6,,,,
+CP10,Henely-on-Thames,Julia Knight,07700 900009,scout hut,///bookcases.unafraid.piles,SU 7575 8220,51.533634,-0.90930826,5.1,33.7,,,,
+CP11,Stoke Row,Kevin Lowe,07700 900010,sport pavilion,///gets.cookie.waltz,SU 6860 8405,51.551178,-1.0120122,9.1,42.8,,,,
+CP12,Icknieldbank Plantation,Laura Mills,07700 900011,vehicle / tent(L),///closed.gladiator.podcast,SU 6660 9140,51.617494,-1.0394608,10.6,53.4,,,,
+CP13,Northend,Martin Nash,07700 900012,village hall,///makes.promising.cool,SU 7340 9240,,,9.1,62.5,3.4,32.5,,
+CP14,Stokenchurch,Nina Owen,07700 900013,scout hut,///scanner.poets.snowy,SU 7610 9650,,,5.7,68.2,5.7,38.2,5.2,18.2
+CP15,Chinnor,Oscar Pike,07700 900014,vehicle / tent(L),///tonsils.rucksack.matter,SP 7610 0035,,,4.9,73.1,4.9,43.1,4.9,23.1
+CP16,Icknield Way,Paula Quinn,07700 900015,vehicle,///tapes.physical.campfires,SP 7835 0120,,,2.8,75.9,2.8,45.9,2.8,25.9
+CP17,Wycombe Road,Ross Reed,07700 900016,vehicle / tent(M),///inhabited.butlers.tune,SP 8065 0190,,,2.6,78.5,2.6,48.5,2.6,28.5
+Finish,Princes Risborough School,Sheila Shaw,07700 900017,A Big Scary Building,///grades.waddle.derailed,SP 8100 0300,,,1.5,80,1.5,50,1.5,30
