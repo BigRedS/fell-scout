@@ -601,7 +601,7 @@ sub get_teams{
 
 	# TODO: The date_format on next_checkpoint_expected_in only allows for a team to be up to 23h and 59min late, before it rolls to zero
 	$sth = $dbh->prepare('select teams.team_number, team_name, route, district, unit, last_checkpoint, next_checkpoint, current_leg,
-	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint,
+	                         timestampdiff(SECOND, last_checkpoint_time, CURTIME()) as seconds_since_checkpoint, completed, retired,
 	                         date_format(last_checkpoint_time, "%H:%i") as last_checkpoint_hhmm,
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
 	                         from teams');
