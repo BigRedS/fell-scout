@@ -123,7 +123,7 @@ async function clearTheDatabase() {
         <td>
           Clear the local cache of FellTrack, useful when something has changed on FellTrack but
           isn't showing up as changed in FellScout, or when you've updated the routes
-          definitions. This will clear Scratch Teams, which will need manual recreation.
+          definitions. This will clear anything configured in Fell Track - Scratch Teams, Incidents, Retriemnts.
         </td>
       </tr>
     </tbody>
