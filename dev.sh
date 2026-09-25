@@ -26,10 +26,11 @@ perl -I"$REPO_ROOT/FellScout/lib" -I"$REPO_ROOT/FellScout/t/lib" \
 
 (
 	cd "$REPO_ROOT/FellScout"
+	cp $REPO_ROOT/s50-example-progress.csv $REPO_ROOT/progress.csv
 	env \
 		MYSQL_HOST=127.0.0.1 MYSQL_PORT=3307 MYSQL_DATABASE=fellscout \
 		MYSQL_USERNAME=root MYSQL_PASSWORD=test \
-		./bin/progress-to-db "$REPO_ROOT/s50-example-progress.csv"
+		./bin/progress-to-db "$REPO_ROOT/progress.csv"
 )
 
 echo "Starting backend (plackup) on http://127.0.0.1:5000 ..."

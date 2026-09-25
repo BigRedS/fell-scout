@@ -80,6 +80,7 @@ async function clearTheDatabase() {
   <form v-if="config" style="max-width: 60em" @submit.prevent="saveConfig">
     <table class="table">
       <tbody>
+        <tr><th>Name</th><th>Value</th><th>Notes</th></tr>
         <tr v-for="name in Object.keys(config).sort()" :key="name">
           <td>{{ name }}</td>
           <td><input v-model="drafts[name]" type="text" class="form-control" /></td>
