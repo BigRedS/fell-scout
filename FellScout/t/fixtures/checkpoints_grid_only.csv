@@ -1,0 +1,5 @@
+cp,description,checkpoint manager,mobile,type of checkpoint,what3words,grid reference,latitude,longitude,50km Leg distance
+Start,Start Field,,,,,SP 928 119,,,0
+CP1,Checkpoint One,,,,,SP 9242 1076,,,1.6
+CP2,Checkpoint Two,,,,,TBC,,,1.0
+Finish,Finish Field,,,,,SP 928 119,51.5,-0.5,1.0
