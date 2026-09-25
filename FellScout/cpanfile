@@ -19,3 +19,6 @@ on "test" => sub {
 # progress-to-json
 requires "Text::CSV" => "0";
 requires "Time::Local" => "0"
+
+# For converting OSGB grid refs to lat/long for the map
+requires "Geo::Coordinates::OSGB" => "0";

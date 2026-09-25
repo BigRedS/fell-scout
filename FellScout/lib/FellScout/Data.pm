@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Exporter 'import';
 use Text::CSV qw/csv/;
+use Geo::Coordinates::OSGB qw/grid_to_ll/;
+use Geo::Coordinates::OSGB::Grid qw/parse_grid/;
 use FellScout::Log qw(info error debug);
 
 our @EXPORT_OK = qw(
@@ -113,6 +115,20 @@ sub get_routes_checkpoints{
 	return \%routes_cps;
 }
 
+# The checkpoints CSV often has OS grid refs but not lat/longs, but we need
+# lat/longs to draw the map.
+sub _grid_to_latlon{
+	my $grid_ref = shift;
+	return unless defined $grid_ref and $grid_ref =~ m/\S/;
+	my @latlon = eval {
+		my ($easting, $northing) = parse_grid($grid_ref);
+		return unless defined $northing;
+		return grid_to_ll($easting, $northing);
+	};
+	return unless @latlon == 2;
+	return map { sprintf('%.6f', $_) } @latlon;
+}
+
 # Takes a path to an uploaded CSV (the caller's job to get it there - a
 # Dancer2 upload's own ->tempname is the normal case, so each request gets
 # its own file rather than every upload racing to write the same shared
@@ -145,7 +161,14 @@ sub import_checkpoints_csv{
 		$cp =~ s/^0//;
 		$cp = 0 if $cp =~ m/Start/i;
 		$cp = 99 if $cp =~ m/Finish/i;
-		$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $row->{latitude}, $row->{longitude}, $row->{what3words});
+
+		# If we have lat/long in the CSV then use those, if we don't then try
+		# to get lat/long from the grid ref
+		my ($lat, $lon) = ($row->{latitude}, $row->{longitude});
+		unless (length($lat // '') and length($lon // '')){
+			($lat, $lon) = _grid_to_latlon($row->{'grid reference'});
+		}
+		$sth->execute($cp, $row->{description}, $row->{'checkpoint manager'}, $row->{mobile}, $row->{'type of checkpoint'}, $row->{'grid reference'}, $lat, $lon, $row->{what3words});
 		$num_checkpoints++;
 
 		foreach my $field (sort(keys(%{$row}))){

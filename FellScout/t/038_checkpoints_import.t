@@ -101,6 +101,29 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 	is($cp1->{status_notes}, 'Bridge washed out', '...or the notes that went with it');
 }
 
+# --- lat/long come from the grid reference when the CSV doesn't supply them ---
+{
+	my $req = POST(
+		'/api/checkpoints/import',
+		Content_Type => 'form-data',
+		Content      => [ csv => ["$FindBin::Bin/fixtures/checkpoints_grid_only.csv", 'checkpoints.csv'] ],
+	);
+	my $res = $test->request($req);
+	ok($res->is_success, '[POST /api/checkpoints/import] grid-ref-only CSV successful') or diag($res->status_line, "\n", $res->content);
+
+	my $cp1 = TestDB->dbh->selectrow_hashref("select * from checkpoints where checkpoint_number = 1");
+	is(sprintf('%.3f', $cp1->{latitude}), '51.788', 'grid ref only: CP1 latitude worked out from SP 9242 1076');
+	is(sprintf('%.3f', $cp1->{longitude}), '-0.661', 'grid ref only: CP1 longitude worked out from SP 9242 1076');
+
+	my $cp2 = TestDB->dbh->selectrow_hashref("select * from checkpoints where checkpoint_number = 2");
+	is($cp2->{latitude}, undef, 'grid ref only: an unreadable grid ref leaves latitude empty rather than failing the import');
+	is($cp2->{longitude}, undef, 'grid ref only: ...and longitude');
+
+	my $finish = TestDB->dbh->selectrow_hashref("select * from checkpoints where checkpoint_number = 99");
+	is($finish->{latitude} + 0, 51.5, 'grid ref only: latitude given in the CSV is used as-is, not overwritten from the grid ref');
+	is($finish->{longitude} + 0, -0.5, 'grid ref only: ...and so is longitude');
+}
+
 # --- a request with no file is a 400, not a crash ---
 {
 	my $req3 = POST('/api/checkpoints/import', Content_Type => 'form-data', Content => []);
