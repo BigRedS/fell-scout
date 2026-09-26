@@ -378,10 +378,12 @@ sub get_laterunners{
 	return \@laterunners;
 }
 
+# `seconds` is a duration, so sec_to_time() - not from_unixtime(), which reads it as a
+# moment in 1970 in the database's time zone (London was UTC+1 then, so 1h showed as 2h).
 sub get_legs{
 	my $dbh = shift;
 	my $legs = {};
-	my $sth = $dbh->prepare("select leg_name, `from`, `to`, date_format(from_unixtime(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
+	my $sth = $dbh->prepare("select leg_name, `from`, `to`, time_format(sec_to_time(seconds), \"%kh %im\") as time from legs where leg_name <> '0-0'");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref()){
 		my $key = sprintf("%02d%02d", $row->{from}, $row->{to});
