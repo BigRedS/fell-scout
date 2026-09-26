@@ -15,23 +15,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "Bringing up db-test..."
 perl -I"$REPO_ROOT/FellScout/lib" -I"$REPO_ROOT/FellScout/t/lib" -MTestDB -e 'TestDB->ensure_running'
 
-echo "Seeding db-test with the S50 example data (wipes any previous db-test data)..."
-perl -I"$REPO_ROOT/FellScout/lib" -I"$REPO_ROOT/FellScout/t/lib" \
-	-MTestDB -MFellScout::Data=import_checkpoints_csv \
-	-e '
-		TestDB->reset;
-		TestDB->seed_config(dev_mode => "on");
-		import_checkpoints_csv(TestDB->dbh, shift);
-	' "$REPO_ROOT/s50-example-checkpoints.csv"
-
-(
-	cd "$REPO_ROOT/FellScout"
-	cp $REPO_ROOT/s50-example-progress.csv $REPO_ROOT/progress.csv
-	env \
-		MYSQL_HOST=127.0.0.1 MYSQL_PORT=3307 MYSQL_DATABASE=fellscout \
-		MYSQL_USERNAME=root MYSQL_PASSWORD=test \
-		./bin/progress-to-db "$REPO_ROOT/progress.csv"
-)
+"$REPO_ROOT/dev-seed.sh"
 
 echo "Starting backend (plackup) on http://127.0.0.1:5000 ..."
 (
@@ -59,6 +43,15 @@ cleanup() {
 	kill "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null
 }
 trap cleanup INT TERM EXIT
+
+# Leg times and finish predictions come from the backend's sync, which needs
+# the backend up first.
+echo "Waiting for the backend, then running the sync..."
+for _ in $(seq 1 60); do
+	curl -fsS -o /dev/null http://127.0.0.1:5000/api/status 2>/dev/null && break
+	sleep 1
+done
+curl -fsS --max-time 120 -o /dev/null http://127.0.0.1:5000/cron
 
 echo
 echo "Dev environment is up - frontend: http://localhost:5173  backend: http://127.0.0.1:5000"

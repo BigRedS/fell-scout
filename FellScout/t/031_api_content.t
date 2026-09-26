@@ -11,6 +11,7 @@ BEGIN {
 }
 
 use FellScout;
+use FellScout::Data qw(get_legs);
 use Test::More;
 use Plack::Test;
 use HTTP::Request::Common;
@@ -286,6 +287,19 @@ sub get_json {
 	);
 
 	ok(!exists $legs->{'0203'}->{teams}, 'legs: 0203 (2-3) has no teams currently on it');
+}
+
+# --- leg durations don't depend on the database's time zone ---
+# get_legs used to format them via from_unixtime(), which shifted them by the
+# session's zone (on a +05:30 zone a 1h leg showed as 6h 30m). Set on the test's own
+# connection and pass it in directly - the app's connection isn't ours to change.
+{
+	my $dbh = TestDB->dbh;
+	$dbh->do("set time_zone = '+05:30'");
+	my $legs = get_legs($dbh);
+	$dbh->do("set time_zone = SYSTEM");
+
+	is($legs->{'0102'}->{time}, '1h 00m', 'get_legs: a one-hour leg reads 1h 00m whatever the database time zone');
 }
 
 # --- /api/map (route-ordered checkpoint lists + colours, for the Map page) ---

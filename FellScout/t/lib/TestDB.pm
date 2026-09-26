@@ -7,9 +7,14 @@ use File::Basename qw(dirname);
 
 my $REPO_ROOT = dirname(dirname(dirname(dirname(abs_path(__FILE__)))));
 
+# The FELLSCOUT_TEST_DB_* overrides are for the self-contained dev compose
+# stack (compose.dev.yaml), whose database isn't on localhost:3307. They're
+# deliberately not MYSQL_HOST/MYSQL_PORT: reset() truncates every table, and
+# a shell with the real dev DB's MYSQL_* variables exported must never be
+# able to point it there.
 use constant {
-	HOST     => '127.0.0.1',
-	PORT     => 3307,
+	HOST     => $ENV{FELLSCOUT_TEST_DB_HOST} // '127.0.0.1',
+	PORT     => $ENV{FELLSCOUT_TEST_DB_PORT} // 3307,
 	DATABASE => 'fellscout',
 	USERNAME => 'root',
 	PASSWORD => 'test',

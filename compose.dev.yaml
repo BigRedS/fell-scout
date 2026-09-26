@@ -1,0 +1,99 @@
+# A self-contained equivalent of ./dev.sh: its own MariaDB, the backend, the
+# Vite dev server, and a job that reseeds the database with the anonymised S50
+# example data at startup and every midnight.
+#
+#   docker compose -f compose.dev.yaml up --build
+#
+# Frontend on http://localhost:5173, backend on http://localhost:5000
+# (DEV_FRONTEND_PORT / DEV_BACKEND_PORT change the host ports). Only bound to
+# localhost: there is no login in front of the app.
+#
+# Times ("midnight", dev_mode's "today", the times shown on the pages) all
+# follow DEV_TZ.
+
+name: fellscout-dev
+
+x-tz: &tz
+  TZ: ${DEV_TZ:-Europe/London}
+
+x-backend: &backend
+  image: fellscout-dev-backend
+  build:
+    context: .
+    dockerfile: ./build/dockerfile
+  volumes:
+    - .:/repo
+
+services:
+  db:
+    image: mariadb:11.8
+    environment:
+      <<: *tz
+      MARIADB_ROOT_PASSWORD: test
+      MARIADB_DATABASE: fellscout
+    volumes:
+      - ./build/sql:/docker-entrypoint-initdb.d:ro
+    # Throwaway on purpose - everything gets reseeded anyway
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  backend:
+    <<: *backend
+    working_dir: /repo/FellScout
+    environment:
+      <<: *tz
+      MYSQL_HOST: db
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: fellscout
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: test
+      DANCER_ENVIRONMENT: test
+      SKIP_FETCH_FROM_FELLTRACK: "1"
+    ports:
+      - "127.0.0.1:${DEV_BACKEND_PORT:-5000}:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:5000/api/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    image: node:22-slim
+    working_dir: /repo/frontend
+    environment:
+      <<: *tz
+      BACKEND_URL: http://backend:5000
+    volumes:
+      - ./frontend:/repo/frontend
+      # Keep the container's own (Linux) node_modules off the host's copy.
+      # `npm install`, not `npm ci`: ci deletes node_modules, which can't be
+      # done to a mount point.
+      - /repo/frontend/node_modules
+    command: sh -c "npm install --no-audit --no-fund && exec npx vite --host 0.0.0.0"
+    ports:
+      - "127.0.0.1:${DEV_FRONTEND_PORT:-5173}:5173"
+    depends_on:
+      - backend
+
+  reseed:
+    <<: *backend
+    working_dir: /repo
+    entrypoint: ["/bin/bash", "/repo/build/dev-reseed-loop.sh"]
+    environment:
+      <<: *tz
+      DEV_DB_HOST: db
+      DEV_DB_PORT: "3306"
+      DEV_BACKEND_URL: http://backend:5000
+      RESEED_INTERVAL_SECONDS: ${RESEED_INTERVAL_SECONDS:-}
+      SYNC_INTERVAL_SECONDS: ${SYNC_INTERVAL_SECONDS:-}
+    depends_on:
+      backend:
+        condition: service_healthy
