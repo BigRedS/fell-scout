@@ -195,12 +195,25 @@ Now click the `Update from Felltrack` link at the bottom of the page, and have a
 
 ## Dev tips
 
-### Frontend
+### Running a Dev environment
 
-The Summary page (`/`) is a Vue 3 SPA living in `frontend/`, consuming the
-backend's `/api/*` JSON endpoints; everything else is still server-rendered
-by Dancer2/Template::Toolkit as before. See `frontend/README.md` for the
-dev-server/build workflow.
+s50-example-checkpoints.csv and s50-example-progress.csv is an example matched
+pair of progress and checkpoints CSVs.
+
+There's two ways to bring up a dev environment, both on 127.0.0.1:5173:
+
+* `./dev.sh` brings up a disposable MariaDB container (`db-test`) and runs
+  the webapp (Plack and Vite) on your local machine, so requires Perl, Node
+  and dependecies.
+
+* `docker compose -f compose.dev.yaml up --build` brings up normal-looking
+  containers with `dev_mode` on, reseeding every night at midnight and because
+  dev_mode is on you'll see the example event play out through the day.
+  See compose.dev.yaml for env vars to override.
+  
+
+`dev-seed.sh` is what does the seeding; it wipes whichever database it's
+pointed at (`db-test` unless `DEV_DB_HOST`/`DEV_DB_PORT` say otherwise).
 
 ### Running the tests
 
