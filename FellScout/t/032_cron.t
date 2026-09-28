@@ -52,6 +52,29 @@ ok(defined $leg && $leg->{seconds}, '/cron: run_cronjobs computed a seconds valu
 my $prediction = TestDB->dbh->selectrow_hashref('select * from checkpoints_teams_predictions where team_number = 1 and checkpoint = 2');
 ok(defined $prediction, '/cron: add_expected_times_to_teams predicted arrival at the next checkpoint, using the seeded leg-2 duration');
 
+# --- dev_mode forces skip_fetch_from_felltrack on ---
+# get-data's output ends up in the logs table. With no FellTrack credentials
+# (as here) and skipping off it bails with an error before it makes any
+# request, so this never touches felltrack.com; with skipping on it says so.
+{
+	my $get_data_log = sub {
+		my ($message) = TestDB->dbh->selectrow_array("select message from logs where name = 'get-data'");
+		return $message // '';
+	};
+
+	TestDB->reset;
+	TestDB->seed_config(skip_fetch_from_felltrack => '', dev_mode => '');
+	$test->request( GET '/cron' );
+	like($get_data_log->(), qr/ERROR: You must pass a Felltrack username/,
+		'skip_fetch_from_felltrack off, dev_mode off: /cron goes on to try fetching from FellTrack');
+
+	TestDB->reset;
+	TestDB->seed_config(skip_fetch_from_felltrack => '', dev_mode => 'on');
+	$test->request( GET '/cron' );
+	like($get_data_log->(), qr/SKIP_FETCH_FROM_FELLTRACK set/,
+		'skip_fetch_from_felltrack off, dev_mode on: /cron still does not fetch from FellTrack');
+}
+
 sub explain_missing {
 	return "No team row was written - the pipeline likely didn't run against the synthetic CSV as expected.";
 }

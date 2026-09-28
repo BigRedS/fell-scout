@@ -262,8 +262,8 @@ INSERT INTO `config` VALUES
 ('felltrack_username','',NULL),
 ('felltrack_password','',NULL),
 ('ignore_teams','','A space-separated list of teams to ignore'),
-('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data'),
-('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file'),
+('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data. Always on when dev_mode is on'),
+('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file. Always on when dev_mode is on'),
 ('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
 ('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
 ('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
@@ -274,7 +274,7 @@ INSERT INTO `config` VALUES
 ('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
 ('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
 ('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests'),
-('dev_mode','','Set to \'on\' to override the date with today\'s date. This will silently break \'event_start_date\'');
+('dev_mode','','Set to \'on\' to override the date with today\'s date and only show events in the past. This will silently override \'event_start_date\', \'ignore_future_events\' and \'skip_fetch_from_felltrack\'');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;

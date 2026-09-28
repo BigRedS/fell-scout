@@ -12,6 +12,7 @@ BEGIN {
 
 use Test::More;
 use POSIX qw(strftime);
+use Time::Local qw(timelocal);
 
 my $SCRIPT   = "$FindBin::Bin/../bin/progress-to-db";
 my $FIXTURES = "$FindBin::Bin/fixtures";
@@ -170,4 +171,38 @@ sub seed_default_route {
 	);
 	is($cp_date, $today, 'dev_mode: entrant checkpoint date is overriden to today');
 }
+
+# ---- dev_mode also forces ignore_future_events on, regardless of the stored config value
+{
+	TestDB->reset;
+	seed_default_route();
+
+	# future_checkpoint.csv's CP01 is "08:00"; dev_mode anchors that to today, so
+	# push it to an hour past "now" via time_shift_events - deterministic whatever
+	# time of day the suite runs at, unlike hard-coding a shift.
+	my $today_08_00 = timelocal(0, 0, 8, (localtime)[3,4,5]);
+	my $shift_seconds = (time() + 3600) - $today_08_00;
+	my $shift = sprintf('%s%d:%02d', $shift_seconds < 0 ? '-' : '+', int(abs($shift_seconds) / 3600), int(abs($shift_seconds) / 60) % 60);
+
+	TestDB->seed_config(dev_mode => 'on', ignore_future_events => '', time_shift_events => $shift);
+	my ($exit, $output) = run_progress_to_db('future_checkpoint.csv');
+	is($exit, 0, 'dev_mode forces ignore_future_events: script exits 0') or diag($output);
+	my $entrant = TestDB->dbh->selectrow_hashref("select * from entrants where code = '8A'");
+	is($entrant->{last_checkpoint}, undef,
+		'dev_mode forces ignore_future_events on even though the config row says off');
+
+	# Control: same effective future time (event_start_date pinned to today
+	# directly, since dev_mode off won't do that itself) and the same shift,
+	# but dev_mode off - proves the skip above is really from dev_mode's
+	# override of ignore_future_events, not just the shift or the date.
+	TestDB->reset;
+	seed_default_route();
+	my $today = strftime('%Y-%m-%d', localtime);
+	TestDB->seed_config(dev_mode => '', event_start_date => $today, ignore_future_events => '', time_shift_events => $shift);
+	run_progress_to_db('future_checkpoint.csv');
+	my $control_entrant = TestDB->dbh->selectrow_hashref("select * from entrants where code = '8A'");
+	is($control_entrant->{last_checkpoint}, 1,
+		'control: same future-shifted checkpoint, but dev_mode off - ignore_future_events off means it is not skipped');
+}
+
 done_testing();
