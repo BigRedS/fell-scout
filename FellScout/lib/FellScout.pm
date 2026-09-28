@@ -67,7 +67,8 @@ hook 'before' => sub {
 # Here we expose a function to grab the various required settings from
 # Dancer's vars keyword
 sub _sync_config {
-	return (
+	my %config = (
+		dev_mode                  => vars->{dev_mode},
 		felltrack_owner           => vars->{felltrack_owner},
 		felltrack_username        => vars->{felltrack_username},
 		felltrack_password        => vars->{felltrack_password},
@@ -79,6 +80,10 @@ sub _sync_config {
 		percentile_sample_size    => vars->{percentile_sample_size},
 		leg_estimate_multiplier   => vars->{leg_estimate_multiplier},
 	);
+	if($config{dev_mode} eq 'on'){
+		$config{skip_fetch_from_felltrack} = 'on';
+	}
+	return %config;
 }
 
 # Feature toggles live as ordinary config rows (same 'on'/'' convention as
