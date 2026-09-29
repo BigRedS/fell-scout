@@ -1,7 +1,21 @@
 <script setup>
 import { ref } from 'vue'
-import { getConfig, updateConfig, getLogs, triggerSync, clearDatabase } from '../api/client'
+import { getStatus, getConfig, updateConfig, getLogs, triggerSync, clearDatabase } from '../api/client'
 import { usePolling } from '../composables/usePolling'
+
+// The nav already hides the Admin link for non-admins, but someone can
+// still navigate here directly (bookmark, back button) - check first rather
+// than calling the API and letting its 403 fail silently. null = not
+// checked yet, so nothing renders until we actually know either way.
+const isAdmin = ref(null)
+
+async function checkIsAdmin() {
+  if (isAdmin.value === null) {
+    const status = await getStatus()
+    isAdmin.value = !!status.is_admin
+  }
+  return isAdmin.value
+}
 
 const config = ref(null)
 const logs = ref(null)
@@ -14,6 +28,7 @@ const changes = ref([])
 const busy = ref(false)
 
 async function refresh() {
+  if (!(await checkIsAdmin())) return
   const [configData, logsData] = await Promise.all([getConfig(), getLogs()])
   config.value = configData
   logs.value = logsData
@@ -61,6 +76,11 @@ async function clearTheDatabase() {
 <template>
   <h1>Fell Scout Admin</h1>
 
+  <div v-if="isAdmin === false" class="alert alert-secondary">
+    You don't have admin access. Ask whoever manages the FellScout admin list to add you.
+  </div>
+
+  <template v-else-if="isAdmin">
   <p>This is the admin/config page for FellScout. Here, you can modify the way FellScout displays the information it gets from FellTrack.</p>
   <p>Most of these will only take effect the next time the data is ingested from FellTrack, there's a button at the bottom of the page for that.</p>
 
@@ -128,4 +148,5 @@ async function clearTheDatabase() {
       </tr>
     </tbody>
   </table>
+  </template>
 </template>

@@ -1,8 +1,20 @@
 <script setup>
 import { ref } from 'vue'
-import { getRoutesCheckpoints, importCheckpointsCsv } from '../api/client'
+import { getStatus, getRoutesCheckpoints, importCheckpointsCsv } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import CheckpointLink from '../components/CheckpointLink.vue'
+
+// Same pattern as AdminView: the nav already hides the way here for
+// non-admins, but this is reachable by direct URL too.
+const isAdmin = ref(null)
+
+async function checkIsAdmin() {
+  if (isAdmin.value === null) {
+    const status = await getStatus()
+    isAdmin.value = !!status.is_admin
+  }
+  return isAdmin.value
+}
 
 const routesCps = ref(null)
 const selectedFile = ref(null)
@@ -11,6 +23,7 @@ const result = ref(null)
 const error = ref(null)
 
 async function refresh() {
+  if (!(await checkIsAdmin())) return
   routesCps.value = await getRoutesCheckpoints()
 }
 
@@ -39,6 +52,11 @@ async function upload() {
 <template>
   <h1>Checkpoints Admin</h1>
 
+  <div v-if="isAdmin === false" class="alert alert-secondary">
+    You don't have admin access. Ask whoever manages the FellScout admin list to add you.
+  </div>
+
+  <template v-else-if="isAdmin">
   <p>Routes are defined as a series of checkpoints; here you can see the current routes and upload a new CSV file to change it.</p>
 
   <h2>Current routes and checkpoints</h2>
@@ -109,4 +127,5 @@ async function upload() {
   </table>
 
   <p>This will update the association of checkpoints with routes and any checkpoint details, but not affect any progress data.</p>
+  </template>
 </template>

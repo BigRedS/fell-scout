@@ -19,6 +19,7 @@ use JSON qw(decode_json encode_json);
 
 TestDB->reset;
 TestDB->seed_sample_world;
+TestDB->seed_config(controllers => 'testcontroller');
 
 # A team that's overdue at its next checkpoint, for the laterunners assertions.
 TestDB->insert_team(
@@ -158,6 +159,7 @@ sub get_json {
 	my $req = PATCH(
 		'/api/checkpoint/1/status',
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testcontroller',
 		Content        => encode_json({ status => 'issue', notes => 'Poor phone signal' }),
 	);
 	my $res = $test->request($req);
@@ -175,6 +177,7 @@ sub get_json {
 	my $bad_req = PATCH(
 		'/api/checkpoint/1/status',
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testcontroller',
 		Content        => encode_json({ status => 'on_fire', notes => '' }),
 	);
 	my $bad_res = $test->request($bad_req);

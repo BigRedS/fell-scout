@@ -24,6 +24,7 @@ use JSON qw(decode_json encode_json);
 FellScout::setting('progress_csv_path', "$FindBin::Bin/fixtures/cron_pipeline.csv");
 
 TestDB->reset;
+TestDB->seed_config(controllers => 'testcontroller');
 TestDB->insert_entrant(code => '11A', team => 11, last_checkpoint => 1);
 TestDB->insert_entrant(code => '12B', team => 12, last_checkpoint => 1);
 TestDB->insert_entrant(code => '13C', team => 13, last_checkpoint => 1);
@@ -39,6 +40,7 @@ sub json_request {
 	my $req = $method->(
 		$path,
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testcontroller',
 		Content        => encode_json($body // {}),
 	);
 	return $test->request($req);

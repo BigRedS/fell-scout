@@ -24,7 +24,11 @@ perl -I"$REPO_ROOT/FellScout/lib" -I"$REPO_ROOT/FellScout/t/lib" \
 	-MTestDB -MFellScout::Data=import_checkpoints_csv \
 	-e '
 		TestDB->reset;
-		TestDB->seed_config(dev_mode => "on");
+		# admins/controllers default to empty in TestDB (deliberately, for test
+		# isolation) - seed the same names all.sql ships in production so the
+		# dev_mode header-less fallback (which only fabricates the identity
+		# "admin", not admin rights themselves) actually lands in a populated list.
+		TestDB->seed_config(dev_mode => "on", admins => "admin", controllers => "central control");
 		import_checkpoints_csv(TestDB->dbh, shift);
 	' "$REPO_ROOT/s50-example-checkpoints.csv"
 
