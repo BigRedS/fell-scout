@@ -221,6 +221,8 @@ There's two ways to bring up a dev environment, both on 127.0.0.1:5173:
 * `docker compose -f compose.dev.yaml up --build` brings up normal-looking
   containers with `dev_mode` on, reseeding every night at midnight and because
   dev_mode is on you'll see the example event play out through the day.
+  It also runs a basic-auth proxy on 127.0.0.1:5080 with logins `admin`,
+  `controller` and `user` (password same as username) for trying each role.
   See compose.dev.yaml for env vars to override.
 
 
