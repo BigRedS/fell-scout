@@ -19,11 +19,15 @@ const vehicleDrafts = ref({})
 // than calling the API and letting its 403 fail silently. null = not
 // checked yet, so nothing renders until we actually know either way.
 const featureEnabled = ref(null)
+// Only controllers can change anything here (the server enforces it; this
+// just stops plain users seeing controls that would 403).
+const isController = ref(false)
 
 async function checkFeatureEnabled() {
   if (featureEnabled.value === null) {
     const status = await getStatus()
     featureEnabled.value = !!status.retirements_enabled
+    isController.value = !!status.is_controller
   }
   return featureEnabled.value
 }
@@ -68,7 +72,7 @@ async function removeRetirement(row) {
   await refresh()
 }
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: 'ID', value: (row) => row.id, numeric: true },
   { key: 'entrant', label: 'Entrant', value: (row) => row.entrant_code },
   { key: 'team', label: 'Team', value: (row) => row.team_number, numeric: true },
@@ -77,8 +81,8 @@ const columns = [
   { key: 'vehicle', label: 'Vehicle', value: (row) => row.vehicle },
   { key: 'status', label: 'Status', value: (row) => row.status },
   { key: 'created_at', label: 'Created', value: (row) => row.created_at },
-  { key: 'actions', label: '', value: () => '' },
-]
+  ...(isController.value ? [{ key: 'actions', label: '', value: () => '' }] : []),
+])
 </script>
 
 <template>
@@ -92,24 +96,27 @@ const columns = [
   <template v-else-if="featureEnabled">
     <p>Tracks entrants who've retired and need picking up - who, from where, and which vehicle's assigned.</p>
 
-    <h3>Log a retirement</h3>
-    <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addRetirement">
-      <div class="col-auto">
-        <input v-model="newRetirement.entrant_code" type="text" class="form-control form-control-sm" placeholder="Entrant code" style="width: 8em" required />
-      </div>
-      <div class="col-auto">
-        <input v-model="newRetirement.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
-      </div>
-      <div class="col-auto">
-        <input v-model="newRetirement.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
-      </div>
-      <div class="col">
-        <input v-model="newRetirement.reason" type="text" class="form-control form-control-sm" placeholder="Reason" />
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary btn-sm">Log retirement</button>
-      </div>
-    </form>
+    <template v-if="isController">
+      <h3>Log a retirement</h3>
+      <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addRetirement">
+        <div class="col-auto">
+          <input v-model="newRetirement.entrant_code" type="text" class="form-control form-control-sm" placeholder="Entrant code" style="width: 8em" required />
+        </div>
+        <div class="col-auto">
+          <input v-model="newRetirement.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
+        </div>
+        <div class="col-auto">
+          <input v-model="newRetirement.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
+        </div>
+        <div class="col">
+          <input v-model="newRetirement.reason" type="text" class="form-control form-control-sm" placeholder="Reason" />
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary btn-sm">Log retirement</button>
+        </div>
+      </form>
+    </template>
+    <p v-else class="text-body-secondary">Only Control can log or change retirements.</p>
 
     <SortableTable
       v-if="retirements"
@@ -127,19 +134,22 @@ const columns = [
         <CheckpointLink v-if="row.checkpoint_number" :checkpoint="row.checkpoint_number" />
       </template>
       <template #vehicle="{ row }">
-        <div class="d-flex gap-1">
+        <div v-if="isController" class="d-flex gap-1">
           <input v-model="vehicleDrafts[row.id]" type="text" class="form-control form-control-sm" style="width: 8em" />
           <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveVehicle(row)">Save</button>
         </div>
+        <template v-else>{{ row.vehicle }}</template>
       </template>
       <template #status="{ row }">
         <select
+          v-if="isController"
           class="form-select form-select-sm w-auto"
           :value="row.status"
           @change="setStatus(row, $event.target.value)"
         >
           <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
         </select>
+        <template v-else>{{ row.status }}</template>
       </template>
       <template #actions="{ row }">
         <button type="button" class="btn btn-outline-danger btn-sm" @click="removeRetirement(row)">Delete</button>
