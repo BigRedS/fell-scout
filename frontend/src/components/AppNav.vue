@@ -67,7 +67,10 @@ const navLinks = computed(() => [
   { label: 'Entrants', to: '/entrants' },
   ...(status.value.incidents_enabled ? [{ label: 'Incidents', to: '/incidents' }] : []),
   ...(status.value.retirements_enabled ? [{ label: 'Retirements', to: '/retirements' }] : []),
-  { label: 'Admin', to: '/admin' },
+  // Hiding the link isn't the real security boundary (the server-side check
+  // on each admin route is) - this just keeps a Controller/Viewer from
+  // landing on a page that's all 403s for them.
+  ...(status.value.is_admin ? [{ label: 'Admin', to: '/admin' }] : []),
 ])
 </script>
 

@@ -23,6 +23,7 @@ use JSON qw(decode_json);
 # exercised by any existing test. This is the first.
 
 TestDB->reset;
+TestDB->seed_config(admins => 'testadmin');
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
@@ -32,6 +33,7 @@ my $csv_path = "$FindBin::Bin/fixtures/checkpoints_admin.csv";
 my $req = POST(
 	'/api/checkpoints/import',
 	Content_Type => 'form-data',
+	'X-Remote-User' => 'testadmin',
 	Content      => [ csv => [$csv_path, 'checkpoints.csv'] ],
 );
 my $res = $test->request($req);
@@ -71,6 +73,7 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 	my $req2 = POST(
 		'/api/checkpoints/import',
 		Content_Type => 'form-data',
+		'X-Remote-User' => 'testadmin',
 		Content      => [ csv => [$csv_path, 'checkpoints.csv'] ],
 	);
 	$test->request($req2);
@@ -92,6 +95,7 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 	my $req = POST(
 		'/api/checkpoints/import',
 		Content_Type => 'form-data',
+		'X-Remote-User' => 'testadmin',
 		Content      => [ csv => [$csv_path, 'checkpoints.csv'] ],
 	);
 	$test->request($req);
@@ -106,6 +110,7 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 	my $req = POST(
 		'/api/checkpoints/import',
 		Content_Type => 'form-data',
+		'X-Remote-User' => 'testadmin',
 		Content      => [ csv => ["$FindBin::Bin/fixtures/checkpoints_grid_only.csv", 'checkpoints.csv'] ],
 	);
 	my $res = $test->request($req);
@@ -126,7 +131,7 @@ is($result->{legs}, 5, 'import: five legs total (three for 50km, two for 30km)')
 
 # --- a request with no file is a 400, not a crash ---
 {
-	my $req3 = POST('/api/checkpoints/import', Content_Type => 'form-data', Content => []);
+	my $req3 = POST('/api/checkpoints/import', Content_Type => 'form-data', 'X-Remote-User' => 'testadmin', Content => []);
 	my $res3 = $test->request($req3);
 	is($res3->code, 400, '[POST /api/checkpoints/import] with no file returns 400');
 }

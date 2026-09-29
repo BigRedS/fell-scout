@@ -17,6 +17,7 @@ use HTTP::Request::Common;
 
 TestDB->reset;
 TestDB->seed_sample_world;
+TestDB->seed_config(admins => 'testadmin');
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
@@ -42,16 +43,29 @@ my @get_routes = qw(
 	/api/map
 	/api/checkpoints/routes
 	/api/scratch-teams
+);
+# /api/config and /api/logs are admin-only reads (config includes FellTrack
+# credentials) - same header on every request here rather than a second list.
+my @admin_get_routes = qw(
 	/api/config
 	/api/logs
 );
-# /clear-cache wipes every table, so it must run last, after every other
-# route has had a chance to exercise the seeded data.
-push @get_routes, '/clear-cache';
 
 for my $path (@get_routes) {
 	my $res = $test->request( GET $path );
 	ok( $res->is_success, "[GET $path] successful" ) or diag($res->status_line, "\n", $res->content);
+}
+for my $path (@admin_get_routes) {
+	my $res = $test->request( GET($path, 'X-Remote-User' => 'testadmin') );
+	ok( $res->is_success, "[GET $path] successful" ) or diag($res->status_line, "\n", $res->content);
+}
+
+# /clear-cache wipes every table, so it must run last, after every other
+# route has had a chance to exercise the seeded data. Admin-only and
+# POST-only.
+{
+	my $res = $test->request( POST('/clear-cache', 'X-Remote-User' => 'testadmin') );
+	ok( $res->is_success, '[POST /clear-cache] successful' ) or diag($res->status_line, "\n", $res->content);
 }
 
 done_testing();

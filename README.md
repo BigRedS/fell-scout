@@ -112,6 +112,18 @@ In general, the further into the event we are, the slower the remaining teams ar
 
 This only applies if the sample after taking the most-recent mth percentile would still be bigger than `percentile_min_sample`.
 
+## `admins` `controllers`
+
+No default beyond the seed data (`admin` and `central control` respectively).
+
+Space-separated lists of usernames, defines the users with `admin` and `controller` roles respectively. These users are not managed by FellScout, the username arrives in the `X-Remote-User` header from the proxy in front of FellScout
+
+* All users can view FellScout
+* `controllers` can additionally create and edit scratch teams, incidents, retirements, and change checkpoint statuses
+* `admins` aditionally can edit config, view logs, clear the DB and import a new checkpoints CSV
+
+See examples in the `deploy` dir for some hints as to how to configure this. In the absence of a proxy managing auth, every user is an admin.
+
 ## `route_30km` `route_50km` `route_50mile`
 
 Defines the routes of the event. The logic in the app is that any config named `route_*` defines a route, named for whatever's after that first underscore; you can add more routes by manually inserting that into the db.
@@ -210,7 +222,7 @@ There's two ways to bring up a dev environment, both on 127.0.0.1:5173:
   containers with `dev_mode` on, reseeding every night at midnight and because
   dev_mode is on you'll see the example event play out through the day.
   See compose.dev.yaml for env vars to override.
-  
+
 
 `dev-seed.sh` is what does the seeding; it wipes whichever database it's
 pointed at (`db-test` unless `DEV_DB_HOST`/`DEV_DB_PORT` say otherwise).

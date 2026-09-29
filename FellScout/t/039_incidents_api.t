@@ -17,6 +17,7 @@ use HTTP::Request::Common qw(GET POST PUT DELETE);
 use JSON qw(decode_json encode_json);
 
 TestDB->reset;
+TestDB->seed_config(controllers => 'testcontroller');
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
@@ -26,6 +27,7 @@ sub json_request {
 	my $req = $method->(
 		$path,
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testcontroller',
 		Content        => encode_json($body // {}),
 	);
 	return $test->request($req);
@@ -98,7 +100,9 @@ my $id;
 
 # --- disabled via config: the API refuses, not just the nav link hiding it ---
 {
-	TestDB->seed_config(enable_incidents => '');
+	# seed_config re-applies the full baseline plus these overrides each
+	# call, so controllers has to be repeated here or it'd reset to empty.
+	TestDB->seed_config(enable_incidents => '', controllers => 'testcontroller');
 
 	my $get_res = $test->request( GET '/api/incidents' );
 	is($get_res->code, 403, '[GET /api/incidents] returns 403 when disabled');
@@ -106,7 +110,7 @@ my $id;
 	my $post_res = json_request(\&POST, '/api/incidents', { type => 'Medical', description => 'test' });
 	is($post_res->code, 403, '[POST /api/incidents] returns 403 when disabled');
 
-	TestDB->seed_config(enable_incidents => 'on');
+	TestDB->seed_config(enable_incidents => 'on', controllers => 'testcontroller');
 	my $reenabled_res = $test->request( GET '/api/incidents' );
 	ok($reenabled_res->is_success, '[GET /api/incidents] works again once re-enabled');
 }
