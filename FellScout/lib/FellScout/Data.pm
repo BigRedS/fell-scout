@@ -484,7 +484,9 @@ sub get_checkpoint_details{
 
 	my $sth = $dbh->prepare('select * from checkpoints where checkpoint_number = ?');
 	$sth->execute($checkpoint);
-	$d = $sth->fetchrow_hashref();
+	# {}, not undef, when the checkpoint doesn't exist - same convention as
+	# get_team()'s not-found case. encode_json(undef) in the route dies.
+	$d = $sth->fetchrow_hashref() // {};
 
 	$sth = $dbh->prepare("select distinct route_name from routes where leg_from = ?");
 	$sth->execute($checkpoint);
@@ -631,7 +633,9 @@ sub get_teams{
 	                         unix_timestamp(last_checkpoint_time) as last_checkpoint_time_epoch
 	                         from teams');
 	$sth->execute();
-	my $teams;
+	# {}, not undef - an empty `teams` table (a brand-new event, before any
+	# progress data is loaded) used to make this encode_json(undef) and 500.
+	my $teams = {};
 	while (my $row = $sth->fetchrow_hashref()){
 		if($times{ $row->{team_number} }->{99}->{expected_hhmm}){
 			$row->{finish_expected_hhmm} = $times{ $row->{team_number} }->{99}->{expected_hhmm};

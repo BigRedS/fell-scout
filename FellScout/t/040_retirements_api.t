@@ -17,6 +17,7 @@ use HTTP::Request::Common qw(GET POST PUT DELETE);
 use JSON qw(decode_json encode_json);
 
 TestDB->reset;
+TestDB->seed_config(controllers => 'testcontroller');
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
@@ -26,6 +27,7 @@ sub json_request {
 	my $req = $method->(
 		$path,
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testcontroller',
 		Content        => encode_json($body // {}),
 	);
 	return $test->request($req);
@@ -85,7 +87,9 @@ my $id;
 
 # --- disabled via config: the API refuses, not just the nav link hiding it ---
 {
-	TestDB->seed_config(enable_retirements => '');
+	# seed_config re-applies the full baseline plus these overrides each
+	# call, so controllers has to be repeated here or it'd reset to empty.
+	TestDB->seed_config(enable_retirements => '', controllers => 'testcontroller');
 
 	my $get_res = $test->request( GET '/api/retirements' );
 	is($get_res->code, 403, '[GET /api/retirements] returns 403 when disabled');
@@ -93,7 +97,7 @@ my $id;
 	my $post_res = json_request(\&POST, '/api/retirements', { entrant_code => '1A' });
 	is($post_res->code, 403, '[POST /api/retirements] returns 403 when disabled');
 
-	TestDB->seed_config(enable_retirements => 'on');
+	TestDB->seed_config(enable_retirements => 'on', controllers => 'testcontroller');
 	my $reenabled_res = $test->request( GET '/api/retirements' );
 	ok($reenabled_res->is_success, '[GET /api/retirements] works again once re-enabled');
 }

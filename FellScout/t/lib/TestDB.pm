@@ -52,6 +52,8 @@ my %BASELINE_CONFIG = (
 	enable_incidents             => 'on',
 	enable_retirements           => 'on',
 	dev_mode                     => '',
+	admins                       => '',
+	controllers                  => '',
 );
 
 my $dbh;

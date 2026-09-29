@@ -17,13 +17,16 @@ use HTTP::Request::Common qw(GET PATCH);
 use JSON qw(decode_json encode_json);
 
 TestDB->reset;
+TestDB->seed_config(admins => 'testadmin');
 
 my $app  = FellScout->to_app;
 my $test = Plack::Test->create($app);
 
+# Every route in this file is admin-only (config includes FellTrack
+# credentials; logs are bundled onto the same page) - one header, here.
 sub get_json {
 	my ($path) = @_;
-	my $res = $test->request( GET $path );
+	my $res = $test->request( GET($path, 'X-Remote-User' => 'testadmin') );
 	ok( $res->is_success, "[GET $path] successful" ) or diag($res->status_line, "\n", $res->content);
 	return decode_json($res->content);
 }
@@ -40,6 +43,7 @@ sub get_json {
 	my $req = PATCH(
 		'/api/config',
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testadmin',
 		Content        => encode_json({ percentile => '90', not_a_real_config_key => 'ignored' }),
 	);
 	my $res = $test->request($req);
@@ -58,6 +62,7 @@ sub get_json {
 	my $req = PATCH(
 		'/api/config',
 		'Content-Type' => 'application/json',
+		'X-Remote-User' => 'testadmin',
 		Content        => encode_json({ percentile => '90' }),
 	);
 	my $res = $test->request($req);

@@ -105,6 +105,48 @@ sub _require_feature {
 	return undef;
 }
 
+# The reverse proxy is responsible for auth; it must set X-Remote-User to the authed
+# username (having first cleared it).
+# Fellscout has the notion of a 'controller' user who may do what we expect people in
+# Central Control to do, Admins who can edit everything, and everyone else can only
+# view
+#
+# Admins are controllers, too, by default
+#
+# In the absence of a proxy everyone is an admin
+sub _remote_user {
+	my $user = request_header('X-Remote-User') // '';
+	$user = 'admin' if $user eq '' and _feature_enabled('dev_mode');
+	return $user;
+}
+
+sub _user_in_list {
+	my $config_name = shift;
+	my $user = _remote_user();
+	return 0 if $user eq '';
+	my @list = split(m/\s+/, vars->{$config_name} // '');
+	return !!grep { $_ eq $user } @list;
+}
+
+sub _is_admin { return _user_in_list('admins'); }
+sub _is_controller { return _is_admin() || _user_in_list('controllers'); }
+
+sub _require_admin {
+	unless(_is_admin()){
+		status(403);
+		return encode_json({ error => 'Admin access required' });
+	}
+	return undef;
+}
+
+sub _require_controller {
+	unless(_is_controller()){
+		status(403);
+		return encode_json({ error => 'Controller access required' });
+	}
+	return undef;
+}
+
 # # # # # SUMMARY
 
 any ['get', 'post'] => '/api/summary' => sub{
@@ -119,6 +161,8 @@ any ['get'] => '/api/status' => sub{
 	# ref to 1 or 0 as a real JSON boolean rather than the number 1 or 0.
 	$status->{incidents_enabled} = _feature_enabled('enable_incidents') ? \1 : \0;
 	$status->{retirements_enabled} = _feature_enabled('enable_retirements') ? \1 : \0;
+	$status->{is_admin} = _is_admin() ? \1 : \0;
+	$status->{is_controller} = _is_controller() ? \1 : \0;
 	return encode_json($status);
 };
 
@@ -150,6 +194,7 @@ any ['get'] => '/api/checkpoints/routes' => sub{
 };
 
 any ['post'] => '/api/checkpoints/import' => sub{
+	if(my $err = _require_admin()){ return $err; }
 	my $upload = request->upload('csv');
 	unless($upload){
 		status(400);
@@ -160,16 +205,19 @@ any ['post'] => '/api/checkpoints/import' => sub{
 };
 
 any ['get'] => '/api/config' => sub{
+	if(my $err = _require_admin()){ return $err; }
 	return encode_json( get_config(database) );
 };
 
 any ['patch'] => '/api/config' => sub{
+	if(my $err = _require_admin()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	my $changes = update_config(database, $body);
 	return encode_json({ changes => $changes });
 };
 
 any ['get'] => '/api/logs' => sub{
+	if(my $err = _require_admin()){ return $err; }
 	return encode_json( get_logs(database) );
 };
 
@@ -187,6 +235,7 @@ any ['get', 'post'] => '/api/arrivals/:checkpoint' => sub{
 };
 
 any ['patch'] => '/api/checkpoint/:checkpoint/status' => sub{
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	my $details = eval {
 		update_checkpoint_status(database, param('checkpoint'), $body->{status}, $body->{notes});
@@ -219,18 +268,21 @@ any ['get'] => '/api/incidents' => sub{
 
 any ['post'] => '/api/incidents' => sub{
 	if(my $err = _require_feature('enable_incidents')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( create_incident(database, $body) );
 };
 
 any ['put'] => '/api/incidents/:id' => sub{
 	if(my $err = _require_feature('enable_incidents')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( update_incident(database, param('id'), $body) );
 };
 
 any ['delete'] => '/api/incidents/:id' => sub{
 	if(my $err = _require_feature('enable_incidents')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	return encode_json( delete_incident(database, param('id')) );
 };
 
@@ -243,18 +295,21 @@ any ['get'] => '/api/retirements' => sub{
 
 any ['post'] => '/api/retirements' => sub{
 	if(my $err = _require_feature('enable_retirements')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( create_retirement(database, $body) );
 };
 
 any ['put'] => '/api/retirements/:id' => sub{
 	if(my $err = _require_feature('enable_retirements')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	return encode_json( update_retirement(database, param('id'), $body) );
 };
 
 any ['delete'] => '/api/retirements/:id' => sub{
 	if(my $err = _require_feature('enable_retirements')){ return $err; }
+	if(my $err = _require_controller()){ return $err; }
 	return encode_json( delete_retirement(database, param('id')) );
 };
 
@@ -265,6 +320,7 @@ any ['get'] => '/api/scratch-teams' => sub{
 };
 
 any ['post'] => '/api/scratch-teams' => sub{
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	my $result = update_scratch_team(database,
 		team_number => undef,
@@ -277,6 +333,7 @@ any ['post'] => '/api/scratch-teams' => sub{
 };
 
 any ['put'] => '/api/scratch-teams/:team_number' => sub{
+	if(my $err = _require_controller()){ return $err; }
 	my $body = decode_json( request->body || '{}' );
 	my $entrants = $body->{entrants} // '';
 	my $result;
@@ -299,6 +356,7 @@ any ['put'] => '/api/scratch-teams/:team_number' => sub{
 };
 
 any ['delete'] => '/api/scratch-teams/:team_number' => sub{
+	if(my $err = _require_controller()){ return $err; }
 	my $result = delete_scratch_team(database, param('team_number'));
 	return encode_json($result);
 };
@@ -323,7 +381,8 @@ any ['get', 'post'] => '/api/problems' => sub{
 
 # # # # # UTILITIES
 
-any ['get', 'post'] => '/clear-cache' => sub {
+any ['post'] => '/clear-cache' => sub {
+	if(my $err = _require_admin()){ return $err; }
 	clear_cache(database);
 	return "Cleanup done, you can now click 'back' to get back to where you were";
 };

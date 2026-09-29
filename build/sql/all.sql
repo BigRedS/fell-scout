@@ -274,7 +274,9 @@ INSERT INTO `config` VALUES
 ('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
 ('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
 ('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests'),
-('dev_mode','','Set to \'on\' to override the date with today\'s date and only show events in the past. This will silently override \'event_start_date\', \'ignore_future_events\' and \'skip_fetch_from_felltrack\'');
+('dev_mode','','Set to \'on\' to override the date with today\'s date and only show events in the past. This will silently override \'event_start_date\', \'ignore_future_events\' and \'skip_fetch_from_felltrack\'. With no X-Remote-User header (no proxy in front), this also grants admin access, so the dev/demo stack is fully usable on its own'),
+('admins','admin','A space-separated list of usernames (from the X-Remote-User header set by the reverse proxy) who get admin access - config, logs, clearing the database, importing the checkpoints CSV. Being an admin also grants everything \'controllers\' does'),
+('controllers','central control','A space-separated list of usernames who get controller access - scratch teams, incidents, retirements, checkpoint status. Everyone else (anyone the proxy authenticates who isn\'t listed here or in \'admins\') gets read-only access');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
