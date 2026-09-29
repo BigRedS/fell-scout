@@ -24,11 +24,15 @@ const ownerDrafts = ref({})
 // than calling the API and letting its 403 fail silently. null = not
 // checked yet, so nothing renders until we actually know either way.
 const featureEnabled = ref(null)
+// Only controllers can change anything here (the server enforces it; this
+// just stops plain users seeing controls that would 403).
+const isController = ref(false)
 
 async function checkFeatureEnabled() {
   if (featureEnabled.value === null) {
     const status = await getStatus()
     featureEnabled.value = !!status.incidents_enabled
+    isController.value = !!status.is_controller
   }
   return featureEnabled.value
 }
@@ -79,7 +83,7 @@ async function removeIncident(row) {
   await refresh()
 }
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: 'ID', value: (row) => row.id, numeric: true },
   { key: 'type', label: 'Type', value: (row) => row.type },
   { key: 'description', label: 'Description', value: (row) => row.description },
@@ -88,8 +92,8 @@ const columns = [
   { key: 'owner', label: 'Owner', value: (row) => row.owner },
   { key: 'status', label: 'Status', value: (row) => row.status },
   { key: 'created_at', label: 'Created', value: (row) => row.created_at },
-  { key: 'actions', label: '', value: () => '' },
-]
+  ...(isController.value ? [{ key: 'actions', label: '', value: () => '' }] : []),
+])
 </script>
 
 <template>
@@ -103,29 +107,32 @@ const columns = [
   <template v-else-if="featureEnabled">
     <p>A log of medical, lost-team, behavioural, and transport incidents during the event.</p>
 
-    <h3>Log a new incident</h3>
-    <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addIncident">
-      <div class="col-auto">
-        <select v-model="newIncident.type" class="form-select form-select-sm">
-          <option v-for="t in INCIDENT_TYPES" :key="t" :value="t">{{ t }}</option>
-        </select>
-      </div>
-      <div class="col">
-        <input v-model="newIncident.description" type="text" class="form-control form-control-sm" placeholder="Description" required />
-      </div>
-      <div class="col-auto">
-        <input v-model="newIncident.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
-      </div>
-      <div class="col-auto">
-        <input v-model="newIncident.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
-      </div>
-      <div class="col-auto">
-        <input v-model="newIncident.owner" type="text" class="form-control form-control-sm" placeholder="Owner" />
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary btn-sm">Log incident</button>
-      </div>
-    </form>
+    <template v-if="isController">
+      <h3>Log a new incident</h3>
+      <form class="row g-2 mb-4" style="max-width: 60em" @submit.prevent="addIncident">
+        <div class="col-auto">
+          <select v-model="newIncident.type" class="form-select form-select-sm">
+            <option v-for="t in INCIDENT_TYPES" :key="t" :value="t">{{ t }}</option>
+          </select>
+        </div>
+        <div class="col">
+          <input v-model="newIncident.description" type="text" class="form-control form-control-sm" placeholder="Description" required />
+        </div>
+        <div class="col-auto">
+          <input v-model="newIncident.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
+        </div>
+        <div class="col-auto">
+          <input v-model="newIncident.team_number" type="number" class="form-control form-control-sm" placeholder="Team #" style="width: 6em" />
+        </div>
+        <div class="col-auto">
+          <input v-model="newIncident.owner" type="text" class="form-control form-control-sm" placeholder="Owner" />
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary btn-sm">Log incident</button>
+        </div>
+      </form>
+    </template>
+    <p v-else class="text-body-secondary">Only Control can log or change incidents.</p>
 
     <SortableTable
       v-if="incidents"
@@ -143,19 +150,22 @@ const columns = [
         <TeamLink v-if="row.team_number" :team-number="row.team_number" />
       </template>
       <template #owner="{ row }">
-        <div class="d-flex gap-1">
+        <div v-if="isController" class="d-flex gap-1">
           <input v-model="ownerDrafts[row.id]" type="text" class="form-control form-control-sm" style="width: 10em" />
           <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveOwner(row)">Save</button>
         </div>
+        <template v-else>{{ row.owner }}</template>
       </template>
       <template #status="{ row }">
         <select
+          v-if="isController"
           class="form-select form-select-sm w-auto"
           :value="row.status"
           @change="setStatus(row, $event.target.value)"
         >
           <option v-for="s in STATUSES" :key="s" :value="s">{{ s }}</option>
         </select>
+        <template v-else>{{ row.status }}</template>
       </template>
       <template #actions="{ row }">
         <button type="button" class="btn btn-outline-danger btn-sm" @click="removeIncident(row)">Delete</button>

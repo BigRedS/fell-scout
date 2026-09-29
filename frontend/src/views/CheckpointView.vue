@@ -5,7 +5,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../leafletIcons'
 import { addFullscreenControl } from '../leafletFullscreen'
-import { getCheckpoint, updateCheckpointStatus } from '../api/client'
+import { getStatus, getCheckpoint, updateCheckpointStatus } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
@@ -26,7 +26,13 @@ const draftNotes = ref('')
 const savingStatus = ref(false)
 let statusDraftSeeded = false
 
+// Only controllers can change the status (the server enforces it; this
+// just stops plain users seeing controls that would 403). null = not
+// checked yet.
+const isController = ref(null)
+
 async function refresh() {
+  if (isController.value === null) isController.value = !!(await getStatus()).is_controller
   checkpoint.value = await getCheckpoint(route.params.checkpoint)
 }
 
@@ -98,21 +104,24 @@ function teamGroups(key) {
 
     <div class="d-flex align-items-center gap-2 flex-wrap my-3">
       <CheckpointStatusBadge :status="details.status" />
-      <select v-model="draftStatus" class="form-select form-select-sm w-auto">
-        <option value="open">Open</option>
-        <option value="issue">Issue</option>
-        <option value="closed">Closed</option>
-      </select>
-      <input
-        v-model="draftNotes"
-        type="text"
-        class="form-control form-control-sm"
-        style="max-width: 20em"
-        placeholder="Notes (e.g. poor signal, heavy load)"
-      />
-      <button type="button" class="btn btn-primary btn-sm" :disabled="savingStatus" @click="saveStatus">
-        {{ savingStatus ? 'Saving…' : 'Save status' }}
-      </button>
+      <template v-if="isController">
+        <select v-model="draftStatus" class="form-select form-select-sm w-auto">
+          <option value="open">Open</option>
+          <option value="issue">Issue</option>
+          <option value="closed">Closed</option>
+        </select>
+        <input
+          v-model="draftNotes"
+          type="text"
+          class="form-control form-control-sm"
+          style="max-width: 20em"
+          placeholder="Notes (e.g. poor signal, heavy load)"
+        />
+        <button type="button" class="btn btn-primary btn-sm" :disabled="savingStatus" @click="saveStatus">
+          {{ savingStatus ? 'Saving…' : 'Save status' }}
+        </button>
+      </template>
+      <span v-else-if="details.status_notes">{{ details.status_notes }}</span>
       <span v-if="details.status_updated_at" class="text-body-secondary small">
         Last updated {{ details.status_updated_at }}
       </span>
