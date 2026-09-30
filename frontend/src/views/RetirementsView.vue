@@ -73,14 +73,14 @@ async function removeRetirement(row) {
 }
 
 const columns = computed(() => [
-  { key: 'id', label: 'ID', value: (row) => row.id, numeric: true },
+  { key: 'id', label: 'ID', value: (row) => row.id, numeric: true, hideBelow: 'md' },
   { key: 'entrant', label: 'Entrant', value: (row) => row.entrant_code },
-  { key: 'team', label: 'Team', value: (row) => row.team_number, numeric: true },
+  { key: 'team', label: 'Team', value: (row) => row.team_number, numeric: true, hideBelow: 'md' },
   { key: 'checkpoint', label: 'Checkpoint', value: (row) => row.checkpoint_number, numeric: true },
-  { key: 'reason', label: 'Reason', value: (row) => row.reason },
+  { key: 'reason', label: 'Reason', value: (row) => row.reason, hideBelow: 'md' },
   { key: 'vehicle', label: 'Vehicle', value: (row) => row.vehicle },
   { key: 'status', label: 'Status', value: (row) => row.status },
-  { key: 'created_at', label: 'Created', value: (row) => row.created_at },
+  { key: 'created_at', label: 'Created', value: (row) => row.created_at, hideBelow: 'md' },
   ...(isController.value ? [{ key: 'actions', label: '', value: () => '' }] : []),
 ])
 </script>
@@ -108,7 +108,7 @@ const columns = computed(() => [
         <div class="col-auto">
           <input v-model="newRetirement.checkpoint_number" type="number" class="form-control form-control-sm" placeholder="CP #" style="width: 6em" />
         </div>
-        <div class="col">
+        <div class="col-12 col-md">
           <input v-model="newRetirement.reason" type="text" class="form-control form-control-sm" placeholder="Reason" />
         </div>
         <div class="col-auto">

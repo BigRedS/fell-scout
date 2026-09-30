@@ -6,6 +6,7 @@ import { teamOrEntrantStatus } from '../status'
 import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
 import StatusBadge from '../components/StatusBadge.vue'
+import PageHelp from '../components/PageHelp.vue'
 
 const entrants = ref(null)
 
@@ -22,24 +23,26 @@ const columns = [
   { key: 'name', label: 'Name', value: (row) => row.entrant_name },
   { key: 'status', label: 'Status', value: (row) => teamOrEntrantStatus(row) },
   { key: 'team', label: 'Team', value: (row) => row.team_name },
-  { key: 'unit', label: 'Unit', value: (row) => row.unit },
-  { key: 'district', label: 'District', value: (row) => row.district },
-  { key: 'route', label: 'Route', value: (row) => row.route },
-  { key: 'last_cp', label: 'Last Checkpoint', value: (row) => row.entrant_last_checkpoint, numeric: true },
-  { key: 'next_cp', label: 'Next Checkpoint', value: (row) => (row.retired ? '' : row.team_next_checkpoint), numeric: true },
-  { key: 'next_cp_in', label: 'Next CP Expected in', value: (row) => (row.retired ? '' : row.expected_in) },
-  { key: 'next_cp_at', label: 'Next CP Expected at', value: (row) => (row.retired ? '' : row.expected_hhmm) },
+  { key: 'unit', label: 'Unit', value: (row) => row.unit, hideBelow: 'md' },
+  { key: 'district', label: 'District', value: (row) => row.district, hideBelow: 'md' },
+  { key: 'route', label: 'Route', value: (row) => row.route, hideBelow: 'md' },
+  { key: 'last_cp', label: 'Last Checkpoint', value: (row) => row.entrant_last_checkpoint, numeric: true, hideBelow: 'md' },
+  { key: 'next_cp', label: 'Next CP', value: (row) => (row.retired ? '' : row.team_next_checkpoint), numeric: true },
+  { key: 'next_cp_in', label: 'Next CP in', value: (row) => (row.retired ? '' : row.expected_in), hideBelow: 'md' },
+  { key: 'next_cp_at', label: 'Next CP at', value: (row) => (row.retired ? '' : row.expected_hhmm) },
 ]
 </script>
 
 <template>
   <h1>Entrants</h1>
 
-  <p>
-    This is a list of all the entrants in the event. For details of their progress, click on
-    their team name to get their team's progress.
-  </p>
-  <p>For any more details about specific entrants, you will need to consult FellTrack directly.</p>
+  <PageHelp>
+    <p>
+      This is a list of all the entrants in the event. For details of their progress, click on
+      their team name to get their team's progress.
+    </p>
+    <p>For any more details about specific entrants, you will need to consult FellTrack directly.</p>
+  </PageHelp>
 
   <div class="mb-3">
     <a href="/api/entrants/export" download class="btn btn-outline-secondary btn-sm">Export CSV</a>

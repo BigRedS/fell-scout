@@ -15,6 +15,13 @@ const props = defineProps({
 
 const rows = computed(() => props.rows)
 
+// A column with hideBelow: 'md' (any Bootstrap breakpoint) isn't shown on
+// narrower screens, so phones get the few columns that matter instead of a
+// side-scrolling table. It's only hidden: search and filters still use it.
+function hideClass(col) {
+  return col.hideBelow ? `d-none d-${col.hideBelow}-table-cell` : null
+}
+
 const {
   sortColumn,
   sortOrder,
@@ -61,6 +68,7 @@ const {
               :key="col.key"
               role="button"
               class="user-select-none"
+              :class="hideClass(col)"
               @click="setSort(i)"
             >
               {{ col.label }}
@@ -74,7 +82,7 @@ const {
             :key="rowKey ? rowKey(row) : idx"
             :class="rowClass ? rowClass(row) : null"
           >
-            <td v-for="col in columns" :key="col.key">
+            <td v-for="col in columns" :key="col.key" :class="hideClass(col)">
               <slot :name="col.key" :row="row">{{ col.value(row) }}</slot>
             </td>
           </tr>
