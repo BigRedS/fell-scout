@@ -10,6 +10,8 @@ import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
 import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
+import CheckpointSwitcher from '../components/CheckpointSwitcher.vue'
+import { checkpointDisplayStatus } from '../status'
 
 const route = useRoute()
 const checkpoint = ref(null)
@@ -89,9 +91,11 @@ onUnmounted(() => {
 
 function teamGroups(key) {
   if (!details.value) return []
-  return details.value.routes.map((routeName) => ({
+  // No routes for the finish (99): the backend only lists routes with a leg
+  // *from* a checkpoint, and nothing leaves the finish.
+  return (details.value.routes ?? []).map((routeName) => ({
     route: routeName,
-    teams: details.value.teams[key]?.[routeName] ?? [],
+    teams: details.value.teams?.[key]?.[routeName] ?? [],
   }))
 }
 </script>
@@ -100,10 +104,10 @@ function teamGroups(key) {
   <template v-if="details">
     <h1>Checkpoint {{ details.checkpoint_number }} Details</h1>
 
-    <router-link :to="`/arrivals/${details.checkpoint_number}`">Arrivals Board</router-link>
+    <CheckpointSwitcher :checkpoint="details.checkpoint_number" view="checkpoint" />
 
-    <div class="d-flex align-items-center gap-2 flex-wrap my-3">
-      <CheckpointStatusBadge :status="details.status" />
+    <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+      <CheckpointStatusBadge :status="checkpointDisplayStatus(details.status, details.progress)" />
       <template v-if="isController">
         <select v-model="draftStatus" class="form-select form-select-sm w-auto">
           <option value="open">Open</option>
