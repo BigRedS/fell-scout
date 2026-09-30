@@ -512,6 +512,13 @@ sub get_checkpoint_details{
 				push(@{$d->{teams}->{next}->{$route}}, $t->[0]);
 			}
 
+			# Teams on a leg that starts here - they could still turn back to it.
+			$sth_teams = $dbh->prepare("select team_number from teams where route = ? and last_checkpoint = ? and completed = 0 and retired = 0");
+			$sth_teams->execute($route, $checkpoint);
+			while(my $t = $sth_teams->fetchrow_arrayref){
+				push(@{$d->{teams}->{leaving}->{$route}}, $t->[0]);
+			}
+
 
 
 			my $sth_route = $dbh->prepare("select leg_from from routes where route_name = ? and leg_to = ?");
@@ -524,7 +531,31 @@ sub get_checkpoint_details{
 			$prev = $sth_route->fetchrow_arrayref();
 			$d->{next}->{$route} = $prev->[0];
 		}
+	# Not for an unknown checkpoint, which stays {} (see t/042_empty_db_reads.t)
+	$d->{progress} = _checkpoint_progress($d->{teams}) if defined $d->{checkpoint_number};
 	return $d;
+}
+
+# How far the event has got past a checkpoint, from get_checkpoint_details'
+# team lists. Kept separate from the stored status (open/issue/closed), which
+# Control sets by hand:
+#   unvisited - teams still to arrive, none been yet
+#   passed    - nobody still to arrive, but some are on a leg out of it and
+#               could turn back
+#   clear     - nobody to arrive and nobody on a leg out of it: the condition
+#               for Control to close it
+#   undef     - teams both past and still to come, or no teams at all (the
+#               start and finish have no routes leaving them, so no lists)
+sub _checkpoint_progress{
+	my $teams = shift // {};
+	my %count;
+	for my $list (qw(past future leaving)){
+		$count{$list} = 0;
+		$count{$list} += scalar @$_ for values %{ $teams->{$list} // {} };
+	}
+	return 'unvisited' if $count{past} == 0 and $count{future} > 0;
+	return undef unless $count{future} == 0 and $count{past} > 0;
+	return $count{leaving} ? 'passed' : 'clear';
 }
 
 sub get_checkpoint_arrivals{

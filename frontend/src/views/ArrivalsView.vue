@@ -7,6 +7,7 @@ import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
 import PageHelp from '../components/PageHelp.vue'
+import CheckpointSwitcher from '../components/CheckpointSwitcher.vue'
 
 const route = useRoute()
 const arrivals = ref(null)
@@ -36,6 +37,8 @@ function rowClass(row) {
 
 <template>
   <h1>Checkpoint {{ arrivals?.cp }} Arrivals Board</h1>
+
+  <CheckpointSwitcher :checkpoint="route.params.checkpoint" view="arrivals" />
 
   <PageHelp>
     <p>This page shows every team that has yet to reach this checkpoint, and when they're expected here.</p>
