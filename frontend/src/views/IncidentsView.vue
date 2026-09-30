@@ -84,14 +84,14 @@ async function removeIncident(row) {
 }
 
 const columns = computed(() => [
-  { key: 'id', label: 'ID', value: (row) => row.id, numeric: true },
+  { key: 'id', label: 'ID', value: (row) => row.id, numeric: true, hideBelow: 'md' },
   { key: 'type', label: 'Type', value: (row) => row.type },
   { key: 'description', label: 'Description', value: (row) => row.description },
-  { key: 'checkpoint', label: 'Checkpoint', value: (row) => row.checkpoint_number, numeric: true },
+  { key: 'checkpoint', label: 'Checkpoint', value: (row) => row.checkpoint_number, numeric: true, hideBelow: 'md' },
   { key: 'team', label: 'Team', value: (row) => row.team_number, numeric: true },
-  { key: 'owner', label: 'Owner', value: (row) => row.owner },
+  { key: 'owner', label: 'Owner', value: (row) => row.owner, hideBelow: 'md' },
   { key: 'status', label: 'Status', value: (row) => row.status },
-  { key: 'created_at', label: 'Created', value: (row) => row.created_at },
+  { key: 'created_at', label: 'Created', value: (row) => row.created_at, hideBelow: 'md' },
   ...(isController.value ? [{ key: 'actions', label: '', value: () => '' }] : []),
 ])
 </script>
@@ -115,7 +115,7 @@ const columns = computed(() => [
             <option v-for="t in INCIDENT_TYPES" :key="t" :value="t">{{ t }}</option>
           </select>
         </div>
-        <div class="col">
+        <div class="col-12 col-md">
           <input v-model="newIncident.description" type="text" class="form-control form-control-sm" placeholder="Description" required />
         </div>
         <div class="col-auto">

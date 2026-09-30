@@ -7,6 +7,7 @@ import { teamOrEntrantStatus } from '../status'
 import SortableTable from '../components/SortableTable.vue'
 import TeamLink from '../components/TeamLink.vue'
 import StatusBadge from '../components/StatusBadge.vue'
+import PageHelp from '../components/PageHelp.vue'
 
 const router = useRouter()
 const teams = ref(null)
@@ -34,30 +35,32 @@ const columns = [
   { key: 'id', label: 'ID', value: (row) => row.team_number, numeric: true },
   { key: 'name', label: 'Name', value: (row) => row.team_name },
   { key: 'status', label: 'Status', value: (row) => teamOrEntrantStatus(row) },
-  { key: 'route', label: 'Route', value: (row) => row.route },
-  { key: 'last_checkin', label: 'Last Checkin', value: (row) => row.last_checkpoint_hhmm },
+  { key: 'route', label: 'Route', value: (row) => row.route, hideBelow: 'md' },
+  { key: 'last_checkin', label: 'Last Checkin', value: (row) => row.last_checkpoint_hhmm, hideBelow: 'md' },
   { key: 'last_cp', label: 'Last CP', value: (row) => row.last_checkpoint, numeric: true },
   { key: 'next_cp', label: 'Next CP', value: (row) => row.next_checkpoint, numeric: true },
-  { key: 'next_cp_at', label: 'Next CP expected at', value: (row) => row.next_checkpoint_expected_hhmm },
-  { key: 'next_cp_in', label: 'Next CP expected in', value: (row) => row.next_checkpoint_expected_in },
-  { key: 'finish', label: 'Finish expected', value: (row) => row.finish_expected_hhmm },
-  { key: 'district_unit', label: 'District, Unit', value: (row) => `${row.district} ${row.unit}` },
+  { key: 'next_cp_at', label: 'Next CP at', value: (row) => row.next_checkpoint_expected_hhmm },
+  { key: 'next_cp_in', label: 'Next CP in', value: (row) => row.next_checkpoint_expected_in, hideBelow: 'md' },
+  { key: 'finish', label: 'Finish expected', value: (row) => row.finish_expected_hhmm, hideBelow: 'md' },
+  { key: 'district_unit', label: 'District, Unit', value: (row) => `${row.district} ${row.unit}`, hideBelow: 'md' },
 ]
 </script>
 
 <template>
   <h1>Teams</h1>
 
-  <p>
-    Every team in the event; scratch teams have a negative number for an ID and may be edited on
-    the <router-link to="/scratch-teams">Scratch Teams</router-link> page.
-  </p>
-  <p>Checkpoint 99 is the finish, so any teams with a 'Last CP' of 99 have already finished.</p>
-  <p>
-    'Expected at finish' will be empty until enough teams on a given route have finished for a
-    reasonable estimate to be calculated. Similarly, teams towards the front will have no estimate
-    for their next checkpoint if not many other teams have already got there.
-  </p>
+  <PageHelp>
+    <p>
+      Every team in the event; scratch teams have a negative number for an ID and may be edited on
+      the <router-link to="/scratch-teams">Scratch Teams</router-link> page.
+    </p>
+    <p>Checkpoint 99 is the finish, so any teams with a 'Last CP' of 99 have already finished.</p>
+    <p>
+      'Expected at finish' will be empty until enough teams on a given route have finished for a
+      reasonable estimate to be calculated. Similarly, teams towards the front will have no estimate
+      for their next checkpoint if not many other teams have already got there.
+    </p>
+  </PageHelp>
 
   <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
     <form class="d-flex align-items-center gap-2" @submit.prevent="goToTeam">

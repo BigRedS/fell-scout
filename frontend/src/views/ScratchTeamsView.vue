@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { getStatus, getScratchTeams, createScratchTeam, updateScratchTeam, deleteScratchTeam } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
+import PageHelp from '../components/PageHelp.vue'
 
 const scratchTeams = ref(null)
 // Per-row editable entrants text, keyed by team_number - kept separate from
@@ -70,27 +71,30 @@ async function removeTeam(id) {
   <div v-for="warning in warnings" :key="warning" class="alert alert-info" role="alert">Warning: {{ warning }}</div>
   <div v-for="success in successes" :key="success" class="alert alert-success" role="alert">Success: {{ success }}</div>
 
-  <p>A scratch team is a team made up ad-hoc of members of other teams.</p>
-  <p>
-    Scratch teams will show up on the normal <router-link to="/teams">teams list</router-link>, they
-    all have a team number that is negative.
-  </p>
+  <PageHelp>
+    <p>A scratch team is a team made up ad-hoc of members of other teams.</p>
+    <p>
+      Scratch teams will show up on the normal <router-link to="/teams">teams list</router-link>, they
+      all have a team number that is negative.
+    </p>
+    <template v-if="isController">
+      <p>This page is for creating or modifying them. To do this use the form below. There are two fields:</p>
+      <ul>
+        <li><b>Team Name</b>: leave empty to get an automatic name, put something in if there's a better meaningful name</li>
+        <li>
+          <b>Entrants</b>: a space-separated list of entrant IDs, which you can read off the
+          <router-link to="/entrants">entrants page</router-link>
+        </li>
+      </ul>
+      <p>
+        You can change the entrants in a team below - clearing all the entrants (or the Delete button)
+        removes the team. To rename a team, delete it and recreate it with a new name.
+      </p>
+    </template>
+  </PageHelp>
   <p v-if="isController === false" class="text-body-secondary">Only Control can create or change scratch teams.</p>
 
   <template v-if="isController">
-    <p>This page is for creating or modifying them. To do this use the form below. There are two fields:</p>
-    <ul>
-      <li><b>Team Name</b>: leave empty to get an automatic name, put something in if there's a better meaningful name</li>
-      <li>
-        <b>Entrants</b>: a space-separated list of entrant IDs, which you can read off the
-        <router-link to="/entrants">entrants page</router-link>
-      </li>
-    </ul>
-    <p>
-      You can change the entrants in a team below - clearing all the entrants (or the Delete button)
-      removes the team. To rename a team, delete it and recreate it with a new name.
-    </p>
-
     <h3>Add a new Scratch Team</h3>
     <form class="mb-4" style="max-width: 30em" @submit.prevent="addTeam">
       <div class="mb-2">
