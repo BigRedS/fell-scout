@@ -6,6 +6,7 @@ import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import CheckpointLink from '../components/CheckpointLink.vue'
 import CheckpointStatusBadge from '../components/CheckpointStatusBadge.vue'
+import PageHelp from '../components/PageHelp.vue'
 
 const router = useRouter()
 const checkpoints = ref(null)
@@ -51,12 +52,14 @@ function goToCheckpoint() {
 <template>
   <h1>Checkpoints</h1>
 
-  <p>
-    This is a list of every checkpoint, each team for whom the checkpoint is the next they will
-    reach, and each team for whom it is the last they left.
-  </p>
+  <PageHelp>
+    <p>
+      This is a list of every checkpoint, each team for whom the checkpoint is the next they will
+      reach, and each team for whom it is the last they left.
+    </p>
 
-  <p>"Checkpoint 99" is the finish.</p>
+    <p>"Checkpoint 99" is the finish.</p>
+  </PageHelp>
 
   <form class="d-flex align-items-center gap-2 mb-3" @submit.prevent="goToCheckpoint">
     <label class="mb-0">View a specific checkpoint's arrivals board:</label>
@@ -74,11 +77,11 @@ function goToCheckpoint() {
           <th class="text-center">Checkpoint</th>
           <th class="text-center">Status</th>
           <th class="text-center">Links</th>
-          <th class="text-center">Routes</th>
-          <th class="text-center">Teams<br />passed</th>
-          <th class="text-center">Teams<br />not passed</th>
-          <th>Arrivals</th>
-          <th>Recent Departures</th>
+          <th class="text-center d-none d-md-table-cell">Routes</th>
+          <th class="text-center d-none d-md-table-cell">Teams<br />passed</th>
+          <th class="text-center d-none d-md-table-cell">Teams<br />not passed</th>
+          <th class="d-none d-md-table-cell">Arrivals</th>
+          <th class="d-none d-md-table-cell">Recent Departures</th>
         </tr>
       </thead>
       <tbody>
@@ -90,16 +93,16 @@ function goToCheckpoint() {
             <br />
             <CheckpointLink :checkpoint="row.id">Info</CheckpointLink>
           </td>
-          <td class="text-center">
+          <td class="text-center d-none d-md-table-cell">
             <div v-for="r in row.routes" :key="r">{{ r }}</div>
           </td>
-          <td class="text-center">
+          <td class="text-center d-none d-md-table-cell">
             <div v-for="r in row.routes" :key="r">{{ (row.past[r] ?? []).length }}</div>
           </td>
-          <td class="text-center">
+          <td class="text-center d-none d-md-table-cell">
             <div v-for="r in row.routes" :key="r">{{ (row.future[r] ?? []).length }}</div>
           </td>
-          <td>
+          <td class="d-none d-md-table-cell">
             <ul class="mb-0">
               <li v-for="team in row.arrivals" :key="team.team_number">
                 {{ team.next_checkpoint_expected_hhmm }} (in {{ team.next_checkpoint_expected_in }}):
@@ -109,7 +112,7 @@ function goToCheckpoint() {
               </li>
             </ul>
           </td>
-          <td>
+          <td class="d-none d-md-table-cell">
             <ul class="mb-0">
               <li v-for="team in row.departures" :key="team.team_number">
                 <TeamLink :team-number="team.team_number">{{ team.team_number }} : {{ team.team_name }}</TeamLink>
