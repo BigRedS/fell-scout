@@ -4,6 +4,7 @@ import { getSummary } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 import TeamLink from '../components/TeamLink.vue'
 import PageHelp from '../components/PageHelp.vue'
+import { checkpointDisplayStatus } from '../status'
 
 const summary = ref(null)
 
@@ -21,6 +22,32 @@ const rows = computed(() => {
     .map((name) => ({ name, ...routes[name] }))
   return [{ name: 'All', ...summary.value.general }, ...routeRows]
 })
+
+// Chip style per displayed status. Unvisited is a kind of open and clear a
+// kind of passed, so each pair shares a colour; outline vs solid tells them
+// apart.
+const CHIP_CLASS = {
+  open: 'btn-success',
+  unvisited: 'btn-outline-success',
+  clear: 'btn-primary',
+  passed: 'btn-outline-primary',
+  issue: 'btn-warning',
+  closed: 'btn-danger',
+}
+const CHIP_KEY = [
+  ['open', 'Open'],
+  ['unvisited', 'Unvisited'],
+  ['passed', 'Passed'],
+  ['clear', 'Clear'],
+  ['issue', 'Issue'],
+  ['closed', 'Closed'],
+]
+
+function chipClass(cp) {
+  return CHIP_CLASS[checkpointDisplayStatus(cp.status, cp.progress)] ?? 'btn-outline-secondary'
+}
+
+const routeLines = computed(() => rows.value.filter((row) => row.checkpoints?.length))
 
 function sortedTeamsOut(row) {
   return [...(row.teams_out ?? [])].sort((a, b) => a - b)
@@ -76,6 +103,30 @@ function sortedTeamsOut(row) {
             </TeamLink>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="routeLines.length" class="card mt-3">
+    <div class="card-header fw-bold">Checkpoints</div>
+    <div class="card-body">
+      <div v-for="row in routeLines" :key="row.name" class="d-flex flex-wrap align-items-center gap-1 mb-2">
+        <span class="me-2" style="min-width: 4em">{{ row.name }}</span>
+        <router-link
+          v-for="cp in row.checkpoints"
+          :key="cp.checkpoint"
+          :to="`/checkpoint/${cp.checkpoint}`"
+          class="btn btn-sm"
+          :class="chipClass(cp)"
+          style="min-width: 2.5em"
+        >
+          {{ cp.checkpoint === 99 ? 'Finish' : cp.checkpoint }}
+        </router-link>
+      </div>
+      <div class="d-flex flex-wrap gap-1 mt-3 small">
+        <span v-for="[status, label] in CHIP_KEY" :key="status" class="btn btn-sm pe-none" :class="CHIP_CLASS[status]">
+          {{ label }}
+        </span>
       </div>
     </div>
   </div>
