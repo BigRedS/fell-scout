@@ -71,6 +71,21 @@ sub get_json {
 	is($summary->{general}->{latest_finish}->{team_number}, 1, 'summary: latest_finish is team 1 (+120min), the later of the two predictions');
 
 	is($summary->{routes}->{'50km'}->{num_not_completed}, 4, 'summary: 50km has four not-completed teams (1, -5, 7, 120)');
+
+	# Per-route checkpoint lines: route order (the start drops out - it's
+	# never a leg's destination), with each checkpoint's status/progress as
+	# get_checkpoint_details gives it. The progress rules themselves are
+	# t/043's job.
+	my @cps = @{ $summary->{routes}->{'50km'}->{checkpoints} };
+	is_deeply([ map { $_->{checkpoint} } @cps ], [1, 2, 3, 99], 'summary: 50km checkpoints, in route order');
+	for my $cp (@cps){
+		my $d = FellScout::Data::get_checkpoint_details(TestDB->dbh, $cp->{checkpoint});
+		is_deeply(
+			[ $cp->{status}, $cp->{progress} ],
+			[ $d->{status}, $d->{progress} ],
+			"summary: 50km checkpoint $cp->{checkpoint} status/progress match get_checkpoint_details"
+		);
+	}
 	is($summary->{routes}->{'30km'}->{num_not_completed}, 2, 'summary: 30km has two not-completed teams (4, 6)');
 	is($summary->{routes}->{'50km'}->{earliest_finish}->{team_number}, 120, 'summary: per-route earliest_finish also correctly picks team 120');
 	is($summary->{routes}->{'50km'}->{latest_finish}->{team_number}, 1, 'summary: per-route latest_finish also correctly picks team 1');

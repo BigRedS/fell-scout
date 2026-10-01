@@ -260,10 +260,23 @@ sub get_summary {
 
 	$summary{general} = _route_summary($dbh, undef);
 
+	# Each route's checkpoints in order, with their status, for the Summary
+	# page's per-route status lines. Checkpoints shared between routes are
+	# only looked up once.
+	my $route_cps = get_routes_checkpoints($dbh);
+	my %details;
+
 	my $routes_sth = $dbh->prepare("select distinct route_name from routes order by route_name");
 	$routes_sth->execute();
 	while (my $row = $routes_sth->fetchrow_hashref()){
-		$summary{routes}->{ $row->{route_name} } = _route_summary($dbh, $row->{route_name});
+		my $route = $row->{route_name};
+		$summary{routes}->{$route} = _route_summary($dbh, $route);
+		$summary{routes}->{$route}->{checkpoints} = [
+			map {
+				my $d = $details{$_} //= get_checkpoint_details($dbh, $_);
+				{ checkpoint => $_ + 0, status => $d->{status}, progress => $d->{progress} }
+			} @{ $route_cps->{$route} // [] }
+		];
 	}
 
 	return \%summary;
