@@ -25,6 +25,12 @@ spec:
       containers:
         - name: web
           image: ghcr.io/bigreds/fell-scout
+          # Listen on IPv6 as well: on an IPv6-first cluster (e.g. farfaraway)
+          # the pod IP, Service and kubelet probes are all IPv6, and plackup's
+          # default of 0:5000 is IPv4-only. "::" takes IPv4 too. Not in the
+          # image's ENTRYPOINT because binding "::" fails on Docker's default
+          # (IPv4-only) network, which compose uses.
+          args: ["--host", "::", "--port", "5000", "--ipv6", "1", "bin/app.psgi"]
           env:
             - name: MYSQL_HOST
               value: db
