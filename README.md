@@ -122,7 +122,7 @@ Space-separated lists of usernames, defines the users with `admin` and `controll
 * `controllers` can additionally create and edit scratch teams, incidents, retirements, and change checkpoint statuses
 * `admins` aditionally can edit config, view logs, clear the DB and import a new checkpoints CSV
 
-See examples in the `deploy` dir for some hints as to how to configure this. In the absence of a proxy managing auth, every user is an admin.
+See [`deploy/`](deploy/) for example proxy config that does this. Without that header nobody has the admin or controller role - except with `dev_mode` on, where a request with no header is treated as coming from `admin`.
 
 ## `route_30km` `route_50km` `route_50mile`
 
@@ -143,47 +143,19 @@ Set to `off` once you've got the username, password and owner set properly.
 
 ## Docker Compose
 
-cd into the repo, then do:
+The production compose file is in [`deploy/`](deploy/). cd into the repo, then do:
 
-    cp .env.example .env
+    cp deploy/.env.example deploy/.env
 
-and set a real root db password in .env, then build the frontend (the
-Dockerfile just copies `FellScout/` as-is, so `FellScout/public/index.html`
-and `FellScout/public/assets/` need to already exist on disk - they're
-gitignored build output, not checked in):
+and set a real root db password in `deploy/.env`, then
 
-    cd frontend && npm install && npm run build && cd ..
-
-then
-
-    docker-compose build
-    docker-compose up
+    docker compose -f deploy/compose.yaml up -d --build
 
 And it will be up, listening on port 5001. It will listen on the address 127.0.0.1, though,
-so is only accessible from the localhost. Edit `compose.yaml` if you want to change this.
+so is only accessible from the localhost. Edit `deploy/compose.yaml` if you want to change this.
 
-There is a /admin page that is linked-to from the webUI, and also a /clear-cache that isn't,
-so you may wish to restrict access to these. I use this in Apache:
-
-    <Virtualhost *:80>
-            ServerName fellscout.avi.st
-
-            Proxypass / http://localhost:5001/
-            proxypassreverse / http://localhost:5001/
-
-            <location />
-                    authtype basic
-                    authname Fell Scout
-                    authuserfile /etc/apache2/fellscout-htpasswd
-                    require valid-user
-            </location>
-            <location /admin>
-                    authtype basic
-                    authname Fell Scout Admin
-                    authuserfile /etc/apache2/fellscout-htpasswd
-                    require user admin
-            </location>
-    </Virtualhost>
+It needs a proxy in front of it to handle logins, and to tell FellScout who's logged in via
+the `X-Remote-User` header - see [`deploy/`](deploy/) for an example Apache config.
 
 You can then visit http://<your felltrack URL>/admin where you'll see this form:
 
@@ -248,4 +220,4 @@ Use the `./FellScout/bin/get-data` scipt to actually download from FellTrack; se
 
 ### Docker Compose Tips
 
-To feed an example CSV to it, do: `docker cp example-progress.csv fell-scout_web_1:/progress.csv`
+To feed an example CSV to it, do: `docker compose -f deploy/compose.yaml cp example-progress.csv web:/progress.csv`
