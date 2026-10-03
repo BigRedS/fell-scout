@@ -1,2 +1,5 @@
 .git
 frontend/node_modules
+# Built inside the image instead - a stale local build mustn't leak in
+FellScout/public/index.html
+FellScout/public/assets

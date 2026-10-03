@@ -1,27 +1,11 @@
+# Test/dev infrastructure only: the throwaway database the test suite and
+# ./dev.sh use. The production stack is in deploy/compose.yaml.
+
+# A separate project from deploy/compose.yaml's ("fell-scout"), so that a
+# `docker compose down` here can't take the production stack with it.
+name: fell-scout-test
+
 services:
-  web:
-    build:
-      context: .
-      dockerfile: ./build/dockerfile
-    ports:
-      - "127.0.0.1:5001:5000"
-    environment:
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=fellscout
-      - SKIP_FETCH_FROM_FELLTRACK=1
-
-  db:
-    image: "mariadb:11.8"
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    volumes:
-      - fellscout_db:/var/lib/mysql
-      - ./build/sql:/docker-entrypoint-initdb.d
-
   db-test:
     image: "mariadb:11.8"
     environment:
@@ -33,19 +17,3 @@ services:
       - ./build/sql:/docker-entrypoint-initdb.d
     tmpfs:
       - /var/lib/mysql
-
-  cron:
-    build:
-      context: build/
-      dockerfile: ./cron.dockerfile
-    environment:
-      - CRON_INTERVAL_SECONDS=60
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=fellscout
-      - SKIP_FETCH_FROM_FELLTRACK=1
-
-volumes:
-  fellscout_db:

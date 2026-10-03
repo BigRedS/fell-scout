@@ -1,0 +1,21 @@
+# Does what compose's `cron` container does: ask the app to run its sync.
+# The app does the actual work; this is just the clock.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: curl
+              image: curlimages/curl:8.16.0
+              args: ["-fsS", "-o", "/dev/null", "--max-time", "50", "http://web:5000/cron"]

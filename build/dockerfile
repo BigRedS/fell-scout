@@ -1,4 +1,17 @@
-FROM debian:trixie-slim
+# Builds the Vue frontend into FellScout/public/, so the image doesn't depend
+# on a frontend build already sitting in the working tree.
+FROM node:22-slim AS frontend
+WORKDIR /src/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY frontend ./
+# vite.config.js writes to ../FellScout/public
+RUN mkdir -p ../FellScout/public && npm run build
+
+# The Perl runtime without the app. compose.dev.yaml stops here
+# (`target: runtime`) and bind-mounts the repo instead, so it doesn't pay for
+# a frontend build it never uses.
+FROM debian:trixie-slim AS runtime
 RUN apt-get update && \
     apt-get -y install vim \
       libdancer2-perl \
@@ -9,9 +22,10 @@ RUN apt-get update && \
       libdbd-mysql-perl \
       libjson-perl \
       curl
+EXPOSE 5000/tcp
+ENTRYPOINT ["/usr/bin/plackup", "bin/app.psgi"]
 
+FROM runtime
 WORKDIR /app
 COPY FellScout /app
-EXPOSE 5000/tcp
-
-ENTRYPOINT ["/usr/bin/plackup", "bin/app.psgi"]
+COPY --from=frontend /src/FellScout/public/ /app/public/
