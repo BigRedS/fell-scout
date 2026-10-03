@@ -1,0 +1,54 @@
+# The production stack: the app, its database, and the cron container that
+# triggers the FellTrack sync. From the repo root:
+#
+#   docker compose -f deploy/compose.yaml up -d --build
+#
+# (or plain `docker compose up -d --build` from inside deploy/). Needs a
+# deploy/.env - copy .env.example. Compose reads .env from this file's
+# directory, not the one you run it from.
+
+# Pinned because compose otherwise names the project after this file's
+# directory ("deploy"), which would put the database in a new, empty
+# deploy_fellscout_db volume instead of the fell-scout_fellscout_db one used
+# from when this file lived in the repo root.
+name: fell-scout
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: ./build/dockerfile
+    ports:
+      - "127.0.0.1:5001:5000"
+    environment:
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=fellscout
+      - SKIP_FETCH_FROM_FELLTRACK=1
+
+  db:
+    image: "mariadb:11.8"
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - fellscout_db:/var/lib/mysql
+      - ../build/sql:/docker-entrypoint-initdb.d
+
+  cron:
+    build:
+      context: ../build
+      dockerfile: ./cron.dockerfile
+    environment:
+      - CRON_INTERVAL_SECONDS=60
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=fellscout
+      - SKIP_FETCH_FROM_FELLTRACK=1
+
+volumes:
+  fellscout_db:
