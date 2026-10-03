@@ -1,46 +1,36 @@
-# Apply with:
-#
-#   kubectl kustomize --load-restrictor LoadRestrictionsNone deploy/k8s | kubectl apply -f -
-#
-# not `kubectl apply -k`: the schema ConfigMap below is built from
-# build/sql/all.sql, outside this directory, and kustomize refuses to read
-# that unless told to. apply -k has no way to tell it, so it fails with
-# "security; file ... is not in or below ..." before applying anything.
-#
-# Create the two secrets first - see secrets.example.yaml.
+# A base, to be pulled in by the repo that actually deploys it, e.g.
+#   resources:
+#     - github.com/BigRedS/fell-scout//deploy/k8s?ref=master
+# See ../README.md for what that repo has to provide.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 namespace: fellscout
 
+# No Namespace or Ingress here - those are cluster-specific, so they belong to
+# the deploying repo, as do the fellscout-db and fellscout-htpasswd Secrets.
 resources:
-  - namespace.yaml
   - db.yaml
   - web.yaml
   - cron.yaml
-  - ingress.yaml
+  - auth.yaml
 
-# One copy of the schema, shared with compose and the tests. MariaDB only runs
-# it on an empty data dir. No hash suffix: a suffix would change with every
-# schema edit, renaming the ConfigMap and so restarting the db for nothing.
+# all.sql is a copy of build/sql/all.sql, because kustomize won't read files
+# outside this directory - not even with --load-restrictor once this is
+# pulled in remotely. FellScout/t/044_k8s_schema_copy.t fails if they drift.
+#
+# MariaDB only runs it on an empty data dir. No hash suffix: a suffix would
+# change with every schema edit, renaming the ConfigMap and so restarting
+# the db for nothing.
 configMapGenerator:
   - name: schema
     files:
-      - ../../build/sql/all.sql
+      - all.sql
     options:
       disableNameSuffixHash: true
 
-# Pin to a sha-<short> tag from CI rather than `latest`, so a rollout is a
-# deliberate change here and `kubectl rollout undo` means something.
+# The deploying repo should pin this to a sha-<short> tag from CI, so a
+# rollout is a deliberate change and `kubectl rollout undo` means something.
 images:
   - name: ghcr.io/bigreds/fell-scout
     newTag: latest
-
-patches:
-  - target:
-      kind: Ingress
-      name: fellscout
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: fellscout.example.org

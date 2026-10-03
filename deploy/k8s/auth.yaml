@@ -1,0 +1,18 @@
+# Traefik does the logins. headerField puts the authenticated username in
+# X-Remote-User, replacing anything the client sent - FellScout trusts that
+# header completely, so it must never pass through from the client.
+#
+# Lives here rather than with the (site-specific) Ingress so that getting
+# this right isn't left to each deployment. The Ingress references it as
+#   traefik.ingress.kubernetes.io/router.middlewares: fellscout-auth@kubernetescrd
+# where "fellscout" is the namespace - so deploy into that namespace, or
+# change the annotation to match.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: auth
+spec:
+  basicAuth:
+    secret: fellscout-htpasswd
+    headerField: X-Remote-User
+    removeHeader: true

@@ -26,52 +26,45 @@ Users are configured in your proxy, see below.
 
 ## Kubernetes
 
-`k8s/` is a kustomization for the same stack, using the image GitHub Actions pushes to ghcr. Currently, this is Traefik-specific.
-
-Two secrets are required, as is a namespace:
-
-```
-kubectl create namespace fellscout
-```
-
-First, generate a mysql db password with something like
+`k8s/` is a kustomize base for the same stack, using the image GitHub Actions pushes to ghcr.
+Currently, this is Traefik-specific. It's meant to be pulled in by the repo that deploys it; see
+[farfaraway's `fellscout/`](https://github.com/BigRedS/farfaraway/tree/main/fellscout) for a
+real one:
 
 ```
-kubectl -n fellscout create secret generic fellscout-db --from-literal=password="$(openssl rand -base64 24)"
+resources:
+  - _namespace.yaml
+  - github.com/BigRedS/fell-scout//deploy/k8s?ref=master
+  - ingress.yaml
 ```
 
-And then use `htpasswd` to create an htpasswd file and create a secret from that:
+The base brings up:
 
-```
-htpasswd -c users <user1>
-htpasswd users <user2>
-[...]
-kubectl -n fellscout create secret generic fellscout-htpasswd --from-file=users
-```
+* `db`, a single-replica MariaDB StatefulSet, initialised from `k8s/all.sql` via a ConfigMap.
+  That's a copy of `build/sql/all.sql`, because kustomize won't read outside `k8s/`; copy it
+  over after changing the schema (a test fails until you do).
+* `web`, a Deployment.
+* `cron`, a CronJob that hits `/cron` once a minute.
+* `auth`, a Traefik basicAuth Middleware with `headerField: X-Remote-User`, which overwrites any
+  value the client sent.
 
-Set the hostname and image tag in `k8s/kustomization.yaml`, then apply it:
+The deploying repo has to provide:
 
-```
-kubectl kustomize --load-restrictor LoadRestrictionsNone deploy/k8s | kubectl apply -f -
-```
+* the `fellscout` namespace. The Ingress annotation below includes the namespace name, so
+  use a different one only if you change that too.
+* an Ingress pointing at the `web` Service, port 5000, with
+  `traefik.ingress.kubernetes.io/router.middlewares: fellscout-auth@kubernetescrd`. Without
+  that annotation there are no logins and nobody gets any role.
+* a `fellscout-db` Secret with a `password` key. MariaDB only reads it when it first
+  initialises its volume, so changing it later won't change the database's password.
+* a `fellscout-htpasswd` Secret with a `users` key holding htpasswd lines:
 
-You can't just `kubectl apply -k` because that won't let us read `build/sql/all.sql`, which we need
-to initialise the db.
+  ```
+  htpasswd -c users <user1>
+  htpasswd users <user2>
+  ```
 
-
-Add users or change passwords by updating that users file and recreating the secret from it:
-
-```
-kubectl -n fellscout create secret generic fellscout-htpasswd --from-file=users --dry-run=client -o yaml | kubectl apply -f -
-```
-
-This brings up four components (the three bits of FellScout plus a Traefik Middleware):
-
-* `db` is a single-replica MariaDB StatefulSet, initialised from
-  `build/sql/all.sql` via a ConfigMap.
-* `web` is a Deployment.
-* `cron` is a CronJob that hits `/cron` once a minute.
-* Traefik does the logins: a basicAuth Middleware with `headerField: X-Remote-User`, which overwrites any value the client sent.
+* an image tag: pin `ghcr.io/bigreds/fell-scout` to a `sha-<short>` tag rather than `latest`.
 
 # Proxying
 FellScout doesn't manage logins, it depends on an HTTP proxy in front of it that will:

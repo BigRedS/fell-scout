@@ -1,0 +1,334 @@
+create database if not exists fellscout;
+use fellscout;
+/*M!999999\- enable the sandbox mode */
+-- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: fellscout-dev
+-- ------------------------------------------------------
+-- Server version	11.8.3-MariaDB-0+deb13u1 from Debian
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+
+--
+-- Table structure for table `checkpoints`
+--
+
+DROP TABLE IF EXISTS `checkpoints`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkpoints` (
+  `checkpoint_number` tinyint(4) NOT NULL,
+  `description` varchar(64) DEFAULT NULL,
+  `mobile` tinytext DEFAULT NULL,
+  `type` varchar(64) DEFAULT NULL,
+  `os_grid` varchar(12) DEFAULT NULL,
+  `longitude` varchar(32) DEFAULT NULL,
+  `what3words` tinytext DEFAULT NULL,
+  `latitude` varchar(32) DEFAULT NULL,
+  `manager` varchar(64) DEFAULT NULL,
+  -- Operational status, set by Control during the event - not touched by
+  -- the checkpoints CSV import, which only manages the columns above.
+  `status` varchar(10) NOT NULL DEFAULT 'open',
+  `status_notes` text DEFAULT NULL,
+  `status_updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`checkpoint_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `checkpoints_teams`
+--
+
+DROP TABLE IF EXISTS `checkpoints_teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkpoints_teams` (
+  `checkpoint` tinyint(4) NOT NULL,
+  `team_number` smallint(6) NOT NULL,
+  `time` datetime DEFAULT NULL,
+  `previous_checkpoint` tinyint(4) DEFAULT NULL,
+  `seconds_since_previous_checkpoint` int(11) DEFAULT NULL,
+  PRIMARY KEY (`checkpoint`,`team_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `checkpoints_teams_predictions`
+--
+
+DROP TABLE IF EXISTS `checkpoints_teams_predictions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkpoints_teams_predictions` (
+  `checkpoint` tinyint(4) NOT NULL,
+  `team_number` smallint(6) NOT NULL,
+  `expected_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`checkpoint`,`team_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `entrants`
+--
+
+DROP TABLE IF EXISTS `entrants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `entrants` (
+  `team` smallint(6) DEFAULT NULL,
+  `entrant_name` text DEFAULT NULL,
+  `district` text DEFAULT NULL,
+  `unit` text DEFAULT NULL,
+  `completed` tinyint(1) DEFAULT NULL,
+  `retired` tinyint(1) DEFAULT NULL,
+  `code` char(4) NOT NULL,
+  `last_checkpoint_time` datetime DEFAULT NULL,
+  `last_checkpoint` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `legs`
+--
+
+DROP TABLE IF EXISTS `legs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `legs` (
+  `from` tinyint(4) NOT NULL,
+  `to` tinyint(4) NOT NULL,
+  `seconds` int(11) DEFAULT NULL,
+  `leg_name` tinytext DEFAULT NULL,
+  PRIMARY KEY (`from`,`to`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `logs`
+--
+
+DROP TABLE IF EXISTS `logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `logs` (
+  `name` text DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `time` datetime DEFAULT current_timestamp(),
+  UNIQUE KEY `name_2` (`name`) USING HASH,
+  KEY `name` (`name`(768))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `routes`
+--
+
+DROP TABLE IF EXISTS `routes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `routes` (
+  `route_name` varchar(32) NOT NULL,
+  `index` tinyint(4) NOT NULL,
+  `leg_name` tinytext DEFAULT NULL,
+  `leg_from` tinyint(4) DEFAULT NULL,
+  `leg_to` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`index`,`route_name`),
+  KEY `route_name` (`route_name`,`index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `scratch_team_entrants`
+--
+
+DROP TABLE IF EXISTS `scratch_team_entrants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `scratch_team_entrants` (
+  `team_number` smallint(6) NOT NULL,
+  `entrant_code` char(4) NOT NULL,
+  `previous_team_number` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`team_number`,`entrant_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `scratch_teams`
+--
+
+DROP TABLE IF EXISTS `scratch_teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `scratch_teams` (
+  `team_number` smallint(6) NOT NULL AUTO_INCREMENT,
+  `team_name` text DEFAULT NULL,
+  PRIMARY KEY (`team_number`),
+  UNIQUE KEY `team_name` (`team_name`) USING HASH
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teams` (
+  `team_number` smallint(6) NOT NULL,
+  `team_name` text DEFAULT NULL,
+  `unit` text DEFAULT NULL,
+  `district` text DEFAULT NULL,
+  `representative_entrant` tinytext DEFAULT NULL,
+  `route` tinytext DEFAULT NULL,
+  `last_checkpoint` tinyint(4) DEFAULT NULL,
+  `last_checkpoint_time` datetime DEFAULT NULL,
+  `next_checkpoint` tinyint(4) DEFAULT NULL,
+  `current_leg` tinytext DEFAULT NULL,
+  `current_leg_index` smallint(6) DEFAULT NULL,
+  `completed` tinyint(4) DEFAULT NULL,
+  `retired` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`team_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2025-10-15 22:16:14
+/*M!999999\- enable the sandbox mode */
+-- MariaDB dump 10.19-11.8.3-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: fellscout-dev
+-- ------------------------------------------------------
+-- Server version	11.8.3-MariaDB-0+deb13u1 from Debian
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+
+--
+-- Table structure for table `config`
+--
+
+DROP TABLE IF EXISTS `config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `config` (
+  `name` varchar(100) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  UNIQUE KEY `name_2` (`name`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `config`
+--
+
+LOCK TABLES `config` WRITE;
+/*!40000 ALTER TABLE `config` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `config` VALUES
+('route_50mile','','space-separated list of checkpoints on 50 mile route'),
+('route_50km','','space-separated list of checkpoints on 50km route'),
+('route_30km','','space-separated list of checkpoints on 30km route'),
+('percentile','95','When calculating expected times for legs, we use this percentile. Normally 90'),
+('felltrack_owner','',NULL),
+('felltrack_username','',NULL),
+('felltrack_password','',NULL),
+('ignore_teams','','A space-separated list of teams to ignore'),
+('ignore_future_events','on','Skip any events that appear to have happened in the future. Should only be useful when testing with old data. Always on when dev_mode is on'),
+('skip_fetch_from_felltrack','on','Set to \'on\' to not download fresh data from felltrack; will continue to use the last-downloaded CSV file. Always on when dev_mode is on'),
+('lateness_percent_amber','30','When a team is on the laterunners page, if thir percent-lateness is higher than this and lower than lateness_percent_red, they will be highlighted in yellow. Normally 30'),
+('lateness_percent_red','80','When a team is on the laterunners page, if their percent-lateness is higher than this they will be highlighted in red. Normally 80'),
+('percentile_sample_size','40','When calculating the expected times for legs we want to favour the more-recent teams; this sets the size of the most-recent percentile of the sample set that we go on to take the time-taken percentile of. Normally 60'),
+('percentile_min_sample','10','When calculating a percentile, after applying any percentile_sample_size, if the number of samples is less than this a simple mean will be taken instead. Normally 10'),
+('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
+('google_maps_url','','address of the route on Google Maps route'),
+('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint. This is silently overriden by \'dev_mode\''),
+('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
+('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
+('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests'),
+('dev_mode','','Set to \'on\' to override the date with today\'s date and only show events in the past. This will silently override \'event_start_date\', \'ignore_future_events\' and \'skip_fetch_from_felltrack\'. With no X-Remote-User header (no proxy in front), this also grants admin access, so the dev/demo stack is fully usable on its own'),
+('admins','admin','A space-separated list of usernames (from the X-Remote-User header set by the reverse proxy) who get admin access - config, logs, clearing the database, importing the checkpoints CSV. Being an admin also grants everything \'controllers\' does'),
+('controllers','central control','A space-separated list of usernames who get controller access - scratch teams, incidents, retirements, checkpoint status. Everyone else (anyone the proxy authenticates who isn\'t listed here or in \'admins\') gets read-only access');
+/*!40000 ALTER TABLE `config` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2025-10-15 22:16:14
+
+--
+-- Table structure for table `incidents`
+--
+-- Added for the pre-event Control-tooling push (2026) - not part of the
+-- original mysqldump above, so no FK to checkpoints/teams, matching this
+-- schema's existing loose-reference convention (e.g. entrants.team).
+
+CREATE TABLE `incidents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) NOT NULL,
+  `description` text DEFAULT NULL,
+  `checkpoint_number` int(11) DEFAULT NULL,
+  `team_number` int(11) DEFAULT NULL,
+  `owner` varchar(64) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Open',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `retirements`
+--
+-- Also added for the pre-event Control-tooling push - tracks the
+-- pickup/transport workflow for a retired entrant. Keyed at entrant
+-- granularity (not team) to match how entrants.retired already records
+-- retirement per-entrant, not per-team.
+
+CREATE TABLE `retirements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entrant_code` char(4) NOT NULL,
+  `team_number` int(11) DEFAULT NULL,
+  `checkpoint_number` int(11) DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `vehicle` varchar(32) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Awaiting pickup',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
