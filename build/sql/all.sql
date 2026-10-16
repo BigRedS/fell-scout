@@ -271,7 +271,7 @@ INSERT INTO `config` VALUES
 ('leg_estimate_multiplier','1.2','Multiply the naive estimate of a leg time by this to increase it to account for later teams being slower than earlier ones'),
 ('google_maps_url','','address of the route on Google Maps route'),
 ('event_start_date','2025-10-15','The date of the start of the event, presumed to be the date on which any team checks into their first checkpoint. This is silently overriden by \'dev_mode\''),
-('time_shift_events','18:00','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
+('time_shift_events','','Time to add (begin with a \"-\" to remove) to each checkpoint check-in time. Mostly for testing'),
 ('enable_incidents','on','Set to \'on\' to enable the Incidents feature - when off, the page is hidden and its API refuses requests'),
 ('enable_retirements','on','Set to \'on\' to enable the Retirements feature - when off, the page is hidden and its API refuses requests'),
 ('dev_mode','','Set to \'on\' to override the date with today\'s date and only show events in the past. This will silently override \'event_start_date\', \'ignore_future_events\' and \'skip_fetch_from_felltrack\'. With no X-Remote-User header (no proxy in front), this also grants admin access, so the dev/demo stack is fully usable on its own'),
