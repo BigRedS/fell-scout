@@ -28,6 +28,10 @@ spec:
         - name: mariadb
           image: mariadb:11.8
           env:
+            # Same as web's: the database fills in some times itself
+            # (current_timestamp() defaults).
+            - name: TZ
+              value: Europe/London
             - name: MARIADB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:

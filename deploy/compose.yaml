@@ -1,5 +1,5 @@
-# The production stack: the app, its database, and the cron container that
-# triggers the FellTrack sync. From the repo root:
+# The production stack: the app, its database, and something to trigger the
+# FellTrack sync every minute. From the repo root:
 #
 #   docker compose -f deploy/compose.yaml up -d --build
 #
@@ -13,42 +13,64 @@
 # from when this file lived in the repo root.
 name: fell-scout
 
+# Times from FellTrack are local, and are parsed and shown with localtime;
+# the database also fills in some times itself. Containers default to UTC,
+# which is an hour out during BST.
+x-tz: &tz
+  TZ: Europe/London
+
 services:
   web:
     build:
       context: ..
       dockerfile: ./build/dockerfile
+    restart: unless-stopped
     ports:
       - "127.0.0.1:5001:5000"
     environment:
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=fellscout
-      - SKIP_FETCH_FROM_FELLTRACK=1
+      <<: *tz
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_HOST: db
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: fellscout
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:5000/api/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   db:
     image: "mariadb:11.8"
-    restart: always
+    restart: unless-stopped
     environment:
+      <<: *tz
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - fellscout_db:/var/lib/mysql
-      - ../build/sql:/docker-entrypoint-initdb.d
+      - ../build/sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
+  # Just the clock: the app does the sync work when /cron is requested.
   cron:
-    build:
-      context: ../build
-      dockerfile: ./cron.dockerfile
-    environment:
-      - CRON_INTERVAL_SECONDS=60
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=fellscout
-      - SKIP_FETCH_FROM_FELLTRACK=1
+    image: curlimages/curl:8.16.0
+    restart: unless-stopped
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        while true; do
+          curl -fsS -o /dev/null http://web:5000/cron || echo "sync request failed"
+          sleep 60
+        done
+    depends_on:
+      - web
 
 volumes:
   fellscout_db:

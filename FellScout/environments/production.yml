@@ -3,8 +3,8 @@
 # only log warning and error messsages
 log: "warning"
 
-# log message to a file in logs/
-logger: "file"
+# to STDERR, where docker/kubectl logs see it
+logger: "console"
 
 # don't consider warnings critical
 warnings: 0
