@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getStatus, getConfig, updateConfig, getLogs, triggerSync, clearDatabase } from '../api/client'
+import { getStatus, getConfig, updateConfig, getLogs, triggerSync, clearFelltrackData, clearDatabase } from '../api/client'
 import { usePolling } from '../composables/usePolling'
 
 // The nav already hides the Admin link for non-admins, but someone can
@@ -61,11 +61,24 @@ async function updateFromFelltrack() {
   }
 }
 
+async function clearTheFelltrackData() {
+  busy.value = true
+  try {
+    await clearFelltrackData()
+    changes.value = ['Cleared FellTrack data']
+    await refresh()
+  } finally {
+    busy.value = false
+  }
+}
+
 async function clearTheDatabase() {
+  // Unlike the FellTrack data, nothing brings this back
+  if (!window.confirm('Delete all scratch teams, checkpoints, incidents and retirements, as well as the FellTrack data? Settings are kept.')) return
   busy.value = true
   try {
     await clearDatabase()
-    changes.value = ['Cleared database tables']
+    changes.value = ['Cleared database (all but settings)']
     await refresh()
   } finally {
     busy.value = false
@@ -139,11 +152,21 @@ async function clearTheDatabase() {
         <td>Manually kick off the periodic update from FellTrack</td>
       </tr>
       <tr>
+        <td><button type="button" class="btn btn-outline-warning" :disabled="busy" @click="clearTheFelltrackData">Clear FellTrack data</button></td>
+        <td>
+          Clear FellScout's copy of the FellTrack data (teams, entrants, check-ins and the predictions
+          made from them), to be rebuilt by the next FellTrack update. Useful when something has
+          changed on FellTrack but isn't showing up in FellScout, or when you've changed which
+          checkpoints are on which route. Scratch teams, checkpoints, incidents, retirements and
+          settings are kept.
+        </td>
+      </tr>
+      <tr>
         <td><button type="button" class="btn btn-outline-danger" :disabled="busy" @click="clearTheDatabase">Clear database</button></td>
         <td>
-          Clear the local cache of FellTrack, useful when something has changed on FellTrack but
-          isn't showing up as changed in FellScout, or when you've updated the routes
-          definitions. This will clear anything configured in Fell Track - Scratch Teams, Incidents, Retriemnts.
+          Clear everything except the settings: the FellTrack data, and also the scratch teams,
+          checkpoints, incidents and retirements. A FellTrack update won't bring those back. For
+          starting afresh for a new event.
         </td>
       </tr>
     </tbody>

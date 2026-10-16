@@ -25,7 +25,8 @@ use FellScout::Data qw(
 	get_teams
 	get_team
 	get_problems
-	clear_cache
+	clear_felltrack_data
+	clear_database
 	delete_scratch_team
 	update_scratch_team
 	get_scratch_teams
@@ -391,10 +392,16 @@ any ['get', 'post'] => '/api/problems' => sub{
 
 # # # # # UTILITIES
 
-any ['post'] => '/clear-cache' => sub {
+any ['post'] => '/clear-felltrack-data' => sub {
 	if(my $err = _require_admin()){ return $err; }
-	clear_cache(database);
-	return "Cleanup done, you can now click 'back' to get back to where you were";
+	clear_felltrack_data(database);
+	return "FellTrack data cleared";
+};
+
+any ['post'] => '/clear-database' => sub {
+	if(my $err = _require_admin()){ return $err; }
+	clear_database(database);
+	return "Database cleared";
 };
 
 any ['get', 'post'] => '/cron' => sub {

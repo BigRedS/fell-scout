@@ -83,10 +83,10 @@ async function upload() {
   <h2>Update the routes definition</h2>
 
   <p>
-    After updating this, you will need to do 'Clear Database' and then 'Felltrack Update' on
+    After updating this, you will need to do 'Clear FellTrack data' and then 'Felltrack Update' on
     <router-link to="/admin">the admin page</router-link> if you've made any changes to which
-    checkpoints are on which route; you will lose any scratch teams. You don't need to do this
-    when just updating information about checkpoints.
+    checkpoints are on which route. You don't need to do this when just updating information
+    about checkpoints.
   </p>
 
   <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>

@@ -60,12 +60,12 @@ for my $path (@admin_get_routes) {
 	ok( $res->is_success, "[GET $path] successful" ) or diag($res->status_line, "\n", $res->content);
 }
 
-# /clear-cache wipes every table, so it must run last, after every other
-# route has had a chance to exercise the seeded data. Admin-only and
-# POST-only.
+# /clear-database wipes every table but config, so it must run last, after
+# every other route has had a chance to exercise the seeded data. t/047
+# covers what each clear actually removes.
 {
-	my $res = $test->request( POST('/clear-cache', 'X-Remote-User' => 'testadmin') );
-	ok( $res->is_success, '[POST /clear-cache] successful' ) or diag($res->status_line, "\n", $res->content);
+	my $res = $test->request( POST('/clear-database', 'X-Remote-User' => 'testadmin') );
+	ok( $res->is_success, '[POST /clear-database] successful' ) or diag($res->status_line, "\n", $res->content);
 }
 
 done_testing();

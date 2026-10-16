@@ -23,10 +23,11 @@ export default defineConfig({
     proxy: {
       '/api': { target: backend, changeOrigin: true },
       // Permanent action endpoints that live outside /api/ (not pages, so
-      // never becoming Vue routes) - the "sync now"/"clear database" buttons
+      // never becoming Vue routes) - the "sync now"/"clear ..." buttons
       // fetch these directly.
       '/cron': { target: backend, changeOrigin: true },
-      '/clear-cache': { target: backend, changeOrigin: true },
+      '/clear-felltrack-data': { target: backend, changeOrigin: true },
+      '/clear-database': { target: backend, changeOrigin: true },
       // Static images hand-maintained in the backend's public/, referenced
       // directly by Vue components (AppNav/AppFooter) - without this, the
       // dev server can't find them and silently serves the SPA shell

@@ -126,11 +126,19 @@ export function getLogs() {
   return getJSON('/api/logs')
 }
 
-export async function clearDatabase() {
-  const res = await fetch('/clear-cache', { method: 'POST' })
+async function postAction(path) {
+  const res = await fetch(path, { method: 'POST' })
   if (!res.ok) {
-    throw new Error(`/clear-cache returned ${res.status}`)
+    throw new Error(`${path} returned ${res.status}`)
   }
+}
+
+export function clearFelltrackData() {
+  return postAction('/clear-felltrack-data')
+}
+
+export function clearDatabase() {
+  return postAction('/clear-database')
 }
 
 export function getRoutesCheckpoints() {

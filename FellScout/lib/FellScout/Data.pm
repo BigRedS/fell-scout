@@ -28,7 +28,8 @@ our @EXPORT_OK = qw(
 	get_teams
 	get_team
 	get_problems
-	clear_cache
+	clear_felltrack_data
+	clear_database
 	delete_scratch_team
 	update_scratch_team
 	get_scratch_teams
@@ -842,20 +843,34 @@ sub get_problems{
 	return \%problems;
 }
 
-sub clear_cache{
+# Everything that comes from (or is computed from) FellTrack, so the next
+# sync rebuilds it. Scratch teams survive: progress-to-db re-applies them to
+# the entrants on every import.
+sub clear_felltrack_data{
 	my $dbh = shift;
-	info("Clearing cache");
-	my @tables = qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes teams logs scratch_teams scratch_team_entrants/;
+	info("Clearing FellTrack data");
+	_delete_from_tables($dbh, qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes teams logs/);
+	$dbh->do("replace into logs (`message`, `name`) values ('Cleared FellTrack data', 'clear_felltrack_data')");
+}
+
+# Everything but config: also the things people entered into FellScout
+# itself, which a sync can't bring back.
+sub clear_database{
+	my $dbh = shift;
+	info("Clearing database");
+	_delete_from_tables($dbh, qw/checkpoints_teams checkpoints_teams_predictions entrants legs routes teams logs
+		scratch_teams scratch_team_entrants checkpoints incidents retirements/);
+	$dbh->do('alter table scratch_teams auto_increment = 1');
+	$dbh->do("replace into logs (`message`, `name`) values ('Cleared all tables except config', 'clear_database')");
+}
+
+sub _delete_from_tables{
+	my ($dbh, @tables) = @_;
 	foreach my $table (@tables){
 		# Can't use placeholders here because dbh adds quotes and   delete from 'table_name'  is invalid
-		my $sth = $dbh->prepare("delete from $table");
-		$sth->execute();
+		$dbh->do("delete from $table");
 		debug("Cleared $table");
 	}
-	my $sth = $dbh->prepare("replace into logs (`message`, `name`) values ('Cleared all tables', 'clear_cache')");
-	$sth->execute();
-	$sth = $dbh->prepare('alter table scratch_teams auto_increment = 1');
-	$sth->execute();
 }
 
 # Deletes a scratch team, resetting every one of its entrants back to
