@@ -40,6 +40,7 @@ use FellScout::Data qw(
 	rows_to_csv
 );
 use FellScout::Sync qw(run_cronjobs);
+use FellScout::ConfigDefaults qw(ensure_config_defaults);
 
 setting('plugins')->{'Database'}->{'host'}=$ENV{'MYSQL_HOST'};
 setting('plugins')->{'Database'}->{'database'}=$ENV{MYSQL_DATABASE};
@@ -50,8 +51,17 @@ setting('plugins')->{'Database'}->{'port'}=$ENV{MYSQL_PORT};
 our $VERSION = '0.1';
 
 
+# Once per process (so once per Starman worker): see FellScout::ConfigDefaults
+# for why the app, not the database's init script, provides these.
+my $config_defaults_ensured = 0;
+
 hook 'before' => sub {
 	response_header 'Content-Type' => 'application/json' if request->path =~ m{^/api/};
+
+	unless ($config_defaults_ensured) {
+		ensure_config_defaults(database);
+		$config_defaults_ensured = 1;
+	}
 
 	# Every config row is exposed as a Dancer var - _sync_config() and
 	# /api/status both read specific ones back out by name.

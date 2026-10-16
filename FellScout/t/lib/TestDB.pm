@@ -2,6 +2,7 @@ package TestDB;
 use strict;
 use warnings;
 use DBI;
+use FellScout::ConfigDefaults qw(@CONFIG_DEFAULTS);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 
@@ -27,31 +28,14 @@ my @TABLES = qw(
 	incidents retirements
 );
 
-# Baseline config rows, mirroring build/sql/all.sql but with deterministic
-# values (fixed past event_start_date, no time_shift) so fixture timestamp
-# maths in tests stay simple. Individual tests override via seed_config.
+# Baseline config rows: the app's real defaults, with a few made
+# deterministic (fixed past event_start_date, no time_shift) so fixture
+# timestamp maths in tests stay simple, and nobody privileged unless a test
+# says so. Individual tests override via seed_config.
 my %BASELINE_CONFIG = (
-	route_50mile               => '',
-	route_50km                 => '',
-	route_30km                 => '',
-	percentile                 => '95',
-	felltrack_owner             => '',
-	felltrack_username          => '',
-	felltrack_password          => '',
-	ignore_teams                => '',
-	ignore_future_events         => 'on',
-	skip_fetch_from_felltrack    => 'on',
-	lateness_percent_amber       => '30',
-	lateness_percent_red         => '80',
-	percentile_sample_size       => '40',
-	percentile_min_sample        => '10',
-	leg_estimate_multiplier      => '1.2',
-	google_maps_url              => '',
+	(map { $_->[0] => $_->[1] } @CONFIG_DEFAULTS),
 	event_start_date             => '2020-01-01',
 	time_shift_events            => '0:00',
-	enable_incidents             => 'on',
-	enable_retirements           => 'on',
-	dev_mode                     => '',
 	admins                       => '',
 	controllers                  => '',
 );
