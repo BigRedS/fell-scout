@@ -15,8 +15,32 @@ our @EXPORT_OK = qw(run_cronjobs add_expected_times_to_teams get_percentile);
 # %config keys: felltrack_owner, felltrack_username, felltrack_password,
 # ignore_future_events, skip_fetch_from_felltrack, progress_csv_path,
 # percentile, percentile_min_sample, percentile_sample_size,
-# leg_estimate_multiplier.
+# leg_estimate_multiplier. Optionally lock_timeout (seconds, default 60).
+#
+# Only one sync runs at a time, across every web worker (and replica): two at
+# once would both write progress.csv while progress-to-db reads it. A caller
+# that finds one running waits for it rather than skipping, since the
+# scratch-team etc. callers rely on their change being reflected when this
+# returns. The lock is MariaDB's, so it goes away with this connection if
+# the worker dies mid-sync.
 sub run_cronjobs{
+	my $dbh = shift;
+	my %config = @_;
+	my $timeout = $config{lock_timeout} // 60;
+
+	my ($locked) = $dbh->selectrow_array("select get_lock('fellscout_sync', ?)", undef, $timeout);
+	unless ($locked) {
+		error("Cron: another sync has been running for over ${timeout}s; not starting this one");
+		return undef;
+	}
+	my $output = eval { _run_cronjobs($dbh, %config) };
+	my $err = $@;
+	$dbh->do("select release_lock('fellscout_sync')");
+	die $err if $err;
+	return $output;
+}
+
+sub _run_cronjobs{
 	my $dbh = shift;
 	my %config = @_;
 

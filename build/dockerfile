@@ -21,6 +21,7 @@ RUN apt-get update && \
       libdbd-mariadb-perl \
       libdbd-mysql-perl \
       libjson-perl \
+      starman \
       curl
 EXPOSE 5000/tcp
 ENTRYPOINT ["/usr/bin/plackup", "bin/app.psgi"]
@@ -29,3 +30,13 @@ FROM runtime
 WORKDIR /app
 COPY FellScout /app
 COPY --from=frontend /src/FellScout/public/ /app/public/
+# Explicit, because Starman sets PLACK_ENV=deployment, which Dancer2 would
+# otherwise take as its environment - there's no deployment.yml, so it would
+# fall back to config.yml's File logger and its non-existent log_dir.
+ENV DANCER_ENVIRONMENT=production
+# Starman rather than plackup's single-process server, so a FellTrack sync
+# (which runs inside the /cron request) doesn't stall everyone else.
+# 0.0.0.0 because Net::Server otherwise prefers [::], which fails on
+# Docker's default IPv4-only network; deploy/k8s overrides this for IPv6.
+ENTRYPOINT ["starman"]
+CMD ["--listen", "0.0.0.0:5000", "bin/app.psgi"]
